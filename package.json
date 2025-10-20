@@ -1,0 +1,22 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "**Namaste Yoga Studio** est une application web et web mobile destinée à la gestion des cours de yoga du centre \"Namaste Yoga Studio\" situé à Buis-les-Baronnies.\r Le site permettra aux visiteurs de découvrir les cours et professeurs, et aux élèves de **réserver une place en ligne**.",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint:js": "eslint public/js --ext .js",
+    "fix:js": "eslint public/js --ext .js --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.38.0",
+    "eslint": "^9.38.0",
+    "globals": "^16.4.0"
+  }
+}
