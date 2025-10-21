@@ -1,3 +1,158 @@
-body {
-    background-color: skyblue;
+/* =======================================================
+                  VARIABLES GLOBALES
+======================================================= */
+
+:root {
+    --color-primary: #2E6F5E;
+    --color-secondary: #7FB069;
+    --color-safran: #E7B10A;
+    --color-prana: #C06C84;
+    --color-bg: #F4F3F2;
+    --color-text: #1F2937;
+
+    --font-sans: "Inter", system-ui, sans-serif;
+    --font-serif: "Merriweather", serif;
+
+    --fs-base: 1rem;          
+    --fs-tiny: .75rem;        
+    --fs-small: .875rem;      
+    --fs-menu: 1rem;          
+    --fs-h4: clamp(1.1rem, 1vw + .8rem, 1.375rem);  
+    --fs-h3: clamp(1.25rem, 1.2vw + .9rem, 1.75rem);
+    --fs-h2: clamp(1.5rem, 2vw + 1rem, 2.25rem);    
+    --fs-h1: clamp(2rem, 3vw + 1rem, 3rem);      
+    
+    --fw-normal: 400;
+    --fw-medium: 600;
+    --fw-bold: 700;
+
+    --bs-body-font-family: var(--font-sans);
+    --bs-body-font-size:   var(--fs-base);
+    --bs-body-line-height: 1.6;
+    --bs-body-color:       var(--color-text);
+    --bs-body-bg:          var(--color-bg);
+
+    --bs-link-color:        var(--color-text);
+    --bs-link-hover-color:  var(--color-secondary);
+  }
+
+
+
+
+
+/* =======================================================
+                  GLOBALES
+======================================================= */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  font-size: 100%;
 }
+
+body{
+  font-family: var(--font-sans);
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* =======================================================
+                  POLICES
+======================================================= */
+h1,h2,h3,h4{
+  font-family: var(--font-serif);
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+  margin: 0 0 .6em;
+}
+
+h1{ font-size: var(--fs-h1); }
+h2{ font-size: var(--fs-h2); }
+h3{ font-size: var(--fs-h3); }
+h4{ font-size: var(--fs-h4); }
+
+p{ margin: 0 0 1rem; }
+a{ text-decoration: none; color: inherit; }
+
+p.medium{ font-weight: var(--fw-medium); }           
+p.small{  font-size: var(--fs-small); }
+p.tiny{   font-size: var(--fs-tiny); }
+p.menu{   font-size: var(--fs-menu); font-weight: var(--fw-bold); }
+
+/* =======================================================
+                  BOUTONS
+======================================================= */
+
+  .btn-primary {
+    --bs-btn-color: var(--color-text);
+    --bs-btn-bg: var(--color-safran);
+    --bs-btn-border-color: var(--color-safran);
+
+
+    --bs-btn-hover-color: var(--color-text);
+    --bs-btn-hover-bg: var(--color-secondary);
+    --bs-btn-hover-border-color: var(--color-secondary);
+
+    --bs-btn-active-color: var(--color-text);
+    --bs-btn-active-bg: var(--color-prana);
+    --bs-btn-active-border-color: var(--color-prana);
+
+    --bs-btn-disabled-color: #8899A6;
+    --bs-btn-disabled-bg: var(--color-bg);
+    --bs-btn-disabled-border-color: #8899A6;
+
+  }
+
+  .btn-primary:focus,
+  .btn-primary:focus-visible{
+    border-color: var(--color-text) !important;
+    box-shadow: none;
+  }
+
+
+    .btn-secondary {
+    --bs-btn-color: var(--color-primary);
+    --bs-btn-bg: var(--color-bg);
+    --bs-btn-border-color: var(--color-primary);
+
+
+    --bs-btn-hover-color: var(--color-bg);
+    --bs-btn-hover-bg: var(--color-primary);
+    --bs-btn-hover-border-color: var(--color-primary);
+
+    --bs-btn-active-color: var(--color-bg);
+    --bs-btn-active-bg: var(--color-safran);
+    --bs-btn-active-border-color: var(--color-safran);
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+
+    --bs-btn-disabled-color: #8899A6;
+    --bs-btn-disabled-bg: var(--color-secondary);
+    --bs-btn-disabled-border-color: var(--color-secondary);
+
+  }
+
+  .btn-secondary:focus,
+  .btn-secondary:focus-visible{
+    border-color: var(--color-primary) !important;
+    box-shadow: none;
+  }
+
+
+  /* =======================================================
+                  HERO
+======================================================= */
+ .bg-hero{
+    width: 100%;
+    height: 90vh;
+    background-image: linear-gradient(rgba(4, 9, 30, 0.5), rgba(4, 9, 30, 0.2)), url(/images/image-bg-hero.jpg);
+    background-position: center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
