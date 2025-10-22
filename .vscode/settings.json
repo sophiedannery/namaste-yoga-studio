@@ -1,10 +1,10 @@
 {
   "files.associations": {
     "*.twig": "twig",
-    "*.html.twig": "html"
+    "*.html.twig": "twig"
   },
   "emmet.includeLanguages": {
-    "twig": "html"
+    "twig": "twig"
   },
   "emmet.triggerExpansionOnTab": true,
   "emmet.showExpandedAbbreviation": "inMarkupAndStylesheet",

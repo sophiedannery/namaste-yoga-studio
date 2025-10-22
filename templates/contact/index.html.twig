@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+<section class="hero py-5 py-lg-7 dark-overlay d-flex flex-column justify-content-center">
+		<img class="bg-image-hero" src="{{ asset('photos/hero-contact.jpg') }}" alt="" aria-hidden="true">
+		<div class="container overlay-content">
+			<h1 class="text-hero">Nous contacter</h1>
+		</div>
+</section>
+
+<section class="py-5">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 text-center text-md-start mb-4 mb-md-0">
+					<div class="mb-4">
+						<i class="fa-contact fa-solid fa-house"></i>
+					</div>
+					<h3 class="h5">Adresse</h3>
+					<p class="medium">Contactez-nous pas courrier à l'adresse suivante :
+						<br><br>
+						<strong>
+							Namaste Yoga Studio<br>12 avenue du Grand Jardin
+							<br>
+							26 170 Buis-les-Baronnies
+							<br>
+							France</strong>
+					</p>
+				</div>
+				<div class="col-md-4 text-center text-md-start mb-4 mb-md-0">
+					<div class="mb-4">
+						<i class="fa-contact fa-solid fa-phone"></i>
+					</div>
+					<h3 class="h5">Téléphone</h3>
+					<p class="medium">Notre équipe est joignable du lundi au samedi de 9h à 20h
+						<br><br>
+						<strong>+33 4 95 45 43 45</strong>
+					</p>
+				</div>
+				<div class="col-md-4 text-center text-md-start mb-4 mb-md-0">
+					<div class="mb-4">
+						<i class="fa-contact fa-solid fa-envelope"></i>
+					</div>
+					<h3 class="h5">E-mail</h3>
+					<p class="medium">Contactez nous par e-mail à l'adresse suivante :
+						<br><br>
+						<strong>namaste.yoga.studio@contact.com</strong>
+					</p>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}
