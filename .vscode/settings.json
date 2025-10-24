@@ -1,0 +1,12 @@
+{
+  "files.associations": {
+    "*.twig": "twig",
+    "*.html.twig": "twig"
+  },
+  "emmet.includeLanguages": {
+    "twig": "twig"
+  },
+  "emmet.triggerExpansionOnTab": true,
+  "emmet.showExpandedAbbreviation": "inMarkupAndStylesheet",
+  "html.autoClosingTags": true
+}

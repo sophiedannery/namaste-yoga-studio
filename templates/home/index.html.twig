@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Namaste Yoga Studio{% endblock %}
+
+{% block body_class %}{% endblock %}
+
+{% block body %}
+
+<section id="bg-hero-accueil" class="bg-hero-accueil d-flex flex-column align-items-center justify-content-center">
+    <div class="container">
+        <div class="text-center">
+            <img src="{{ asset('/logos/logo-horizontal-clair.png')}}" alt="Logo Namaste Yoga Studio" height="200" loading="lazy">
+        </div>
+    </div>
+</section>
+
+<section id="introduction" class="mt-5">
+	<div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-12 col-md-10 col-lg-8">
+            <h4 style="color: var(--color-primary)">Votre voyage intérieur commence ici</h4>
+			<h1 class="mb-3">Namaste Yoga Studio</h1>
+			<p>
+                Namaste Yoga Studio est un espace de bien-être situé au cœur de la Drôme provençale, à Buis-les-Baronnies.
+                <br>Nous proposons des cours de yoga, de méditation et de relaxation, accessibles à tous les niveaux, 
+                dans une atmosphère douce et bienveillante.
+                <br>Chaque séance est une invitation à reconnecter le corps et l’esprit, à respirer profondément et 
+                à trouver l’équilibre au quotidien. 
+                <br><br>
+                Respirez, détendez-vous et laissez-vous guider - votre voyage intérieur commence ici.
+			</p>
+            <a class="btn btn-primary" href="#">Je découvre</a>
+        </div>
+        </div>
+	</div>
+</section>
+
+<section id="cours" class="mt-5">
+<div class="container">
+    <hr class="mx-auto">
+    <h1 class="text-center">Les cours</h1>
+    <div class="row justify-content-center text-center">
+        <div class="col-12 col-md-4">
+            <div class="card-accueil rounded-2 card-1">
+            </div>
+            <div class="text-start mt-3">
+                <h2>Hatha Yoga</h2>
+                <p>Le yoga traditionnel, idéal pour apprendre à respirer, s’étirer et se recentrer en douceur.</p>
+                <!-- <a href="">Je réserve -></a> -->
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card-accueil rounded-2 card-2">
+            </div>
+            <div class="text-start mt-3">
+                <h2>Vinyasa Yoga</h2>
+                <p>Un enchaînement fluide et dynamique de postures, parfait pour renforcer le corps et apaiser l’esprit.</p>
+                <!-- <a href="">Je réserve -></a> -->
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="card-accueil rounded-2 card-3">
+            </div>
+            <div class="text-start mt-3">
+                <h2>Yin Yoga</h2>
+                <p>Un yoga lent et profond pour relâcher les tensions et retrouver un équilibre intérieur durable.</p>
+                <!-- <a href="">Je réserve -></a> -->
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<section id="jumbo">
+		<div class="container my-5 ">
+			<div class="bg-image-jumbo p-5 text-center text-lg-start rounded-3 text-white d-flex flex-column justify-content-center">
+
+				<h1 class="text-jumbo">SÉANCE D'ESSAI OFFERTE POUR TOUTE INSCRIPTION</h1>
+
+				<p class="col-lg-8 text-jumbo">Découvrez la sérénité de nos cours et rejoignez la communauté Namaste.</p>
+
+				<div class="d-flex justify-content-center justify-content-lg-start gap-2 mb-5">
+
+					<a href="" class="d-inline-flex align-items-center btn btn-primary">
+						JE M'INSCRIS
+					</a>
+
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+
+
+
+{% endblock %}
