@@ -86,6 +86,16 @@ docker compose exec mongo mongosh -u root -p root --authenticationDatabase admin
 
 ## Fonctionnalités principales
 
+Résumé des User Stories / fonctionnalités implémentées :
+
+- Recherche de cours de yoga du studio
+- Réservation de cours
+- Création d'un compte élève
+- Espace élève avec planning
+- Création d'un compte professeur
+- Espace professeur avec planning et nouveau cours
+- Tableau de bord administrateur (statistiques, gestion de comptes)
+
 ### Structures des branches
 
 - **master** : branche principale contenant les versions stables et déployées en production.
@@ -96,22 +106,83 @@ docker compose exec mongo mongosh -u root -p root --authenticationDatabase admin
 - **docs/nom-du-doc** : branche dédiée à la documentation.
 - **test/nom-du-test** : branche dédiée aux tests.
 
+### Processus de développement :
+
+1. Création d'une nouvelle fonctionnalité : branche `feature/...` à partir de `dev`.
+2. Développement local et commits fréquents : (`feat:`, `fix:`...).
+3. Tests manuels.
+4. Merge vers `dev` une fois la fonctionnalité testée et validée.
+5. Merge de `dev` vers `master` uniquement lors d'un déploiement.
+
 ## Sécurité et bonnes pratiques
 
 ## Tests
 
 
 ## Déploiement
-L'application **Namaste Yoga Studio** sera déployée sur la plateforme [Heroku](https://www.heroku.com/)
+L'application **Namaste Yoga Studio** est déployée sur la plateforme [Heroku](https://www.heroku.com/)
 
 ### URL de production
 
+https://namaste-yoga-studio.fr
+
 ### Étapes de déploiement
+
+. Création de l'application Heroku
+
+```bash
+heroku login
+heroku create namaste-yoga-studio-buis
+```
+
+2. Définition du Procfile
+   `web: heroku-php-apache2 public/`
+
+3. Configuration des variables d'environnement
+
+```bash
+heroku config:set APP_ENV=prod
+heroku config:set APP_SECRET=your_app_secret
+heroku config:set APP_DEBUG=0
+heroku config:set MAILER_DSN=smtp://user:pass@mailtrap.io
+heroku config:set MONGODB_URL="mongodb+srv://..."
+```
+
+4. Connexion aux bases de données
+
+Base de données MySQL via JawsDB
+```bash
+heroku addons:create jawsdb:kitefin
+heroku config:set DATABASE_URL=$(heroku config:get JAWSDB_URL)
+```
+Base de données NoSQL via MongoAtlast
+Créer cluster sur MongoAtlas
+Récupérer URL de connexion
+```bash
+heroku config:set MONGODB_URL=”mongodb+srv://…”
+```
+
+5. Exécution des migrations Doctrine
+   `php bin/console doctrine:migrations:migrate`
+
+6. Déploiement du code
+   `git push heroku master`
 
 ### Sécurité en production
 
+- HTTPS activé automatiquement (Let's Encrypt via Heroku)
+- Redirection forcée vers l'URL sécurisée https://ecoride-app.fr
+- Variables sensibles stockées en dehors du code source
+- Auncun fichier `.env` versionné grâce au `.gitignore`
+
 ### Domaine personnalisé
 
+Le nom de domaine _namaste-yoga-studio.fr_ a été acheté chez [Gandi](https://www.gandi.net/fr) et configuré pour pointer vers **Heroku** via :
+
+- un enregistrement **CNAME**
+- un enregistrement **ALIAS**
+
+Toutes les requêtes sont redirigées vers l'URL https://namaste-yoga-studio.fr.
 ## Fichiers SQL
 
 ### schema.sql
@@ -130,6 +201,12 @@ L'application **Namaste Yoga Studio** sera déployée sur la plateforme [Heroku]
 - 🖼️ [Wireframes]()
 - 💻 [Mockups - Desktop]()
 - 📱 [Mockups - Mobile]()
+
+### Modélisation bdd
+
+- 🧩 [Modèle Conceptuel de Données]()
+- 🧩 [Modèle Logique de Données]()
+- 🧩 [Modèle Physique de Données]()
 
 ### Diagramme
 
@@ -154,18 +231,3 @@ Encadrement pédagogique : **STUDI /DREETS**
 📧 Contact : **dannery.sophie@gmail.com**
 
 
-## 🚀 Étapes suivantes
-
-1. Maquettage
-
-2. Création des wireframes et maquettes desktop/mobile.
-
-3. Intégration front-end statique, HTML / CSS responsive (Bootstrap).
-
-4. Développement dynamique (JS), Filtres, formulaires, API Google Avis.
-
-5. Base de données MySQL & MongoDB, Modélisation, scripts schema.sql et data.sql.
-
-6. Développement back-end Symfony, Sécurité, gestion utilisateurs, réservations, API REST.
-
-7. Déploiement et documentation, Docker + Heroku / OVH, guide d’installation, manuel utilisateur.
