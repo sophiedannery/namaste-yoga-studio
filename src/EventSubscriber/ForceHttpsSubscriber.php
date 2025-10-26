@@ -6,14 +6,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class ForceHttpsSubscriber implements EventSubscriberInterface
 {
     private string $env;
 
-    public function __construct(string $env)
+    public function __construct(KernelInterface $kernel)
     {
-        $this->env = $env;
+        $this->env = $kernel->getEnvironment();
     }
 
     public function onKernelRequest(RequestEvent $event)
