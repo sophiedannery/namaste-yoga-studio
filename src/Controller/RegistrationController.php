@@ -30,6 +30,7 @@ class RegistrationController extends AbstractController
         }
 
         $user = new User();
+
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
@@ -38,8 +39,9 @@ class RegistrationController extends AbstractController
             $plainPassword = $form->get('plainPassword')->getData();
 
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-
             $user->setRoles(['ROLE_USER']);
+            $user->setEmail(mb_strtolower($user->getEmail() ?? ''));
+            $user->setIsActive(true);
 
             $entityManager->persist($user);
             $entityManager->flush();
