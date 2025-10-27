@@ -421,3 +421,13 @@ footer a {
 .titre-footer{
   color: var(--color-bg);
 }
+
+
+/* =======================================================
+                  LOGIN & SIGNIN
+======================================================= */
+  .bg-cover {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+  }
