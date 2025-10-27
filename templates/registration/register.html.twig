@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription
+{% endblock %}
+
+{% block hide_header %}{% endblock %}
+{% block hide_footer %}{% endblock %}
+{% block body_class %}p-0
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="container-fluid px-3">
+		<div class="row min-vh-100">
+
+			<div class="col-md-8 col-lg-6 col-xl-5 d-flex align-items-center">
+
+				<div class="w-100 py-5 px-md-5 px-xxl-6 position-relative">
+
+					<a href="{{ path('app_home') }}" class="btn btn-link text-muted text-decoration-none mb-5">
+						<i class="fa-chevron-left fa me-1"></i>Retour</a>
+
+					<div class="mb-5">
+						<h1>Bienvenue</h1>
+					</div>
+
+
+					{{ form_start(registrationForm, { attr: { class: 'form-validate' } }) }}
+
+					<div class="mb-4">
+						<label class="form-label" for="email">
+							<i class="fa fa-envelope me-1"></i>
+							Adresse email
+						</label>
+						{{ form_widget(registrationForm.email, { attr: { class: 'form-control' } }) }}
+						{% if registrationForm.email.vars.errors|length > 0 %}
+							<div class="alert alert-danger mt-2 p-2">
+								{{ form_errors(registrationForm.email) }}
+							</div>
+						{% endif %}
+					</div>
+
+					<div class="mb-4">
+						<label class="form-label">
+							<i class="fa fa-lock me-1"></i>
+							Mot de passe
+						</label>
+						{{ form_widget(registrationForm.plainPassword.first, { attr: { class: 'form-control' } }) }}
+						{% if registrationForm.plainPassword.first.vars.errors|length > 0 %}
+							<div class="alert alert-danger mt-2 p-2">
+								{{ form_errors(registrationForm.plainPassword.first) }}
+							</div>
+						{% endif %}
+					</div>
+
+					<div class="mb-4">
+						<label class="form-label">
+							<i class="fa fa-lock me-1"></i>
+							Confirmer le mot de passe
+						</label>
+						{{ form_widget(registrationForm.plainPassword.second, { attr: { class: 'form-control' } }) }}
+						{{ form_errors(registrationForm.plainPassword.second) }}
+					</div>
+
+
+					<div class="d-grid gap-2">
+						<button class="btn btn-lg btn-primary" type="submit">
+							S’inscrire
+						</button>
+					</div>
+
+					
+					{{ form_end(registrationForm) }}
+
+
+					<div class="text-center mt-4">
+						<small class="mb-1 text-muted">Déjà inscrit ?</small>
+						<h5>
+							<a id="lien-inscription" href="{{ path('app_login')}}">
+								<u>Connectez-vous ici</u>
+							</a>
+						</h5>
+					</div>
+
+				</div>
+
+
+			</div>
+
+			<div class="col-md-4 col-lg-6 col-xl-7 d-none d-md-block">
+				<div class="bg-cover h-100 me-n3" style="background-image: url(/photos/photo-signin.jpg);"></div>
+			</div>
+		</div>
+	{% endblock %}
