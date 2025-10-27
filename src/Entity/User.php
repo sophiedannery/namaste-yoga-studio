@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -58,11 +60,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
+    /**
+     * @var Collection<int, Review>
+     */
+    #[ORM\OneToMany(targetEntity: Review::class, mappedBy: 'student')]
+    private Collection $reviews;
+
+    /**
+     * @var Collection<int, Session>
+     */
+    #[ORM\OneToMany(targetEntity: Session::class, mappedBy: 'teacher')]
+    private Collection $sessions;
+
+    /**
+     * @var Collection<int, Session>
+     */
+    #[ORM\OneToMany(targetEntity: Session::class, mappedBy: 'cancelledBy')]
+    private Collection $sessionsCanceled;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'student')]
+    private Collection $reservations;
+
+    /**
+     * @var Collection<int, Reservation>
+     */
+    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'cancelledBy')]
+    private Collection $reservations_cancelled;
+
+    /**
+     * @var Collection<int, Suspension>
+     */
+    #[ORM\OneToMany(targetEntity: Suspension::class, mappedBy: 'student')]
+    private Collection $suspensions_student;
+
+    /**
+     * @var Collection<int, Suspension>
+     */
+    #[ORM\OneToMany(targetEntity: Suspension::class, mappedBy: 'admin_res')]
+    private Collection $suspensions_admin_res;
+
     public function __construct()
     {
         $now = new \DateTimeImmutable('now');
         $this->createdAt = $now;
         $this->updatedAt = $now;
+        $this->reviews = new ArrayCollection();
+        $this->sessions = new ArrayCollection();
+        $this->sessionsCanceled = new ArrayCollection();
+        $this->reservations = new ArrayCollection();
+        $this->reservations_cancelled = new ArrayCollection();
+        $this->suspensions_student = new ArrayCollection();
+        $this->suspensions_admin_res = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -228,6 +279,207 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Review>
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Review $review): static
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews->add($review);
+            $review->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Review $review): static
+{
+    $this->reviews->removeElement($review);
+    // ne pas setStudent(null) car FK non-nullable
+    return $this;
+}
+
+    /**
+     * @return Collection<int, Session>
+     */
+    public function getSessions(): Collection
+    {
+        return $this->sessions;
+    }
+
+    public function addSession(Session $session): static
+    {
+        if (!$this->sessions->contains($session)) {
+            $this->sessions->add($session);
+            $session->setTeacher($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSession(Session $session): static
+    {
+        $this->sessions->removeElement($session);
+        // ne pas setTeacher(null) (FK non-nullable)
+        return $this;
+    }
+
+
+    /**
+     * @return Collection<int, Session>
+     */
+    public function getSessionsCanceled(): Collection
+    {
+        return $this->sessionsCanceled;
+    }
+
+    public function addSessionsCanceled(Session $sessionsCanceled): static
+    {
+        if (!$this->sessionsCanceled->contains($sessionsCanceled)) {
+            $this->sessionsCanceled->add($sessionsCanceled);
+            $sessionsCanceled->setCancelledBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSessionsCanceled(Session $sessionsCanceled): static
+    {
+        if ($this->sessionsCanceled->removeElement($sessionsCanceled)) {
+            // set the owning side to null (unless already changed)
+            if ($sessionsCanceled->getCancelledBy() === $this) {
+                $sessionsCanceled->setCancelledBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservations(): Collection
+    {
+        return $this->reservations;
+    }
+
+    public function addReservation(Reservation $reservation): static
+    {
+        if (!$this->reservations->contains($reservation)) {
+            $this->reservations->add($reservation);
+            $reservation->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservation(Reservation $reservation): static
+    {
+        if ($this->reservations->removeElement($reservation)) {
+            // set the owning side to null (unless already changed)
+            if ($reservation->getStudent() === $this) {
+                $reservation->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reservation>
+     */
+    public function getReservationsCancelled(): Collection
+    {
+        return $this->reservations_cancelled;
+    }
+
+    public function addReservationsCancelled(Reservation $reservationsCancelled): static
+    {
+        if (!$this->reservations_cancelled->contains($reservationsCancelled)) {
+            $this->reservations_cancelled->add($reservationsCancelled);
+            $reservationsCancelled->setCancelledBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReservationsCancelled(Reservation $reservationsCancelled): static
+    {
+        if ($this->reservations_cancelled->removeElement($reservationsCancelled)) {
+            // set the owning side to null (unless already changed)
+            if ($reservationsCancelled->getCancelledBy() === $this) {
+                $reservationsCancelled->setCancelledBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Suspension>
+     */
+    public function getSuspensionsStudent(): Collection
+    {
+        return $this->suspensions_student;
+    }
+
+    public function addSuspensionsStudent(Suspension $suspensionsStudent): static
+    {
+        if (!$this->suspensions_student->contains($suspensionsStudent)) {
+            $this->suspensions_student->add($suspensionsStudent);
+            $suspensionsStudent->setStudent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSuspensionsStudent(Suspension $suspensionsStudent): static
+    {
+        if ($this->suspensions_student->removeElement($suspensionsStudent)) {
+            // set the owning side to null (unless already changed)
+            if ($suspensionsStudent->getStudent() === $this) {
+                $suspensionsStudent->setStudent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Suspension>
+     */
+    public function getSuspensionsAdminRes(): Collection
+    {
+        return $this->suspensions_admin_res;
+    }
+
+    public function addSuspensionsAdminRe(Suspension $suspensionsAdminRe): static
+    {
+        if (!$this->suspensions_admin_res->contains($suspensionsAdminRe)) {
+            $this->suspensions_admin_res->add($suspensionsAdminRe);
+            $suspensionsAdminRe->setAdminRes($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSuspensionsAdminRe(Suspension $suspensionsAdminRe): static
+    {
+        if ($this->suspensions_admin_res->removeElement($suspensionsAdminRe)) {
+            // set the owning side to null (unless already changed)
+            if ($suspensionsAdminRe->getAdminRes() === $this) {
+                $suspensionsAdminRe->setAdminRes(null);
+            }
+        }
 
         return $this;
     }
