@@ -28,31 +28,30 @@
 					{% if is_granted('ROLE_ADMIN') %}
 
 						<li class="nav-item mt-3 mt-lg-0 ms-lg-3 d-xl-infinite-block">
-							<a class="btn btn-outline-primary" href="#">Admin</a>
+							<a class="btn btn-primary" href="{{ path('app_admin')}}">Admin</a>
 						</li>
 						<li class="nav-item mt-3 mt-lg-0 ms-lg-3 d-xl-infinite-block">
-							<a class="btn btn-primary" href="#">Deconnexion</a>
+							<a class="btn btn-primary" href="{{ path('app_logout')}}">Deconnexion</a>
 						</li>
 
 					{% elseif is_granted('ROLE_EMPLOYEE') %}
 						<li class="nav-item mt-3 mt-lg-0 ms-lg-3 d-xl-infinite-block">
-							<a class="btn btn-outline-primary" href="# ">Espace Employée</a>
+							<a class="btn btn-primary" href="# ">Espace Employée</a>
 						</li>
 						<li class="nav-item mt-3 mt-lg-0 ms-lg-3 d-xl-infinite-block">
-							<a class="btn btn-primary" href="#">Deconnexion</a>
+							<a class="btn btn-primary" href="{{ path('app_logout')}}">Deconnexion</a>
 						</li>
 
 					{% elseif app.user  %}
 						<li class="nav-item mt-3 mt-lg-0 ms-lg-3 d-xl-infinite-block">
-							<a class="btn btn-outline-primary" href="#">Mon espace</a>
+							<a class="btn btn-primary" href="{{ path('app_profile')}}">Mon espace</a>
 						</li>
 						<li class="nav-item mt-3 mt-lg-0 ms-lg-3 d-xl-infinite-block">
-							<a class="btn btn-primary" href="#">Deconnexion</a>
+							<a class="btn btn-primary" href="{{ path('app_logout')}}">Deconnexion</a>
 						</li>
-
 					{% else %}
 						<li class="nav-item mt-3 mt-lg-0 ms-lg-3 d-xl-infinite-block">
-							<a class="btn btn-primary" href="#">CONNEXION</a>
+							<a class="btn btn-primary" href="{{ path('app_login')}}">CONNEXION</a>
 						</li>
 					{% endif %}
 
