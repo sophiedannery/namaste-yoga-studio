@@ -302,11 +302,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     public function removeReview(Review $review): static
-{
-    $this->reviews->removeElement($review);
+    {
+        $this->reviews->removeElement($review);
     // ne pas setStudent(null) car FK non-nullable
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * @return Collection<int, Session>

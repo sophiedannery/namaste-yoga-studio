@@ -151,11 +151,11 @@ class ClassType
     }
 
     public function removeReview(Review $review): static
-{
-    $this->reviews->removeElement($review);
+    {
+        $this->reviews->removeElement($review);
     // ne pas setClassType(null) car FK non-nullable
-    return $this;
-}
+        return $this;
+    }
 
     /**
      * @return Collection<int, Session>
@@ -181,5 +181,4 @@ class ClassType
         // ne pas setClassType(null) (FK non-nullable)
         return $this;
     }
-
 }
