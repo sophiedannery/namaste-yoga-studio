@@ -22,7 +22,7 @@
 				</p>
 
 				<p>
-					<i class="fa-solid fa-coins me-2"></i>
+					<i class="fa-solid fa-tag"></i>
 					{{ s.price}}
 					€
 				</p>
@@ -46,7 +46,8 @@
 
 
 			<div class="col-12 text-center mt-2">
-				<a href="{{path('app_session_details') }}" class="btn btn-primary my-3">En savoir plus</a>
+				<a href="{{path('app_session_details', {id: s.id} ) }}" class="btn btn-secondary my-3">En savoir plus</a>
+
 			</div>
 
 		</div>
