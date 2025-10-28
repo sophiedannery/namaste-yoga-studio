@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Les cours
+{% endblock %}
+
+{% block body %}
+
+
+	<section class="py-5">
+		<div class="container">
+			<div class="row">
+
+				<div
+					class="col-12 col-xl-4 col-xxl-3">{# <div class="rounded-3 shadow p-3 bg-white mb-5">
+																																																																								<h3>Filtres</h3>
+																																																																							</div> #}
+
+				</div>
+
+				<div class="col-12 col-xl-8 col-xxl-9">
+
+					<div class="mb-3 mb-sm-0">
+						<h1>Les cours</h1>
+					</div>
+
+					<div class="vstack gap-4 mt-4" id="resultsContainer">
+
+						{% if sessions|length > 0 %}
+							{% for s in sessions %}
+								<div>
+									{% include "session/session-partial-card.html.twig" with {'s': s} %}
+								</div>
+							{% endfor %}
+						{% else %}
+							<div class="text-center m-5">
+								<p>Pas de cours à venir</p>
+							</div>
+						{% endif %}
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+	<div class="container pt-5">
+		<div class="text-center my-5">
+			<a class="btn btn-primary" href="/">Retour à l'accueil</a>
+		</div>
+	</div>
+
+
+{% endblock %}

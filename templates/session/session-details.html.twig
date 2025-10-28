@@ -1,0 +1,120 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du cours
+{% endblock %}
+
+{% block body %}
+
+
+	<section class="py-5">
+
+		<div class="container mt-3">
+
+			<div class="row">
+
+				<div class="col-lg-3 me-lg-auto">
+
+					<div class="card boarder-0 shadow mb-6 mb-lg-0">
+
+						<div class="card-header bg-gray-100 py-4 border-0 text-center">
+
+							<div>
+								{% if session.teacher.avatarUrl %}
+									<img src="{{ asset('uploads/photos/' ~ session.teacher.avatarUrl) }}" alt="Photo de {{ session.teacher.firstName }}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+								{% else %}
+									<img src="{{ asset('photos/avatar.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; opacity: 0.5;">
+								{% endif %}
+
+							</div>
+
+							<h2 class="mt-4">{{ session.teacher.firstName }}</h2>
+
+						</div>
+
+						<div class="card-body p-4">
+
+							<h4 class="mt-3">Bio</h4>
+							{% if session.teacher.bio is empty %}Pas de bio renseignée
+							{% else %}
+								<p>{{ session.teacher.bio }}</p>
+							{% endif %}
+
+							<h4 class="mt-3">Spécialités</h4>
+							{% if session.teacher.specialties is empty %}Pas de spécialitées renseignées
+							{% else %}
+								<p>{{ session.teacher.specialties }}</p>
+							{% endif %}
+						</div>
+
+					</div>
+				</div>
+
+				<div class="col-lg-9 ps-lg-5">
+
+					<div class="text-block mt-4 mt-lg-0">
+						<h1 class="text-center text-md-start mb-3">
+							{{ session.classType.title }}
+						</h1>
+						<p>{{ session.details }}</p>
+						<h4>{{ session.startAt|date('H:i') }}
+							-
+							{{ session.endAt|date('H:i') }}</h4>
+						<p class="medium">{{ session.startAt|date('d/m/Y') }}</p>
+					</div>
+
+					<div class="text-block">
+						<p>
+							<i class="fa-solid fa-spa me-2"></i>
+
+							{{ session.classType.style }}
+							-
+							{{ session.classType.description }}
+
+						</p>
+
+						<p>
+							<i class="fa-solid fa-users me-2"></i>
+							{{ session.capacity}}
+							place{{ session.capacity > 1 ? 's' : '' }}
+						</p>
+						<p>
+							<i class="fa-solid fa-tag me-2"></i>
+
+							{{ session.price}}
+							€
+						</p>
+						<p>
+							<i class="fa-solid fa-star me-2"></i>
+
+							{{session.classType.level}}
+
+						</p>
+						<p>
+							<i class="fa-solid fa-people-roof me-2"></i>
+
+							Salle :
+							{{session.room.nameRoom}}
+
+						</p>
+
+					</div>
+
+
+				</div>
+
+
+			</div>
+
+
+		</div>
+
+	</div>
+</section>
+
+<div class="container pb-4">
+	<div class="text-center">
+		<a class="btn btn-primary  me-2" href="#">Réservation</a>
+		<a class="btn btn-secondary" href=" {{ previousUrl }} ">Retour</a>
+
+	</div>
+</div>{% endblock %}
