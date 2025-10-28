@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Session;
 use App\Repository\SessionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -19,11 +21,14 @@ final class SessionController extends AbstractController
         ]);
     }
 
-    #[Route('/session-details', name: 'app_session_details')]
-    public function details(): Response
+    #[Route('/session-details/{id}', name: 'app_session_details', requirements: ['id' => '\d+'])]
+    public function details(Session $session, Request $request): Response
     {
+        $referer = $request->headers->get('referer');
+
         return $this->render('session/session-details.html.twig', [
-            'controller_name' => 'SessionController',
+            'session' => $session,
+            'previousUrl' => $referer ?? '/',
         ]);
     }
 }
