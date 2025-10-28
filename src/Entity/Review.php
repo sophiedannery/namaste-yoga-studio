@@ -8,7 +8,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[UniqueEntity(fields: ['student', 'classType'], message: 'Tu as déjà laissé un avis pour ce cours.')]
 class Review

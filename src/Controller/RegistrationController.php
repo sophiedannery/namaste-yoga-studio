@@ -17,13 +17,12 @@ class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
     public function register(
-        Request $request, 
-        UserPasswordHasherInterface $userPasswordHasher, 
-        Security $security, 
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        Security $security,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
-        ): Response
-    {
+    ): Response {
 
         if ($security->getUser()) {
             return $this->redirectToRoute('app_profile');
