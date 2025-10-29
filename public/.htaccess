@@ -1,0 +1,25 @@
+# public/.htaccess
+# Désactive MultiViews qui casse les URLs "propres"
+<IfModule mod_negotiation.c>
+    Options -MultiViews
+</IfModule>
+
+# Réécriture vers le front controller
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Si le fichier ou le dossier existe, on le sert tel quel
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Sinon, on passe tout à index.php
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+
+# Fallback (au cas où mod_rewrite n'est pas chargé)
+<IfModule !mod_rewrite.c>
+    <IfModule mod_alias.c>
+        RedirectMatch 307 ^/$ /index.php/
+    </IfModule>
+</IfModule>
