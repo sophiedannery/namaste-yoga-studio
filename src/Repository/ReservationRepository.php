@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Reservation;
+use App\Entity\Session;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -59,6 +60,19 @@ class ReservationRepository extends ServiceEntityRepository
         ->orderBy('s.startAt', 'DESC')            
         ->getQuery()
         ->getResult();
+    }
+
+    public function countActiveBySession(Session $session): int 
+    {
+        return (int) $this->createQueryBuilder('r')
+        ->select('COUNT(r.id)')
+        ->andWhere('r.session = :s')
+        ->andWhere('r.statut = :status')
+        ->andWhere('r.cancelledAt IS NULL')
+        ->setParameter('s', $session)
+        ->setParameter('status', 'CONFIRMED')
+        ->getQuery()
+        ->getSingleScalarResult();
     }
     
 
