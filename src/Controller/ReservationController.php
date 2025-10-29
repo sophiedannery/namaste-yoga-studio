@@ -85,4 +85,40 @@ final class ReservationController extends AbstractController
 
         return $this->redirectToRoute('app_profile_cours');
     }
+
+    #[Route('/reservation/{id}/annuler', name: 'app_reservation_annuler', methods: ['POST'])]
+    public function annulerReservation(int $id, Request $request, ReservationRepository $reservation_repository, EntityManagerInterface $em): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        /** @var Reservation|null $reservation */
+        $reservation = $reservation_repository->find($id);
+        if (!$reservation) {
+            $this->addFlash('error', 'Réservation introuvable.');
+            return $this->redirectToRoute('app_profile_cours');
+        }
+
+        if (!$this->isCsrfTokenValid('cancel_reservation' . $reservation->getId(), $request->request->get('_token'))) {
+        $this->addFlash('error', 'Token invalide.');
+        return $this->redirectToRoute('app_profile_cours');
+        }
+
+        if ($reservation->getStudent() !== $this->getUser()) {
+        throw $this->createAccessDeniedException();
+        }
+
+        $reservation->setStatut('CANCELLED');
+        $reservation->setCancelledAt(new \DateTimeImmutable('now'));
+        $reservation->setCancelledBy($this->getUser());
+        $reservation->setUpdatedAt(new \DateTimeImmutable('now'));
+
+        $em->flush();
+
+        $this->addFlash('success', 'Votre réservation a bien été annulée.');
+
+        return $this->redirectToRoute('app_profile_cours');
+    }
+
+
+
 }
