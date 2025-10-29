@@ -432,3 +432,44 @@ footer a {
     background-position: center center;
     background-size: cover;
   }
+
+
+  
+  /* =======================================================
+                  CARTES & HOVER
+======================================================= */
+  
+.card-title {
+    color: var(--primary);
+  }
+
+.card-img-top {
+    width: 100%;
+    height: 15vw;
+    object-fit: cover;
+}
+  
+.hover-animate {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-animate:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+  
+.card-header {
+  font-family: "Anton", sans-serif;
+  font-weight: bold;
+  font-size: 1rem;
+  text-transform: uppercase;
+}
+  
+.card-header i {
+  font-size: 3rem;
+}
+  
+.card-body ul i {
+  color: var(--primary);
+}

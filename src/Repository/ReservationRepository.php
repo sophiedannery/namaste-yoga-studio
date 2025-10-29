@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Reservation;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,6 +16,51 @@ class ReservationRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Reservation::class);
     }
+
+    public function findUpcomingByStudent(User $student): array
+    {
+        $now = new \DateTimeImmutable('now');
+
+        return $this->createQueryBuilder('r')
+        ->innerJoin('r.session', 's')->addSelect('s')
+        ->innerJoin('s.classType', 'ct')->addSelect('ct')
+        ->leftJoin('s.teacher', 't')->addSelect('t')
+        ->leftJoin('s.room', 'room')->addSelect('room')
+        ->andWhere('r.student = :student')
+        ->andWhere('r.cancelledAt IS NULL')
+        ->andWhere('r.statut = :status')
+        ->andWhere('s.status = :sstatus')
+        ->andWhere('s.cancelledAt IS NULL')
+        ->andWhere('s.startAt > :now')
+        ->setParameter('student', $student)
+        ->setParameter('status', 'CONFIRMED')
+        ->setParameter('sstatus', 'SCHEDULED')
+        ->setParameter('now', $now)
+        ->orderBy('s.startAt', 'ASC')
+        ->getQuery()
+        ->getResult();
+    }
+
+    public function findPastByStudent(User $student): array 
+    {
+        $now = new \DateTimeImmutable('now'); 
+
+    return $this->createQueryBuilder('r')
+        ->innerJoin('r.session', 's')->addSelect('s')
+        ->innerJoin('s.classType', 'ct')->addSelect('ct')
+        ->leftJoin('s.teacher', 't')->addSelect('t')
+        ->leftJoin('s.room', 'room')->addSelect('room')
+        ->andWhere('r.student = :student')
+        ->andWhere('r.statut = :status')          
+        ->andWhere('s.startAt < :now')            
+        ->setParameter('student', $student)
+        ->setParameter('status', 'CONFIRMED')
+        ->setParameter('now', $now)
+        ->orderBy('s.startAt', 'DESC')            
+        ->getQuery()
+        ->getResult();
+    }
+    
 
     //    /**
     //     * @return Reservation[] Returns an array of Reservation objects
