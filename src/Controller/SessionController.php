@@ -73,4 +73,33 @@ final class SessionController extends AbstractController
         ]);
     }
 
+    #[Route('/session/{id}/annuler', name: 'app_session_annuler', methods: ['POST'])]
+    #[IsGranted('ROLE_TEACHER')]
+    public function annulerSession(
+        Session $session,
+        EntityManagerInterface $em,
+        Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('cancel_session' . $session->getId(), $request->request->get('_token'))) {
+        $this->addFlash('error', 'Token invalide.');
+        return $this->redirectToRoute('app_profile_teacher_planning');
+        }
+
+        if ($session->getTeacher() !== $this->getUser()) {
+        throw $this->createAccessDeniedException();
+        }
+
+        $session->setStatus('CANCELLED');
+        $session->setCancelledAt(new \DateTimeImmutable('now'));
+        $session->setCancelledBy($this->getUser());
+        $session->setUpdatedAt(new \DateTimeImmutable('now'));
+
+        $em->flush();
+
+        $this->addFlash('success', 'Votre cours a bien été annulé.');
+
+        return $this->redirectToRoute('app_profile_teacher_planning');
+
+
+    }
 }
