@@ -36,6 +36,11 @@
 										→
 										{{ s.endAt|date('H:i') }}
 									</p>
+									<p class="text-muted mb-2">
+										Places :
+										{{ s.capacity }}
+									</p>
+
 									<p class="mb-2">Salle :
 										{{ s.room ? s.room.nameRoom : '—' }}</p>
 									<p class="mb-2">Tarif :
@@ -51,8 +56,6 @@
 										{% endfor %}
 
 									</p>
-
-									<span class="badge text-bg-success align-self-start mb-3">Cours confirmé</span>
 									<div class="mt-auto">
 										{% if s.id is defined %}
 											<a href="{{ path('app_session_details', {id: s.id}) }}" class="btn btn-primary w-100">
@@ -64,7 +67,7 @@
 										<form method='post' action="#" onsubmit="return confirm('Voulez-vous vraiment annuler ce cours ?')">
 
 											<input type="hidden" name="_token" value="#">
-											<button class="btn btn-sm btn-danger mt-2">Annuler ce cours</button>
+											<button class="btn btn-danger w-100 mt-2">Annuler ce cours</button>
 										</form>
 									</div>
 
