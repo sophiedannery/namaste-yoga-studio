@@ -25,6 +25,8 @@
 				<div class="row g-4">
 
 					{% for reservation in upcoming %}
+
+
 						{% set s = reservation.session %}
 
 						<div class="col-12 col-md-6 col-lg-4">
@@ -53,7 +55,20 @@
 											{{ s.price }}
 											€</p>
 									{% endif %}
-									<span class="badge text-bg-success align-self-start mb-3">Réservation confirmée</span>
+
+
+									{% if s.status == 'SCHEDULED' %}
+										<span class="badge text-bg-success align-self-start mb-3">Cours confirmée</span>
+									{% else %}
+										<span class="badge text-bg-danger align-self-start mb-3">Cours annulé</span>
+									{% endif %}
+
+
+									{% if reservation.statut == 'CONFIRMED' %}
+										<span class="badge text-bg-success align-self-start mb-3">Réservation confirmée</span>
+									{% endif %}
+
+
 									<div class="mt-auto">
 										{% if s.id is defined %}
 											<a href="{{ path('app_session_details', {id: s.id}) }}" class="btn btn-primary w-100">
@@ -62,15 +77,25 @@
 										{% endif %}
 									</div>
 									<div class="mt-auto">
-										<form method='post' action="{{ path('app_reservation_annuler', {'id': reservation.id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler cette réservation ?')">
 
-											<input type="hidden" name="_token" value="{{ csrf_token('cancel_reservation' ~ reservation.id) }}">
-											<button class="btn btn-sm btn-danger mt-2">Annuler ma réservation</button>
-										</form>
+										{% if reservation.statut =='CANCELLED'%}
+
+											<a href="#" class="btn btn-primary w-100 disabled">
+												Vous avez annulé votre réservation
+											</a>
+										{% else %}
+											<form method='post' action="{{ path('app_reservation_annuler', {'id': reservation.id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler cette réservation ?')">
+												<input type="hidden" name="_token" value="{{ csrf_token('cancel_reservation' ~ reservation.id) }}">
+												<button class="btn btn-sm btn-danger mt-2">Annuler ma réservation</button>
+											</form>
+										{% endif %}
+
+
 									</div>
 								</div>
 							</div>
 						</div>
+
 
 					{% endfor %}
 

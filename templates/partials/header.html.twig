@@ -34,9 +34,10 @@
 							<a class="btn btn-primary" href="{{ path('app_logout')}}">Deconnexion</a>
 						</li>
 
-					{% elseif is_granted('ROLE_EMPLOYEE') %}
+					{% elseif is_granted('ROLE_TEACHER') %}
 						<li class="nav-item mt-3 mt-lg-0 ms-lg-3 d-xl-infinite-block">
-							<a class="btn btn-primary" href="# ">Espace Employée</a>
+							<a class="btn btn-primary" href="{{ path('app_profile_teacher')}} ">Espace Professeur</a>
+
 						</li>
 						<li class="nav-item mt-3 mt-lg-0 ms-lg-3 d-xl-infinite-block">
 							<a class="btn btn-primary" href="{{ path('app_logout')}}">Deconnexion</a>

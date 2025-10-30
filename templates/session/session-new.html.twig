@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un cours
+{% endblock %}
+
+{% block body %}
+	<section>
+		<div class="container py-5">
+			<h1 class="mb-5">Ajouter un cours</h1>
+
+			{{ form_start(form) }}
+
+
+			<div class="row">
+
+				<div class="col-md-6 mb-3">
+					{{ form_label(form.classType) }}
+					{{ form_widget(form.classType, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.classType) }}
+				</div>
+
+				<div class="col-md-6 mb-3">
+					{{ form_label(form.room) }}
+					{{ form_widget(form.room, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.room) }}
+				</div>
+
+			</div>
+
+			<div class="row">
+
+				<div class="col-md-6 mb-3">
+					{{ form_label(form.startAt) }}
+					{{ form_widget(form.startAt, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.startAt) }}
+				</div>
+
+				<div class="col-md-6 mb-3">
+					{{ form_label(form.endAt) }}
+					{{ form_widget(form.endAt, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.endAt) }}
+				</div>
+
+			</div>
+
+			<div class="row">
+
+				<div class="col-md-6 mb-3">
+					{{ form_label(form.capacity) }}
+					{{ form_widget(form.capacity, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.capacity) }}
+				</div>
+
+				<div class="col-md-6 mb-3">
+					{{ form_label(form.price) }}
+					{{ form_widget(form.price, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.price) }}
+				</div>
+
+			</div>
+
+			<div class="row">
+
+				<div class="col-md-12 mb-12">
+					{{ form_label(form.details) }}
+					{{ form_widget(form.details, { attr: { class: 'form-control' } }) }}
+					{{ form_errors(form.details) }}
+				</div>
+
+
+			</div>
+
+
+			<button class="btn btn-primary mt-2">Créer le cours</button>
+
+
+			{{ form_end(form) }}
+
+		</div>
+
+		<div class="container py-4">
+			<div class="text-center">
+				<a class="btn btn-secondary" href="{{ path('app_profile_teacher')}}">Retour</a>
+
+			</div>
+		</div>
+
+	</section>
+{% endblock %}

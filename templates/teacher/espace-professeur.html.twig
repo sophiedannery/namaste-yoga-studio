@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Espace Professeur
+{% endblock %}
+
+{% block body %}
+
+	<section class="py-5">
+		<div class="container">
+			<div class="row mt-4">
+
+				<div>
+					<h1 class="hero-heading mb-0">
+						Bonjour
+						{{app.user.firstName}}</h1>
+					<p></p>
+				</div>
+
+				<div class="row mt-5">
+
+					<div class="col-12 col-md-4 mb-4">
+						<div class="card h-100 border-0 shadow hover-animate">
+							<div class="card-body">
+								<div class="icon-rounded bg-secondary-light mb-3">
+									<i class="fa-solid fa-calendar"></i>
+
+								</div>
+								<h5 class="card-title mb-3">
+									<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_profile_teacher_planning')}}">Mon planning</a>
+
+								</h5>
+								<p class="text-muted card-text text-sm">Voir vos cours à venir</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-12 col-md-4 mb-4">
+						<div class="card h-100 border-0 shadow hover-animate">
+							<div class="card-body">
+								<div class="icon-rounded bg-secondary-light mb-3">
+									<i class="fa-solid fa-book"></i>
+								</div>
+								<h5 class="card-title mb-3">
+									<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_profile_teacher_historique')}}">Mon historique</a>
+								</h5>
+								<p class="text-muted card-text text-sm">Consulter l'historique de vos cours</p>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-12 col-md-4 mb-4">
+						<div class="card h-100 border-0 shadow hover-animate">
+							<div class="card-body">
+								<div class="icon-rounded bg-secondary-light mb-3">
+									<i class="fa-solid fa-spa"></i>
+
+								</div>
+								<h5 class="card-title mb-3">
+									<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_session_new')}}">Ajouter un cours</a>
+
+
+								</h5>
+								<p class="text-muted card-text text-sm">Proposer un nouveau cours au studio</p>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+
+		</div>
+	</section>
+
+
+{% endblock %}

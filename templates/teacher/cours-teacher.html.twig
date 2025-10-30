@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Planning Professeur
+{% endblock %}
+
+{% block body %}
+
+	<section class="py-5">
+		<div class="container">
+
+			<div class="d-flex justify-content-between align-items-end mb-5">
+				<h1 class="hero-heading mb-0">Vos cours à venir</h1>
+			</div>
+
+			{% if upcoming is empty %}
+				<div>
+					<h4>Vous n’avez pas encore cours à venir.</h4>
+					<a class="btn btn-secondary" href="#">Proposez un cours</a>.
+				</div>
+
+			{% else %}
+
+				<div class="row g-4">
+					{% for s in upcoming %}
+
+						<div class="col-12 col-md-6 col-lg-4">
+							<div class="card h-100 shadow-sm">
+								<div class="card-body d-flex flex-column">
+
+									<h5 class="card-title mb-1">
+										{{ s.classType.title }}
+									</h5>
+
+									<p class="text-muted mb-2">
+										{{ s.startAt|date('d/m/Y H:i') }}
+										→
+										{{ s.endAt|date('H:i') }}
+									</p>
+									<p class="text-muted mb-2">
+										Places :
+										{{ s.capacity }}
+									</p>
+
+									<p class="text-muted mb-2">Salle :</p>
+
+									<p>{{ s.room ? s.room.nameRoom : '—' }}</p>
+									<p class="text-muted mb-2">Tarif :
+										{{ s.price }}
+										€</p>
+									<p class="text-muted mb-2">Inscrits :
+										<br>
+										{% for r in studentsBySession[s.id] ?? [] %}
+											-
+											{{ r.student.firstName }}
+											{{ r.student.lastName }}
+											({{ r.student.email }})
+											<br>
+										{% else %}
+											<p>Aucun élève inscrit</p>
+										{% endfor %}
+
+									</p>
+									<div class="mt-auto">
+										{% if s.id is defined %}
+											<a href="{{ path('app_session_details', {id: s.id}) }}" class="btn btn-primary w-100">
+												Détails du cours
+											</a>
+										{% endif %}
+									</div>
+									<div class="mt-auto">
+										{% if s.status == 'CANCELLED' %}
+											<a href="#" class="mt-2 btn btn-primary w-100 disabled">
+												Vous avez annulé ce cours
+											</a>
+
+										{% else %}
+											<form method='post' action="{{ path('app_session_annuler', {'id': s.id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler ce cours ?')">
+												<input type="hidden" name="_token" value="{{ csrf_token('cancel_session' ~ s.id) }}">
+												<button class="btn btn-sm btn-danger mt-2">Annuler ce cours</button>
+											</form>
+
+										{% endif %}
+
+
+									</div>
+
+
+								</div>
+							</div>
+						</div>
+
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+	</section>
+{% endblock %}
