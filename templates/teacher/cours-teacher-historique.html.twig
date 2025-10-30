@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Historique Professeur
+{% endblock %}
+
+{% block body %}
+	<h2>Historique</h2>
+	<ul>
+		{% for s in past %}
+			<li>
+				{{ s.classType.title }}
+				—
+				{{ s.startAt|date('d/m/Y H:i') }}
+				—
+				{% if s.cancelledAt %}
+					<strong>Annulé</strong>
+					{% else %}Terminé
+				{% endif %}
+			</li>
+		{% else %}
+			<li>Pas d’historique</li>
+		{% endfor %}
+	</ul>
+
+{% endblock %}

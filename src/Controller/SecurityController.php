@@ -15,9 +15,13 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils, CsrfTokenManagerInterface $csrfTokenManager, Security $security): Response
     {
 
-        if ($security->getUser()) {
-            return $this->redirectToRoute('app_profile');
+        if ($user = $security->getUser()) {
+            if (in_array('ROLE_TEACHER', $user->getRoles(), true)) {
+                return $this->redirectToRoute('app_profile_teacher');
+            }
+        return $this->redirectToRoute('app_profile');
         }
+
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
 

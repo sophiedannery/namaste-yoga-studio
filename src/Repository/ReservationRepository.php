@@ -74,6 +74,20 @@ class ReservationRepository extends ServiceEntityRepository
         ->getQuery()
         ->getSingleScalarResult();
     }
+
+    public function findActiveBySession(Session $session, string $status = 'CONFIRMED'): array 
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.student', 'u')->addSelect('u')
+            ->andWhere('r.session = :session')
+            ->andWhere('r.cancelledAt IS NULL')
+            ->andWhere('r.statut = :status')
+            ->setParameter('session', $session)
+            ->setParameter('status', $status)
+            ->orderBy('u.lastName', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
     
 
     //    /**
