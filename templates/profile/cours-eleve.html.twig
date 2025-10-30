@@ -78,14 +78,13 @@
 									</div>
 									<div class="mt-auto">
 
-										{% if reservation.statut =='CANCELLED' %}
+										{% if reservation.statut =='CANCELLED'%}
 
 											<a href="#" class="btn btn-primary w-100 disabled">
-												Réservation annulée
+												Vous avez annulé votre réservation
 											</a>
 										{% else %}
 											<form method='post' action="{{ path('app_reservation_annuler', {'id': reservation.id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler cette réservation ?')">
-
 												<input type="hidden" name="_token" value="{{ csrf_token('cancel_reservation' ~ reservation.id) }}">
 												<button class="btn btn-sm btn-danger mt-2">Annuler ma réservation</button>
 											</form>

@@ -4,22 +4,61 @@
 {% endblock %}
 
 {% block body %}
-	<h2>Historique</h2>
-	<ul>
-		{% for s in past %}
-			<li>
-				{{ s.classType.title }}
-				—
-				{{ s.startAt|date('d/m/Y H:i') }}
-				—
-				{% if s.cancelledAt %}
-					<strong>Annulé</strong>
-					{% else %}Terminé
-				{% endif %}
-			</li>
-		{% else %}
-			<li>Pas d’historique</li>
-		{% endfor %}
-	</ul>
+
+
+	<section class="py-5">
+		<div class="container">
+
+			<div class="d-flex justify-content-between align-items-end mb-5">
+				<h1 class="hero-heading mb-0">Historique de mes cours</h1>
+			</div>
+
+			{% if past is empty %}
+				<div>
+					<h4>Aucun cours passé dans votre historique.</h4>
+				</div>
+			{% else %}
+
+				<div class="table-responsive">
+					<table class="table table-hover align-middle">
+						<thead class="table-light">
+							<tr>
+								<th scope="col">Date</th>
+								<th scope="col">Heure</th>
+								<th scope="col">Intitulé</th>
+								<th scope="col">Salle</th>
+								<th scope="col" class="text-end">Tarif</th>
+								<th scope="col">Statut</th>
+							</tr>
+						</thead>
+
+						<tbody>
+							{% for session in past %}
+								<tr>
+									<td>{{ session.startAt|date('d/m/Y') }}</td>
+									<td>{{ session.startAt|date('H:i') }}
+										→
+										{{ session.endAt|date('H:i') }}</td>
+									<td>{{ session.classType.title }}</td>
+									<td>{{ session.room ? session.room.nameRoom : '—' }}</td>
+									<td class="text-end">{{ session.price is defined ? (session.price ~ ' €') : '—' }}</td>
+									<td>
+										{% if session.cancelledAt %}
+											<span class="badge text-bg-danger">Annulé</span>
+										{% else %}
+											<span class="badge text-bg-secondary">Terminé</span>
+										{% endif %}
+									</td>
+
+								</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+			{% endif %}
+		</div>
+	</section>
+
 
 {% endblock %}

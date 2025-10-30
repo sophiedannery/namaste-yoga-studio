@@ -41,16 +41,20 @@
 										{{ s.capacity }}
 									</p>
 
-									<p class="mb-2">Salle :
-										{{ s.room ? s.room.nameRoom : '—' }}</p>
-									<p class="mb-2">Tarif :
+									<p class="text-muted mb-2">Salle :</p>
+
+									<p>{{ s.room ? s.room.nameRoom : '—' }}</p>
+									<p class="text-muted mb-2">Tarif :
 										{{ s.price }}
 										€</p>
-									<p class="mb-2">Inscrits :
+									<p class="text-muted mb-2">Inscrits :
+										<br>
 										{% for r in studentsBySession[s.id] ?? [] %}
+											-
 											{{ r.student.firstName }}
 											{{ r.student.lastName }}
 											({{ r.student.email }})
+											<br>
 										{% else %}
 											<p>Aucun élève inscrit</p>
 										{% endfor %}
@@ -78,10 +82,7 @@
 
 					{% endfor %}
 				</div>
-
 			{% endif %}
-
-
 		</div>
 	</section>
 {% endblock %}
