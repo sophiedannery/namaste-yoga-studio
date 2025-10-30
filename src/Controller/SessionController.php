@@ -3,12 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Session;
+use App\Form\SessionForm;
 use App\Repository\ReservationRepository;
 use App\Repository\SessionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class SessionController extends AbstractController
 {
@@ -38,4 +41,36 @@ final class SessionController extends AbstractController
             'remaining' => $remaining,
         ]);
     }
+
+
+    #[Route('/session/ajout', name: 'app_session_new')]
+    #[IsGranted('ROLE_TEACHER')]
+    public function newSession(Request $request, EntityManagerInterface $em): Response
+    {
+        /** @var \App\Entity\User $user */
+            $teacher = $this->getUser();
+        $session = new Session();
+        $form = $this->createForm(SessionForm::class, $session);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            
+            $session->setTeacher($teacher);
+            $session->setStatus('SCHEDULED');
+            $session->setUpdatedAt(new \DateTimeImmutable('now'));
+
+            $em->persist($session);
+            $em->flush();
+
+            $this->addFlash('success', 'Cours ajouté avec succès !');
+            return $this->redirectToRoute('app_profile_teacher_planning');
+
+        }
+        
+        return $this->render('session/session-new.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
 }
