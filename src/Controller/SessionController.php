@@ -100,6 +100,5 @@ final class SessionController extends AbstractController
 
         return $this->redirectToRoute('app_profile_teacher_planning');
 
-
     }
 }

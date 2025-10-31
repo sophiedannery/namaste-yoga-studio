@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin
+{% endblock %}
+
+
+{% block body %}
+
+	<section class="py-5">
+		<div class="container">
+
+			<h1 class="hero-heading mb-0 mt-3 mt-md-0">Tableau de bord</h1>
+			<p class="text-muted mt-3 mb-5"></p>
+
+			<div class="row mb-5">
+
+
+				<div class="col-12 col-sm-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-spa"></i>
+							</div>
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_teacher_edit')}}">Les professeurs</a>
+							</h5>
+							<p class="text-muted card-text text-sm">Gérer les comptes des professeurs</p>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-12 col-sm-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-users-line"></i>
+							</div>
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_student_edit')}}">Les élèves</a>
+							</h5>
+							<p class="text-muted card-text text-sm">Suspendre un compte élève</p>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="col-12 col-sm-4 mb-4">
+					<div class="card h-100 border-0 shadow hover-animate">
+						<div class="card-body">
+							<div class="icon-rounded bg-secondary-light mb-3">
+								<i class="fa-solid fa-chart-column"></i>
+							</div>
+							<h5 class="card-title mb-3">
+								<a class="text-decoration-none text-dark stretched-link" data-turbo="false" href="{{ path('app_admin_sessions')}}">Les cours</a>
+
+
+							</h5>
+							<p class="text-muted card-text text-sm">Voir la liste des cours</p>
+						</div>
+					</div>
+				</div>
+
+			</div>
+
+
+		</div>
+	</section>
+
+
+{% endblock %}
