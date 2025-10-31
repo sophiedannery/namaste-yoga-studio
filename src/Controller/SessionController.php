@@ -6,6 +6,7 @@ use App\Entity\Session;
 use App\Form\SessionForm;
 use App\Repository\ReservationRepository;
 use App\Repository\SessionRepository;
+use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +46,7 @@ final class SessionController extends AbstractController
 
     #[Route('/session/ajout', name: 'app_session_new')]
     #[IsGranted('ROLE_TEACHER')]
-    public function newSession(Request $request, EntityManagerInterface $em): Response
+    public function newSession(StatsCounter $counter, Request $request, EntityManagerInterface $em): Response
     {
         /** @var \App\Entity\User $user */
             $teacher = $this->getUser();
@@ -59,6 +60,8 @@ final class SessionController extends AbstractController
             $session->setTeacher($teacher);
             $session->setStatus('SCHEDULED');
             $session->setUpdatedAt(new \DateTimeImmutable('now'));
+
+            $counter->incCreated(1);
 
             $em->persist($session);
             $em->flush();
@@ -76,6 +79,7 @@ final class SessionController extends AbstractController
     #[Route('/session/{id}/annuler', name: 'app_session_annuler', methods: ['POST'])]
     #[IsGranted('ROLE_TEACHER')]
     public function annulerSession(
+        StatsCounter $counter,
         Session $session,
         EntityManagerInterface $em,
         Request $request): Response
@@ -93,6 +97,8 @@ final class SessionController extends AbstractController
         $session->setCancelledAt(new \DateTimeImmutable('now'));
         $session->setCancelledBy($this->getUser());
         $session->setUpdatedAt(new \DateTimeImmutable('now'));
+
+        $counter->decCreated(1);
 
         $em->flush();
 

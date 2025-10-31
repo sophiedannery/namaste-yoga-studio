@@ -8,6 +8,7 @@ use App\Form\TeacherNewFormType;
 use App\Form\TeacherNewFormTypeForm;
 use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
+use App\Stats\SessionsCounter;
 use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
