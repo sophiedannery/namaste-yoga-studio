@@ -52,10 +52,12 @@
 									{% endif %}
 								</td>
 								<td>
-									{# <form method="post" action="{{ path('app_student_delete', {'id': student.id}) }}" onsubmit="return confirm('Voulez-vous suspendre ce compte utilisateur ?');">
-																																																																																																																																																				<input type="hidden" name="_token" value="{{ csrf_token('delete_student' ~ student.id) }}">
-																																																																																																																																																				<button class="btn  btn-outline-primary px-4 me-md-2">Suspendre</button>
-																																																																																																																																																			</form> #}
+									{% if state not in ['CANCELLED', 'FINISHED'] %}
+										<form method='post' action="{{ path('app_session_annuler_admin', {'id': session.id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler ce cours ?')">
+											<input type="hidden" name="_token" value="{{ csrf_token('cancel_session_admin' ~ session.id) }}">
+											<button class="btn btn-sm btn-danger">Annuler ce cours</button>
+										</form>
+									{% endif %}
 								</td>
 							</tr>
 						{% else %}
@@ -67,7 +69,7 @@
 				</table>
 			</div>
 			<div class="text-center m-5">
-				<a class="btn btn-outline-primary px-4 me-md-2" href="{{ path('app_admin')}}">Retour</a>
+				<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_admin')}}">Retour</a>
 			</div>
 		</div>
 	</section>

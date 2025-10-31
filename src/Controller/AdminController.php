@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Session;
 use App\Entity\User;
 use App\Form\TeacherNewFormType;
 use App\Form\TeacherNewFormTypeForm;
@@ -115,6 +116,31 @@ final class AdminController extends AbstractController
         return $this->render('admin/admin-sessions.html.twig', [
             'sessions' => $sessions,
         ]);
+    }
+
+    #[Route('/session/{id}/annuler-admin', name: 'app_session_annuler_admin', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function annulerSession(
+        Session $session,
+        EntityManagerInterface $em,
+        Request $request): Response
+    {
+        if (!$this->isCsrfTokenValid('cancel_session_admin' . $session->getId(), $request->request->get('_token'))) {
+        $this->addFlash('error', 'Token invalide.');
+        return $this->redirectToRoute('app_admin_sessions');
+        }
+
+        $session->setStatus('CANCELLED');
+        $session->setCancelledAt(new \DateTimeImmutable('now'));
+        $session->setCancelledBy($this->getUser());
+        $session->setUpdatedAt(new \DateTimeImmutable('now'));
+
+        $em->flush();
+
+        $this->addFlash('success', 'Ce cours a bien été annulé.');
+
+        return $this->redirectToRoute('app_admin_sessions');
+
     }
 
 
