@@ -38,13 +38,45 @@ final class StatsCounter
         );
     }
 
+
+    public function incCreated(int $delta = 1): void
+    {
+        $this->col->updateOne(
+            ['_id' => 'sessions_total'],
+            [
+                '$setOnInsert' => ['_id' => 'sessions_total'],
+                '$inc' => ['total' => $delta, 'net' => $delta],
+            ],
+            ['upsert' => true]
+        );
+    }
+
+    public function decCreated(int $delta = 1): void
+    {
+        $this->col->updateOne(
+            ['_id' => 'sessions_total'],
+            [
+                '$setOnInsert' => ['_id' => 'sessions_total'],
+                '$inc' => ['cancelled' => $delta, 'net' => -$delta],
+            ],
+            ['upsert' => true]
+        );
+    }
+
+
     public function getTotals(): array
     {
-        $doc = $this->col->findOne(['_id' => 'reservations_total']) ?? [];
+        $res = $this->col->findOne(['_id' => 'reservations_total']) ?? [];
+        $ses = $this->col->findOne(['_id' => 'sessions_total']) ?? [];
+
         return [
-            'confirmed' => (int)($doc['confirmed'] ?? 0),
-            'cancelled' => (int)($doc['cancelled'] ?? 0),
-            'net'       => (int)($doc['net'] ?? 0),
+            'confirmed' => (int)($res['confirmed'] ?? 0),
+            'cancelled' => (int)($res['cancelled'] ?? 0),
+            'net'       => (int)($res['net'] ?? 0),
+
+            'sessions_total'     => (int)($ses['total'] ?? 0),
+            'sessions_cancelled' => (int)($ses['cancelled'] ?? 0),
+            'sessions_net'       => (int)($ses['net'] ?? 0),
         ];
     }
 }
