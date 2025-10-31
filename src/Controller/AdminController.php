@@ -8,6 +8,7 @@ use App\Form\TeacherNewFormType;
 use App\Form\TeacherNewFormTypeForm;
 use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
+use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,10 +21,12 @@ final class AdminController extends AbstractController
 {
     #[Route('/admin/tableau-de-board', name: 'app_admin')]
     #[IsGranted('ROLE_ADMIN')]
-    public function index(): Response
+    public function index(StatsCounter $counter): Response
     {
+        $totals = $counter->getTotals();
+
         return $this->render('admin/admin-dashboard.html.twig', [
-            'controller_name' => 'AdminController',
+            'totals' => $totals,
         ]);
     }
 
