@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les comptes professeurs
+{% endblock %}
+
+{% block body %}
+
+	<section class="py-5">
+		<div class="container">
+
+
+			<h1 class="hero-heading mb-5 mt-3 mt-md-0">Gérer les comptes des professeurs</h1>
+
+			<div class="table-responsive">
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>Id</th>
+
+							{# <th>Password</th> #}
+							<th>Nom</th>
+							<th>Prénom</th>
+							<th>Email</th>
+							<th>Création du compte</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for teacher in teachers %}
+							<tr>
+								<td>{{ teacher.id }}</td>
+
+								{# <td>{{ teacher.password }}</td> #}
+								<td>{{ teacher.LastName }}</td>
+								<td>{{ teacher.firstName }}</td>
+								<td>{{ teacher.email }}</td>
+								<td>{{ teacher.createdAt ? teacher.createdAt|date('d-m-Y') : '' }}</td>
+								<td>
+									<form method="post" action="{{ path('app_teacher_delete', {'id': teacher.id}) }}" onsubmit="return confirm('Voulez-vous supprimer ce compte professeur ?');">
+										<input type="hidden" name="_token" value="{{ csrf_token('delete_teacher' ~ teacher.id) }}">
+
+										<button class="btn  btn-secondary px-4 me-md-2">Supprimer</button>
+									</form>
+
+								</td>
+							</tr>
+						{% else %}
+							<tr>
+								<td colspan="9">Pas de compte professeur.</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+			<div class="text-center m-5">
+				<a href="{{ path('app_teacher_new')}}" class="btn btn-primary px-4 me-md-2">Créer un compte professeur</a>
+				<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_admin')}}">Retour</a>
+			</div>
+
+
+		</div>
+	</section>
+{% endblock %}

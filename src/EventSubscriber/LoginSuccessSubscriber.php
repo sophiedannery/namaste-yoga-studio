@@ -28,6 +28,11 @@ final class LoginSuccessSubscriber implements EventSubscriberInterface
             return; 
         }
 
+        if (in_array('ROLE_ADMIN', $roles, true)) {
+            $event->setResponse(new RedirectResponse($this->router->generate('app_admin')));
+            return;
+        }
+
         $event->setResponse(new RedirectResponse($this->router->generate('app_profile')));
     }
 
