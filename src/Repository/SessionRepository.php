@@ -54,6 +54,20 @@ class SessionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findAll(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.teacher', 't')->addSelect('t')
+            ->leftJoin('s.classType', 'ct')->addSelect('ct')
+            ->leftJoin('s.room', 'r')->addSelect('r')
+            ->orderBy('s.startAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
+
+
     //    /**
     //     * @return Session[] Returns an array of Session objects
     //     */

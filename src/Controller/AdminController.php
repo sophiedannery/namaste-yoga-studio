@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\TeacherNewFormType;
 use App\Form\TeacherNewFormTypeForm;
+use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,9 +25,6 @@ final class AdminController extends AbstractController
             'controller_name' => 'AdminController',
         ]);
     }
-
-
-    
 
     #[Route('/admin/teacher-edit', name: 'app_teacher_edit', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
@@ -82,11 +80,6 @@ final class AdminController extends AbstractController
         return $this->redirectToRoute('app_teacher_edit', [], Response::HTTP_SEE_OTHER);
     }
 
-
-
-
-    
-
     #[Route('/admin/student_edit', name: 'app_student_edit', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function studentEdit(UserRepository $userRepository): Response
@@ -111,4 +104,23 @@ final class AdminController extends AbstractController
 
         return $this->redirectToRoute('app_student_edit', [], Response::HTTP_SEE_OTHER);
     }
+
+
+    #[Route('/admin/tableau-cours', name: 'app_admin_sessions')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function findSessions(SessionRepository $session_repository): Response
+    {
+
+        $sessions = $session_repository->findAll();
+        return $this->render('admin/admin-sessions.html.twig', [
+            'sessions' => $sessions,
+        ]);
+    }
+
+
+
+
+
+
+
 }
