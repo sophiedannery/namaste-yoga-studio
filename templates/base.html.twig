@@ -4,14 +4,16 @@
 		<meta charset="UTF-8">
 		<meta
 		name="viewport" content="width=device-width, initial-scale=1">
-		{# --- Meta description  --- #}
-		{% set page_desc = block('meta_description')|default('')|striptags|trim %}
+
+		{# --- Meta description --- #}
+		{% block meta_description %}{% endblock %}
+
+		{% set page_desc = block('meta_description')|striptags|trim %}
 		{% if page_desc is empty %}
 			{% set page_desc = 'Cours de yoga à Buis-les-Baronnies : Hatha, Vinyasa, Yin. Réservation en ligne, professeurs certifiés, ambiance bienveillante.' %}
 		{% endif %}
-		<meta name="description" content="{{ page_desc|slice(0, 155) }}">
 
-
+		<meta name="description" content="{{ page_desc|slice(0,155) }}">
 		<title>
 			{% block title %}Namaste Yoga Studio
 			{% endblock %}
