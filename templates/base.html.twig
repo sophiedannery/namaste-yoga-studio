@@ -2,10 +2,18 @@
 <html lang="fr">
 	<head>
 		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta
+		name="viewport" content="width=device-width, initial-scale=1">
+		{# --- Meta description  --- #}
+		{% set page_desc = block('meta_description')|default('')|striptags|trim %}
+		{% if page_desc is empty %}
+			{% set page_desc = 'Cours de yoga à Buis-les-Baronnies : Hatha, Vinyasa, Yin. Réservation en ligne, professeurs certifiés, ambiance bienveillante.' %}
+		{% endif %}
+		<meta name="description" content="{{ page_desc|slice(0, 155) }}">
+
 
 		<title>
-			{% block title %}Welcome!
+			{% block title %}Namaste Yoga Studio
 			{% endblock %}
 		</title>
 
@@ -47,7 +55,7 @@
 							{{ msg }}
 						</div>
 					{% endfor %}
-					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Ferme"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
 				</div>
 			</div>
 		{% endfor %}
