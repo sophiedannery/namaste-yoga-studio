@@ -4,7 +4,6 @@
 
 		<div class="row g-4 align-items-center ">
 
-
 			<div class="col-sm-4">
 				<h3>{{ s.classType.title }}</h3>
 				<h4>{{ s.startAt|date('H:i') }}
@@ -12,7 +11,6 @@
 					{{ s.endAt|date('H:i') }}</h4>
 				<p class="medium">{{ s.startAt|date('d/m/Y') }}</p>
 			</div>
-
 
 			<div class="col-sm-4">
 				<p>
@@ -43,7 +41,6 @@
 
 				<h4 class="mt-2">{{ s.teacher.firstName}}</h4>
 			</div>
-
 
 			<div class="col-12 text-center mt-2">
 				<a href="{{path('app_session_details', {id: s.id} ) }}" class="btn btn-secondary my-3">En savoir plus</a>
