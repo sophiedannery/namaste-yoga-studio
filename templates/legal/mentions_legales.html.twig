@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions légales - Namaste Yoga Studio
+{% endblock %}
+
+{% block body %}
+	<section class="container py-5">
+		<h1 class="mb-4">Mentions légales</h1>
+
+		<h2>1. Éditeur du site</h2>
+		<p>
+			<strong>Namaste Yoga Studio</strong><br>
+			Site édité par :
+			<strong>Sophie Dannery</strong><br>
+			Adresse : 27 Grande Rue, 26170 Buis-les-Baronnies, France<br>
+			Téléphone : 06 69 34 98 61<br>
+			Email : dannery.sophie@gmail.com<br>
+			SIRET : 532 987 456 00027<br>
+			Responsable de la publication :
+			<strong>Sophie Dannery</strong>
+		</p>
+
+		<h2>2. Hébergement du site</h2>
+		<p>
+			Hébergeur :
+			<strong>Heroku (Salesforce Inc.)</strong><br>
+			Siège social : Salesforce Tower, 415 Mission Street, San Francisco, CA 94105, États-Unis<br>
+			Site web :
+			<a href="https://www.heroku.com">www.heroku.com</a><br>
+			Téléphone : +1 (415) 801-1000
+		</p>
+
+		<h2>3. Conception et développement</h2>
+		<p>
+			Réalisation et conception du site :
+			<strong>Sophie Dannery</strong><br>
+			Développeuse web et web mobile – Titre professionnel RNCP 37674.
+		</p>
+
+		<h2>4. Crédits photos et contenus</h2>
+		<p>
+			Les photographies et visuels utilisés sur ce site proviennent de la banque d’images libre de droits
+			<strong>Unsplash</strong>. Tous les textes, images et éléments graphiques du site Namaste Yoga Studio sont la propriété de leur autrice et ne peuvent être reproduits sans autorisation préalable.
+		</p>
+
+		<h2>5. Propriété intellectuelle</h2>
+		<p>
+			Le site dans son ensemble relève de la législation française sur le droit d’auteur et la propriété intellectuelle. Toute reproduction, représentation, modification ou adaptation, totale ou partielle, est strictement interdite sans autorisation écrite préalable de l’éditrice.
+		</p>
+
+		<h2>6. Responsabilité</h2>
+		<p>
+			Namaste Yoga Studio met tout en œuvre pour garantir l’exactitude et la mise à jour des informations diffusées sur le site. Toutefois, elle ne saurait être tenue responsable d’erreurs ou d’omissions, ni de l’indisponibilité temporaire du site ou de la présence de liens externes.
+		</p>
+
+		<h2>7. Protection des données personnelles</h2>
+		<p>
+			Les informations collectées via les formulaires ou la création de compte sont traitées conformément au Règlement Général sur la Protection des Données (RGPD). Pour plus d’informations, consultez la
+			<a href="{{ path('app_politique_confidentialite') }}">Politique de confidentialité</a>.
+		</p>
+
+		<p class="mt-5">
+			<em>Dernière mise à jour : novembre 2025</em>
+		</p>
+	</section>
+{% endblock %}
