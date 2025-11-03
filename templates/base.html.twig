@@ -10,7 +10,8 @@
 
 		{% set page_desc = block('meta_description')|striptags|trim %}
 		{% if page_desc is empty %}
-			{% set page_desc = 'Cours de yoga à Buis-les-Baronnies : Hatha, Vinyasa, Yin. Réservation en ligne, professeurs certifiés, ambiance bienveillante.' %}
+			{% set page_desc = 'Cours de yoga à Buis-les-Baronnies : Hatha, Vinyasa, Yin. Réservation en ligne, 
+			professeurs certifiés, ambiance bienveillante.' %}
 		{% endif %}
 
 		<meta name="description" content="{{ page_desc|slice(0,155) }}">
