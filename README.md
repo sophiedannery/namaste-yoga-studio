@@ -183,35 +183,79 @@ Le nom de domaine _namaste-yoga-studio.fr_ a été acheté chez [Gandi](https://
 - un enregistrement **ALIAS**
 
 Toutes les requêtes sont redirigées vers l'URL https://namaste-yoga-studio.fr.
+
 ## Fichiers SQL
 
 ### schema.sql
+
+Le fichier [backup.sql](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/db/backup.sql) contient une sauvegarde complète de la base (structure + données) à un instant T. Il permet de restaurer rapidement un environnement identique
+
+
+**Commande pour exécuter :**
+```bash
+mysql -u root -p namaste_test2 < backup.sql
+```
+
+
+### schema.sql
+
+Le fichier [schema.sql](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/db/schema.sql) contient **le script de création des tables** nécessaires au fonctionnement de l'application.
+
+Tables créées : `user`, `session`, `reservation`, `room`, `classType`, `review`, `suspension`
+
+**Commande pour exécuter :**
+
+```bash
+mysql -u root -p namaste_test2 < schema.sql
+```
+
 ### data.sql
+
+Le fichier [data.sql](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/db/data.sql) contient **un jeu de données** permettant de tester l'application. Il comprend notamment :
+
+- des utilisateurs avec différents rôles (admin, teacher, student)
+- des types de cours 
+- des cours de yoga 
+- des réservations à venir et terminées
+- des annulations
+- des salles
+- une suspension
+- des avis
+
+**Commande pour insérer les données :**
+
+```bash
+mysql -u root -p namaste_test2 < data.sql
+```
+
+Il est possible d'adapter les identifiants, mots de passe et autre selon vos besoins.
+
+
 
 ## Identifiants de test
 
-
+Les identifiants de test sont disponibles dans le [Manuel d'utilisation]().
 
 
 ## Ressources supplémentaires
 
 ### Visuels
 
-- 🎨 [Charte graphique]()
-- 🖼️ [Wireframes]()
-- 💻 [Mockups - Desktop]()
-- 📱 [Mockups - Mobile]()
+- 🎨 [Charte graphique](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/docs/Maquettes%20et%20charte%20graphique/Charte%20Graphique%20-%20Namaste%20Yoga%20Studio.pdf)
+- 🖼️ [Wireframes](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/docs/Maquettes%20et%20charte%20graphique/Wireframes%20-%20Namaste%20Yoga%20Studio.pdf)
+- 💻 [Mockups - Desktop](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/docs/Maquettes%20et%20charte%20graphique/Mockups%20-%20Desktop%20-%20Namaste%20Yoga%20Studio.pdf)
+- 📱 [Mockups - Mobile](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/docs/Maquettes%20et%20charte%20graphique/Mockups%20-%20Mobile%20-%20Namaste%20Yoga%20Studio.pdf)
 
 ### Modélisation bdd
 
-- 🧩 [Modèle Conceptuel de Données]()
-- 🧩 [Modèle Logique de Données]()
-- 🧩 [Modèle Physique de Données]()
+- 🧩 [Modèle Conceptuel de Données](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/docs/Mod%C3%A9lisation%20bdd/MCD%20-%20Namaste.png)
+- 🧩 [Modèle Logique de Données](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/docs/Mod%C3%A9lisation%20bdd/MLD%20-%20Namaste.png)
+- 🧩 [Modèle Physique de Données](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/docs/Mod%C3%A9lisation%20bdd/MPD%20-%20Namaste.png)
 
 ### Diagramme
 
 - 🧩 [Diagramme de séquence]()
-- 🧩 [Diagramme de cas d'utilisation]()
+- 🧩 [Diagramme de cas d'utilisation](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/docs/Diagrammes/Diagramme%20d'utilisation.jpeg)
 - 🧩 [Diagramme de classe]()
 
 ### Documentation
