@@ -65,6 +65,55 @@ class SessionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByFilters(?string $level, ?string $teacher, ?string $style): array
+    {
+        $qb = $this->createQueryBuilder('s')
+            ->leftJoin('s.classType', 'ct')->addSelect('ct')
+            ->leftJoin('s.teacher', 't')->addSelect('t')
+            ->orderBy('s.startAt', 'DESC');
+
+        if ($level !== null && $level !== '') {
+            $qb->andWhere('LOWER(ct.level) = LOWER(:level)')
+                ->setParameter('level', trim($level));
+        }
+
+        if ($style !== null && $style !== '') {
+            $qb->andWhere('LOWER(ct.style) = LOWER(:style)')
+                ->setParameter('style', trim($style));
+        }
+
+        if ($teacher !== null && $teacher !== '') {
+            $qb->andWhere('LOWER(t.firstName) = LOWER(:teacher)')
+                ->setParameter('teacher', trim($teacher));
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+
+
+    // public function findByLevel(string $level): array 
+    // {
+    //     return $this->createQueryBuilder('s')
+    //         ->join('s.classType', 'ct')
+    //         ->addSelect('ct')
+    //         ->andWhere('ct.level = :lvl')
+    //         ->setParameter('lvl', $level)
+    //         ->getQuery()
+    //         ->getResult();
+    // }
+
+    // public function findByTeacher(string $teacher): array
+    // {
+    //     return $this->createQueryBuilder('s')
+    //         ->join('s.user', 'u')
+    //         ->addSelect('u')
+    //         ->andWhere('u.firstName = :tch')
+    //         ->setParameter('tch', $teacher)
+    //         ->getQuery()
+    //         ->getResult();
+    // }
+
 
 
 
