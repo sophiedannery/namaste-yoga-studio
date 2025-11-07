@@ -1,52 +1,52 @@
-<div class="card border">
+{# templates/session/_cards_list.html.twig #}
+<div class="vstack gap-4">
+	{% if sessions is not empty %}
+		{% for s in sessions %}
+			<div class="card border">
+				<div class="card-body p-4 pb-0 align-items-center">
+					<div class="row g-4 align-items-center ">
+						<div class="col-sm-4">
+							<h3>{{ s.classType.title }}</h3>
+							<h4>{{ s.startAt|date('H:i') }}
+								-
+								{{ s.endAt|date('H:i') }}</h4>
+							<p class="medium">{{ s.startAt|date('d/m/Y') }}</p>
+						</div>
 
-	<div class="card-body p-4 pb-0 align-items-center">
+						<div class="col-sm-4">
+							<p>
+								<i class="fa-solid fa-users me-2"></i>
+								{{ s.capacity }}
+								place{{ s.capacity > 1 ? 's' : '' }}</p>
+							<p>
+								<i class="fa-solid fa-tag"></i>
+								{{ s.price }}
+								€</p>
+							<p>
+								<i class="fa-solid fa-star"></i>
+								Niveau :
+								{{ s.classType.level }}</p>
+						</div>
 
-		<div class="row g-4 align-items-center ">
+						<div class="col-sm-4 text-center">
+							{% if s.teacher.avatarUrl %}
+								<img src="{{ asset('uploads/photos/' ~ s.teacher.avatarUrl) }}" alt="Photo de {{ s.teacher.firstName }}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
+							{% else %}
+								<img src="{{ asset('photos/avatar.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; opacity: 0.5;">
+							{% endif %}
+							<h4 class="mt-2">{{ s.teacher.firstName }}</h4>
+						</div>
 
-			<div class="col-sm-4">
-				<h3>{{ s.classType.title }}</h3>
-				<h4>{{ s.startAt|date('H:i') }}
-					-
-					{{ s.endAt|date('H:i') }}</h4>
-				<p class="medium">{{ s.startAt|date('d/m/Y') }}</p>
+						<div class="col-12 text-center mt-2">
+							<a href="{{ path('app_session_details', { id: s.id }) }}" class="btn btn-secondary my-3">
+								En savoir plus
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
-
-			<div class="col-sm-4">
-				<p>
-					<i class="fa-solid fa-users me-2"></i>
-					{{ s.capacity}}
-					place{{ s.capacity > 1 ? 's' : '' }}
-				</p>
-
-				<p>
-					<i class="fa-solid fa-tag"></i>
-					{{ s.price}}
-					€
-				</p>
-				<p>
-					<i class="fa-solid fa-star"></i>
-					Niveau :
-					{{s.classType.level}}
-
-				</p>
-			</div>
-
-			<div class="col-sm-4 text-center">
-				{% if s.teacher.avatarUrl %}
-					<img src="{{ asset('uploads/photos/' ~ s.teacher.avatarUrl) }}" alt="Photo de {{ s.teacher.firstName }}" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;">
-				{% else %}
-					<img src="{{ asset('photos/avatar.png') }}" alt="Pas de photo" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover; opacity: 0.5;">
-				{% endif %}
-
-				<h4 class="mt-2">{{ s.teacher.firstName}}</h4>
-			</div>
-
-			<div class="col-12 text-center mt-2">
-				<a href="{{path('app_session_details', {id: s.id} ) }}" class="btn btn-secondary my-3">En savoir plus</a>
-
-			</div>
-
-		</div>
-	</div>
+		{% endfor %}
+	{% else %}
+		<p>Aucune session trouvée</p>
+	{% endif %}
 </div>

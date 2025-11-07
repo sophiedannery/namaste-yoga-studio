@@ -56,6 +56,7 @@ class SessionController extends AbstractController
             'level'    => $s->getClassType()?->getLevel(),
             'teacher'    => $s->getTeacher()?->getfirstName(),
             'capacity' => $s->getCapacity(),
+            'price' => $s->getPrice(),
             'startAt' => $s->getStartAt()?->format(DATE_ATOM),
             'endAt' => $s->getEndAt()?->format(DATE_ATOM),
         ], $sessions);

@@ -29,6 +29,35 @@ final class SessionController extends AbstractController
         ]);
     }
 
+
+
+
+    #[Route('/sessions/fragment', name: 'sessions_fragment', methods: ['GET'])]
+    public function fragment(Request $request, SessionRepository $repo)
+    {
+        $level   = $request->query->get('level');
+        $teacher = $request->query->get('teacher');
+        $style   = $request->query->get('style');
+        $idParam = $request->query->get('id');
+
+        if ($idParam !== null && $idParam !== '') {
+            $s = $repo->find((int)$idParam);
+            $sessions = $s ? [$s] : [];
+        } else {
+            $sessions = $repo->findByFilters($level, $teacher, $style);
+        }
+
+        return $this->render('session/session-partial-card.html.twig', [
+            'sessions' => $sessions,
+        ]);
+    }
+
+
+
+
+
+
+
     #[Route('/session-details/{id}', name: 'app_session_details', requirements: ['id' => '\d+'])]
     public function details(Session $session, Request $request, ReservationRepository $reservation_repository): Response
     {

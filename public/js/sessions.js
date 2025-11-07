@@ -1,101 +1,45 @@
+    // public/js/sessions.js
+    window.loadSessions = async function loadSessions() {
+    const status  = document.getElementById('status');   // <p id="status" class="d-none">…</p>
+    const results = document.getElementById('results');   // contiendra les cartes
 
-window.loadSessions = async function loadSessions() {
-    const status = document.getElementById('status');
-    const results = document.getElementById('results');
-    const input   = document.getElementById('filterId');
-    const selectLevel = document.getElementById('filterLevel');
-    const selectTeacher = document.getElementById('filterTeacher');
-    const selectStyle = document.getElementById('filterStyle');
+    const id      = document.getElementById('filterId').value.trim();
+    const level   = document.getElementById('filterLevel').value;
+    const teacher = document.getElementById('filterTeacher').value;
+    const style   = document.getElementById('filterStyle').value;
 
-    if (!status || !results || !input || !selectLevel || !selectTeacher || !selectStyle) return;
 
-    const idRaw = input.value.trim();
-    const level = selectLevel.value;
-    const teacher = selectTeacher.value;
-    const style = selectStyle.value;
-
+    // Construire proprement ?id=…&level=…&teacher=…&style=…
     const params = new URLSearchParams();
-    if (idRaw !== '') params.set('id', idRaw);
-    if (level !== '') params.set('level', level);
-    if (teacher !== '') params.set('teacher', teacher);
-    if (style !== '') params.set('style', style);
+    if (id)      params.set('id', id);
+    if (level)   params.set('level', level);
+    if (teacher) params.set('teacher', teacher);
+    if (style)   params.set('style', style);
 
+    const qs  = params.toString();
+    const url = `/sessions/fragment${qs ? `?${qs}` : ''}`;
 
-    const url = `/api/sessions${params.toString() ? '?' + params.toString() : ''}`;
-
-    console.log('filters →', { idRaw, level, teacher, style });
-    console.log('URL →', url);
-
+    // Afficher "Chargement…" pendant la requête
+    status.classList.remove('d-none');
     status.textContent = 'Chargement…';
-    results.innerHTML = '';
-
 
     try {
-        const res = await fetch(url, { cache: 'no-store' });
-
-        if (res.status === 404) { // id demandé mais introuvable
-            status.textContent = 'Aucune session trouvée';
-            return;
-        }
+        // On demande du HTML, pas du JSON
+        const res = await fetch(url, { headers: { 'X-Requested-With': 'fetch' }, cache: 'no-store' });
         if (!res.ok) throw new Error('HTTP ' + res.status);
 
-        const data = await res.json();
+        const html = await res.text(); // <- on lit du texte (HTML)
+        results.innerHTML = html;      // <- on remplace le contenu par le fragment reçu
 
-        if (!Array.isArray(data) || data.length === 0) {
-        status.textContent = 'Aucune session trouvée';
-        return;
-        }
-
-        status.textContent = ''; // on cache le message
-        results.innerHTML = data.map(s =>
-        `
-        <div class="card border">
-            <div class="card-body p-4 pb-0 align-items-center">
-                <div class="row g-4 align-items-center ">
-
-                    <div class="col-sm-4">
-                        <h3>${s.title}</h3>
-                        <h4>Heure début - Heure fin</h4>
-                        <p class="medium">Date</p>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <p>
-                            <i class="fa-solid fa-users me-2"></i>
-                            ${s.capacity}
-                            place
-                        </p>
-                        <p>
-                            <i class="fa-solid fa-tag"></i>
-                            PRIX
-                            €
-                        </p>
-                        <p>
-                            <i class="fa-solid fa-star"></i>
-                            Niveau :  ${s.level}
-                        </p>
-                    </div>
-
-                    <div class="col-sm-4 text-center">
-                        <h4 class="mt-2">${s.teacher}</h4>
-                    </div>
-
-                   
-
-
-                </div>
-            </div>
-        </div>
-
-
-        `
-        ).join('');
+        status.textContent = '';
+        status.classList.add('d-none');
     } catch (e) {
         status.textContent = 'Erreur de chargement';
         console.error(e);
     }
-};
+    };
 
-window.loadSessions();
-
-
+    // Quand l’utilisateur touche un filtre, on charge le fragment HTML
+    ['filterId','filterLevel','filterTeacher','filterStyle'].forEach(id =>
+    document.getElementById(id)?.addEventListener('input', window.loadSessions)
+    );
