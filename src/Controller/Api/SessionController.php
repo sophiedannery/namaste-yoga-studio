@@ -14,42 +14,12 @@ class SessionController extends AbstractController
     #[Route('/sessions', name: 'sessions', methods: ['GET'])]
     public function list(Request $request, SessionRepository $repo): JsonResponse
     {
-        $idParam = $request->query->get('id', null);
         $level = $request->query->get('level', null);
         $teacher = $request->query->get('teacher', null);
         $style = $request->query->get('style', null);
 
-        if ($idParam !== null && $idParam !== '') {
+        $sessions = $repo->findByFilters($level, $teacher, $style);
 
-            $id = (int) $idParam;
-            $session = $repo->find($id);
-
-            if (!$session) {
-            return $this->json(['error' => 'Session not found'], 404);
-        }
-
-        if ($level !== null && $level !== '' && $session->getClassType()?->getLevel() !== $level) {
-            return $this->json([]); // aucun résultat
-        }
-
-        if ($teacher !== null && $teacher !== '' && strcasecmp($session->getTeacher()?->getFirstName() ?? '', $teacher) !== 0) {
-                return $this->json([]); // pas de match
-        }
-
-        if ($style !== null && $style !== '' && strcasecmp($session->getClassType()?->getStyle() ?? '', $style) !== 0) {
-                return $this->json([]); // pas de match
-        }
-
-            $sessions = [$session];
-        }
-        
-        else {
-
-            $sessions = $repo->findByFilters($level, $teacher, $style);
-
-        }
-
-        // On transforme les entités en tableau simple (évite les erreurs de sérialisation)
         $data = array_map(fn($s) => [
             'id'      => $s->getId(),
             'title'    => $s->getClassType()?->getTitle(),

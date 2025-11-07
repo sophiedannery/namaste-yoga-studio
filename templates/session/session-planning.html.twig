@@ -6,7 +6,7 @@
 {% block body %}
 	<section class="py-5">
 		<div class="container">
-			<div class="row">
+			<div class="row mt-3">
 
 				<div class="col-12 col-xl-4 col-xxl-3">
 					<div class="rounded-3 shadow p-3 mb-5">
@@ -14,30 +14,10 @@
 						<form onreset="setTimeout(() => window.loadSessions && window.loadSessions(), 0)" data-turbo="false">
 
 							<div class="mb-3">
-								<label class="form-label">Filtrer par ID</label>
-								<input type="number" id="filterId" class="form-control" placeholder="ex : 12" oninput="window.loadSessions && window.loadSessions()" data-turbo="false">
-							</div>
+								<label class="form-label">
+									<i class="fa-solid fa-spa"></i>
+									Cours</label>
 
-							<div class="mb-3">
-								<label class="form-label">Niveau</label>
-								<select id="filterLevel" class="form-select" onchange="window.loadSessions && window.loadSessions()" data-turbo="false">
-									<option value="">Tous les niveaux</option>
-									<option value="Débutant">Débutant</option>
-									<option value="Intermédiaire">Intermédiaire</option>
-								</select>
-							</div>
-
-							<div class="mb-3">
-								<label class="form-label">Professeur</label>
-								<select id="filterTeacher" class="form-select" onchange="window.loadSessions && window.loadSessions()" data-turbo="false">
-									<option value="">Tous les professeurs</option>
-									<option value="Lucas">Lucas</option>
-									<option value="Sophie">Sophie</option>
-								</select>
-							</div>
-
-							<div class="mb-3">
-								<label class="form-label">Cours</label>
 								<select id="filterStyle" class="form-select" onchange="window.loadSessions && window.loadSessions()" data-turbo="false">
 									<option value="">Tous les cours</option>
 									<option value="Hatha">Hatha</option>
@@ -46,7 +26,33 @@
 								</select>
 							</div>
 
-							<button type="reset" class="btn btn-outline-secondary btn-sm">Effacer les filtres</button>
+							<div class="mb-3">
+								<label class="form-label">
+									<i class="fa-solid fa-star"></i>
+									Niveau</label>
+
+								<select id="filterLevel" class="form-select" onchange="window.loadSessions && window.loadSessions()" data-turbo="false">
+									<option value="">Tous les niveaux</option>
+									<option value="Débutant">Débutant</option>
+									<option value="Intermédiaire">Intermédiaire</option>
+								</select>
+							</div>
+
+							<div class="mb-3">
+								<label class="form-label">
+									<i class="fa-solid fa-user"></i>
+									Professeur</label>
+
+								<select id="filterTeacher" class="form-select" onchange="window.loadSessions && window.loadSessions()" data-turbo="false">
+									<option value="">Tous les professeurs</option>
+									<option value="Lucas">Lucas</option>
+									<option value="Sophie">Sophie</option>
+								</select>
+							</div>
+
+							<div class="text-center">
+								<button type="reset" class="btn btn-secondary btn-sm">Effacer les filtres</button>
+							</div>
 						</form>
 
 					</div>
@@ -59,11 +65,11 @@
 
 					<p id="status" class="mt-4"></p>
 
-					{# ——— Rendu SSR initial ——— #}
+
 					<div id="results" class="vstack gap-4 mt-3">
 						{% include "session/session-partial-card.html.twig" with { sessions: sessions } %}
 					</div>
-					{# ———————————————— #}
+
 				</div>
 
 
