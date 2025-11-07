@@ -4,50 +4,78 @@
 {% endblock %}
 
 {% block body %}
-
 	<section class="py-5">
 		<div class="container">
-			<div class="row">
+			<div class="row mt-3">
 
-				<div
-					class="col-12 col-xl-4 col-xxl-3">{# <div class="rounded-3 shadow p-3 bg-white mb-5">
-												<h3>Les filtres seront ici.</h3>
-											</div> #}
+				<div class="col-12 col-xl-4 col-xxl-3">
+					<div class="rounded-3 shadow p-3 mb-5">
+
+						<form onreset="setTimeout(() => window.loadSessions && window.loadSessions(), 0)" data-turbo="false">
+
+							<div class="mb-3">
+								<label class="form-label">
+									<i class="fa-solid fa-spa"></i>
+									Cours</label>
+
+								<select id="filterStyle" class="form-select" onchange="window.loadSessions && window.loadSessions()" data-turbo="false">
+									<option value="">Tous les cours</option>
+									<option value="Hatha">Hatha</option>
+									<option value="Yin">Yin</option>
+									<option value="Vinyasa">Vinyasa</option>
+								</select>
+							</div>
+
+							<div class="mb-3">
+								<label class="form-label">
+									<i class="fa-solid fa-star"></i>
+									Niveau</label>
+
+								<select id="filterLevel" class="form-select" onchange="window.loadSessions && window.loadSessions()" data-turbo="false">
+									<option value="">Tous les niveaux</option>
+									<option value="Débutant">Débutant</option>
+									<option value="Intermédiaire">Intermédiaire</option>
+								</select>
+							</div>
+
+							<div class="mb-3">
+								<label class="form-label">
+									<i class="fa-solid fa-user"></i>
+									Professeur</label>
+
+								<select id="filterTeacher" class="form-select" onchange="window.loadSessions && window.loadSessions()" data-turbo="false">
+									<option value="">Tous les professeurs</option>
+									<option value="Lucas">Lucas</option>
+									<option value="Sophie">Sophie</option>
+								</select>
+							</div>
+
+							<div class="text-center">
+								<button type="reset" class="btn btn-secondary btn-sm">Effacer les filtres</button>
+							</div>
+						</form>
+
+					</div>
 				</div>
 
 				<div class="col-12 col-xl-8 col-xxl-9">
-
 					<div class="mb-3 mb-sm-0">
 						<h1>Les cours</h1>
 					</div>
 
-					<div class="vstack gap-4 mt-4" id="resultsContainer">
+					<p id="status" class="mt-4"></p>
 
-						{% if sessions|length > 0 %}
-							{% for s in sessions %}
-								<div>
-									{% include "session/session-partial-card.html.twig" with {'s': s} %}
-								</div>
-							{% endfor %}
-						{% else %}
-							<div class="text-center m-5">
-								<p>Pas de cours à venir</p>
-							</div>
-						{% endif %}
 
+					<div id="results" class="vstack gap-4 mt-3">
+						{% include "session/session-partial-card.html.twig" with { sessions: sessions } %}
 					</div>
 
 				</div>
+
+
 			</div>
 		</div>
 	</section>
 
-
-	<div class="container pt-5">
-		<div class="text-center my-5">
-			<a class="btn btn-primary" href="/">Retour à l'accueil</a>
-		</div>
-	</div>
-
-
+	<script src="/js/sessions.js" defer></script>
 {% endblock %}

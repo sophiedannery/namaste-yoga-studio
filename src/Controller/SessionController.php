@@ -6,6 +6,7 @@ use App\Entity\Session;
 use App\Form\SessionForm;
 use App\Repository\ReservationRepository;
 use App\Repository\SessionRepository;
+use App\Repository\UserRepository;
 use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,16 +18,33 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class SessionController extends AbstractController
 {
     #[Route('/planning', name: 'app_session_planning')]
-    public function planning(SessionRepository $session_repository, ReservationRepository $reservation_repository): Response
+    public function planning(SessionRepository $session_repository, UserRepository $user_repository): Response
     {
         $sessions = $session_repository->findAll();
-
-        
+        $teacher = $user_repository->findAll();
 
         return $this->render('session/session-planning.html.twig', [
             'sessions' => $sessions,
+            'teacher' => $teacher,
         ]);
     }
+
+
+    #[Route('/sessions/fragment', name: 'sessions_fragment', methods: ['GET'])]
+    public function fragment(Request $request, SessionRepository $repo)
+    {
+        $level   = $request->query->get('level');
+        $teacher = $request->query->get('teacher');
+        $style   = $request->query->get('style');
+
+        $sessions = $repo->findByFilters($level, $teacher, $style);
+
+        return $this->render('session/session-partial-card.html.twig', [
+            'sessions' => $sessions,
+        ]);
+    }
+
+
 
     #[Route('/session-details/{id}', name: 'app_session_details', requirements: ['id' => '\d+'])]
     public function details(Session $session, Request $request, ReservationRepository $reservation_repository): Response
