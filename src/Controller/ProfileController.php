@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * ProfileController
+ * -----------------------------------------------------------------------------
+ * Purpose:
+ *   Provide the private "My Space" area for authenticated students.
+ *
+ * What it does:
+ *   - Shows the user profile landing page.
+ *   - Lists upcoming sessions reserved by the current user.
+ *   - Lists past sessions (history) reserved by the current user.
+ */
+
 namespace App\Controller;
 
 use App\Repository\ReservationRepository;
@@ -10,6 +22,13 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class ProfileController extends AbstractController
 {
+
+    /**
+     * Display the student's main space.
+     *
+     * GET /mon-espace
+     * Requires ROLE_USER..
+     */
     #[Route('/mon-espace', name: 'app_profile')]
     #[IsGranted('ROLE_USER')]
     public function index(): Response
@@ -19,6 +38,12 @@ final class ProfileController extends AbstractController
         ]);
     }
 
+    /**
+     * Show upcoming sessions for the student.
+     *
+     * GET /mon-espace/mes-cours
+     * Requires ROLE_USER.
+     */
     #[Route('/mon-espace/mes-cours', name: 'app_profile_cours')]
     #[IsGranted('ROLE_USER')]
     public function upcomingSession(ReservationRepository $reservation_repository): Response
@@ -27,15 +52,20 @@ final class ProfileController extends AbstractController
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
+        // Repository encapsulates date filtering (now -> future).
         $upcoming = $reservation_repository->findUpcomingByStudent($user);
-
-
 
         return $this->render('profile/cours-eleve.html.twig', [
             'upcoming' => $upcoming,
         ]);
     }
 
+    /**
+     * Show past (historical) sessions for the authenticated student.
+     *
+     * GET /mon-espace/mes-historique
+     * Requires ROLE_USER.
+     */
     #[Route('/mon-espace/mes-historique', name: 'app_profile_historique')]
     #[IsGranted('ROLE_USER')]
     public function pastSession(ReservationRepository $reservation_repository): Response
@@ -44,8 +74,8 @@ final class ProfileController extends AbstractController
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
+        // Repository encapsulates date filtering (past only).
         $past = $reservation_repository->findPastByStudent($user);
-
 
         return $this->render('profile/cours-eleve-historique.html.twig', [
             'past' => $past,

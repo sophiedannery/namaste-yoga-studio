@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * TeacherController
+ * -----------------------------------------------------------------------------
+ * Purpose:
+ *   Provide the teacher's private area: dashboard, upcoming sessions with students,
+ *   and past sessions (history).
+ *
+ */
+
 namespace App\Controller;
 
 use App\Repository\ReservationRepository;
@@ -11,30 +20,42 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class TeacherController extends AbstractController
 {
+
+    /**
+     * Teacher dashboard / landing page.
+     *
+     * GET /espace-professeur
+     * Requires ROLE_TEACHER.
+     */
     #[Route('/espace-professeur', name: 'app_profile_teacher')]
     #[IsGranted('ROLE_TEACHER')]
     public function index(): Response
     {
         
-        $this->denyAccessUnlessGranted('ROLE_TEACHER');
-
         return $this->render('teacher/espace-professeur.html.twig', [
             'controller_name' => 'TeacherController',
         ]);
     }
 
 
+    /**
+     * List upcoming sessions for the logged-in teacher, with enrolled students.
+     *
+     * GET /espace-professeur/planning
+     * Requires ROLE_TEACHER.
+     */
     #[Route('/espace-professeur/planning', name: 'app_profile_teacher_planning')]
     #[IsGranted('ROLE_TEACHER')]
     public function upComingSessionTeacher(SessionRepository $session_repository, ReservationRepository $reservation_repository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_TEACHER');
 
         /** @var \App\Entity\User $teacher */
         $teacher = $this->getUser();
 
+        // Fetch future sessions owned by this teacher.
         $upcoming = $session_repository->findUpcomingByTeacher($teacher);
 
+        // Build a map: sessionId => list of active reservations (students).
         $studentsBySession = [];
         foreach($upcoming as $sess) {
             $studentsBySession[$sess->getId()] = $reservation_repository->findActiveBySession($sess);
@@ -47,15 +68,21 @@ final class TeacherController extends AbstractController
     }
 
 
+    /**
+     * List past sessions (history) for the logged-in teacher.
+     *
+     * GET /espace-professeur/historique
+     * Requires ROLE_TEACHER.
+     */
     #[Route('/espace-professeur/historique', name: 'app_profile_teacher_historique')]
     #[IsGranted('ROLE_TEACHER')]
     public function pastSessionTeacher(SessionRepository $session_repository): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_TEACHER');
 
         /** @var \App\Entity\User $teacher */
         $teacher = $this->getUser();
 
+        // Fetch past sessions owned by this teacher.
         $past = $session_repository->findPastByTeacher($teacher);
 
         return $this->render('teacher/cours-teacher-historique.html.twig', [
