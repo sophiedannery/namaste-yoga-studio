@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * SessionController
+ * -----------------------------------------------------------------------------
+ * Purpose:
+ *   Manage yoga class sessions.
+ *
+ * What it does:
+ *   - Show the planning.
+ *   - Show the detail page of a single session.
+ *   - Allow teachers to create and cancel their own sessions.
+ */
+
 namespace App\Controller;
 
 use App\Entity\Session;
@@ -17,6 +29,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class SessionController extends AbstractController
 {
+     /**
+     * Display the public planning (list of sessions).
+     * GET /planning
+     */
     #[Route('/planning', name: 'app_session_planning')]
     public function planning(SessionRepository $session_repository, UserRepository $user_repository): Response
     {
@@ -45,12 +61,18 @@ final class SessionController extends AbstractController
     }
 
 
-
+    /**
+     * Show a single session details page.
+     *
+     * GET /session-details/{id}
+     * Route requires id.
+     */
     #[Route('/session-details/{id}', name: 'app_session_details', requirements: ['id' => '\d+'])]
     public function details(Session $session, Request $request, ReservationRepository $reservation_repository): Response
     {
         $referer = $request->headers->get('referer');
 
+        // Remaining seats = capacity - active reservations (never negative).
         $active = $reservation_repository->countActiveBySession($session);
         $remaining = max(0, $session->getCapacity() - $active);
 
@@ -62,23 +84,37 @@ final class SessionController extends AbstractController
     }
 
 
+     /**
+     * Create a new session (teacher only).
+     *
+     * GET|POST /session/ajout
+     *   - GET: display the creation form.
+     *   - POST: validate, set teacher/status, persist, update stats, redirect.
+     */
     #[Route('/session/ajout', name: 'app_session_new')]
     #[IsGranted('ROLE_TEACHER')]
-    public function newSession(StatsCounter $counter, Request $request, EntityManagerInterface $em): Response
+    public function newSession(
+        StatsCounter $counter, 
+        Request $request, 
+        EntityManagerInterface $em
+        ): Response
     {
         /** @var \App\Entity\User $user */
             $teacher = $this->getUser();
+            
         $session = new Session();
         $form = $this->createForm(SessionForm::class, $session);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            
+            // Ensure the session is owned by the logged-in teacher.
             $session->setTeacher($teacher);
+             // Initial status for a new class.
             $session->setStatus('SCHEDULED');
             $session->setUpdatedAt(new \DateTimeImmutable('now'));
 
+            // Update stats
             $counter->incCreated(1);
 
             $em->persist($session);
@@ -94,6 +130,11 @@ final class SessionController extends AbstractController
         ]);
     }
 
+/**
+     * Cancel a session owned by the current teacher.
+     *
+     * POST /session/{id}/annuler
+     */
     #[Route('/session/{id}/annuler', name: 'app_session_annuler', methods: ['POST'])]
     #[IsGranted('ROLE_TEACHER')]
     public function annulerSession(
@@ -102,20 +143,24 @@ final class SessionController extends AbstractController
         EntityManagerInterface $em,
         Request $request): Response
     {
+        // CSRF protection
         if (!$this->isCsrfTokenValid('cancel_session' . $session->getId(), $request->request->get('_token'))) {
         $this->addFlash('error', 'Token invalide.');
         return $this->redirectToRoute('app_profile_teacher_planning');
         }
 
+        // Ownership: only the session's teacher can cancel it.
         if ($session->getTeacher() !== $this->getUser()) {
         throw $this->createAccessDeniedException();
         }
 
+        // Mark as cancelled and set audit fields.
         $session->setStatus('CANCELLED');
         $session->setCancelledAt(new \DateTimeImmutable('now'));
         $session->setCancelledBy($this->getUser());
         $session->setUpdatedAt(new \DateTimeImmutable('now'));
 
+         // Update stats
         $counter->decCreated(1);
 
         $em->flush();
