@@ -34,7 +34,9 @@ final class SessionController extends AbstractController
      * GET /planning
      */
     #[Route('/planning', name: 'app_session_planning')]
-    public function planning(SessionRepository $session_repository, UserRepository $user_repository): Response
+    public function planning(
+        SessionRepository $session_repository, 
+        UserRepository $user_repository): Response
     {
         $sessions = $session_repository->findAll();
         $teacher = $user_repository->findAll();

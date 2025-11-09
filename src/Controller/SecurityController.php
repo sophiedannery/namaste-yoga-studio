@@ -28,7 +28,11 @@ class SecurityController extends AbstractController
      * GET /login
      */
     #[Route(path: '/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils, CsrfTokenManagerInterface $csrfTokenManager, Security $security): Response
+    public function login(
+        AuthenticationUtils $authenticationUtils, 
+        CsrfTokenManagerInterface $csrfTokenManager, 
+        Security $security
+        ): Response
     {
 
         // If an authenticated user hits /login, redirect them to their space.

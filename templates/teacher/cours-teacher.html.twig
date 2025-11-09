@@ -67,21 +67,18 @@
 											</a>
 										{% endif %}
 									</div>
+
 									<div class="mt-auto">
 										{% if s.status == 'CANCELLED' %}
 											<a href="#" class="mt-2 btn btn-primary w-100 disabled">
 												Vous avez annulé ce cours
 											</a>
-
 										{% else %}
 											<form method='post' action="{{ path('app_session_annuler', {'id': s.id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler ce cours ?')">
 												<input type="hidden" name="_token" value="{{ csrf_token('cancel_session' ~ s.id) }}">
 												<button class="btn btn-sm btn-danger mt-2">Annuler ce cours</button>
 											</form>
-
 										{% endif %}
-
-
 									</div>
 
 
