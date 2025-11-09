@@ -30,7 +30,6 @@ class SessionForm extends AbstractType
                 },
                 'label' => 'Type de cours',
             ])
-
             ->add('room', EntityType::class, [
                 'class' => Room::class,
                 'choice_label' => 'nameRoom',
@@ -41,24 +40,21 @@ class SessionForm extends AbstractType
                 },
                 'label' => 'Salle',
             ])
-
             ->add('startAt', DateTimeType::class, [
-                'widget' => 'single_text',             // input HTML5 datetime-local
-                'input'  => 'datetime_immutable',      // mappe bien avec ton entité
+                'widget' => 'single_text',
+                'input'  => 'datetime_immutable',
                 'label'  => 'Début',
                 'help'   => 'Date et heure de début',
                 'attr'   => [
                     'min' => (new \DateTimeImmutable('now'))->format('Y-m-d\TH:i'),
                 ],
             ])
-
             ->add('endAt', DateTimeType::class, [
                 'widget' => 'single_text',
                 'input'  => 'datetime_immutable',
                 'label'  => 'Fin',
                 'help'   => 'La fin doit être après le début',
             ])
-
             ->add('capacity', IntegerType::class, [
                 'label' => 'Places disponibles',
                 'attr'  => ['min' => 1, 'step' => 1],

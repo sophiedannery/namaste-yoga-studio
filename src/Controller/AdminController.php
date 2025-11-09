@@ -81,26 +81,20 @@ final class AdminController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $user = new User();
-
         // Build and handle the form bound to the new User entity.
         $form = $this->createForm(TeacherNewFormType::class, $user);
         $form->handleRequest($request);
-
         // Validate only after submission
         if ($form->isSubmitted() && $form->isValid()) {
-
             // 1) Hash the plain password coming from the form field.
             $plainPassword = $form->get('password')->getData();
             $hashed = $passwordHasher->hashPassword($user, $plainPassword);
             $user->setPassword($hashed);
-
             // 2) Assign the proper role for a teacher.
             $user->setRoles(['ROLE_TEACHER']);
-
              // 3) Persist and flush to save the new teacher.
             $entityManager->persist($user);
             $entityManager->flush();
-
             return $this->redirectToRoute('app_teacher_edit', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -125,7 +119,6 @@ final class AdminController extends AbstractController
         if ($this->isCsrfTokenValid('delete_teacher' . $user->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
-
             $this->addFlash('success', 'Le compte a bien été supprimé.');
         }
 
@@ -144,7 +137,6 @@ final class AdminController extends AbstractController
     {
         // Custom finder returning only student accounts
         $students = $userRepository->findStudentsOnly();
-
         return $this->render('admin/admin-student-edit.html.twig', [
             'students' => $students,
         ]);
@@ -164,7 +156,6 @@ final class AdminController extends AbstractController
         if ($this->isCsrfTokenValid('delete_student' . $user->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
-
             $this->addFlash('success', 'Le compte a bien été supprimé.');
         }
 
@@ -182,7 +173,6 @@ final class AdminController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function findSessions(SessionRepository $session_repository): Response
     {
-
         // Custom finder returning sessions
         $sessions = $session_repository->findAll();
         return $this->render('admin/admin-sessions.html.twig', [
@@ -198,30 +188,22 @@ final class AdminController extends AbstractController
      */
     #[Route('/session/{id}/annuler-admin', name: 'app_session_annuler_admin', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function annulerSession(
-        Session $session,
-        EntityManagerInterface $em,
-        Request $request): Response
+    public function annulerSession(Session $session,EntityManagerInterface $em,Request $request): Response
     {
         // Reject if CSRF token is invalid
         if (!$this->isCsrfTokenValid('cancel_session_admin' . $session->getId(), $request->request->get('_token'))) {
         $this->addFlash('error', 'Token invalide.');
         return $this->redirectToRoute('app_admin_sessions');
         }
-
         // Mark the session as cancelled
         $session->setStatus('CANCELLED');
         $session->setCancelledAt(new \DateTimeImmutable('now'));
         $session->setCancelledBy($this->getUser());
         $session->setUpdatedAt(new \DateTimeImmutable('now'));
-
         // Persist changes to the database
         $em->flush();
-
         $this->addFlash('success', 'Ce cours a bien été annulé.');
-
         return $this->redirectToRoute('app_admin_sessions');
-
     }
 
 

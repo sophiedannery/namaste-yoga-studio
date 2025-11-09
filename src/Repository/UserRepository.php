@@ -10,6 +10,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
 /**
+ * UserRepository
+ * -----------------------------------------------------------------------------
+ * Purpose:
+ *   Centralize all User entity queries and password-upgrade logic.
+ */
+/**
  * @extends ServiceEntityRepository<User>
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
@@ -33,6 +39,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
+     /**
+     * Find users having a given role.
+     */
     public function findByRole(string $role): array
     {
         return $this->createQueryBuilder('u')
@@ -43,43 +52,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
+     /**
+     * Find "students only":
+     *   - Users that are plain ROLE_USER (or with empty roles),
+     *   - and do NOT have ROLE_TEACHER nor ROLE_ADMIN.
+     */
     public function findStudentsOnly(): array
-{
-    return $this->createQueryBuilder('u')
-        ->andWhere('(u.roles LIKE :user OR u.roles = :empty)')
-        ->andWhere('u.roles NOT LIKE :teacher')
-        ->andWhere('u.roles NOT LIKE :admin')
-        ->setParameter('user', '%"ROLE_USER"%')
-        ->setParameter('empty', '[]')
-        ->setParameter('teacher', '%"ROLE_TEACHER"%')
-        ->setParameter('admin', '%"ROLE_ADMIN"%')
-        ->orderBy('u.id', 'ASC')
-        ->getQuery()
-        ->getResult();
-}
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('(u.roles LIKE :user OR u.roles = :empty)')
+            ->andWhere('u.roles NOT LIKE :teacher')
+            ->andWhere('u.roles NOT LIKE :admin')
+            ->setParameter('user', '%"ROLE_USER"%')
+            ->setParameter('empty', '[]')
+            ->setParameter('teacher', '%"ROLE_TEACHER"%')
+            ->setParameter('admin', '%"ROLE_ADMIN"%')
+            ->orderBy('u.id', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    /**
-    //     * @return User[] Returns an array of User objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('u.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?User
-    //    {
-    //        return $this->createQueryBuilder('u')
-    //            ->andWhere('u.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }
