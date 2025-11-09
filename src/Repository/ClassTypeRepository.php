@@ -7,6 +7,12 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * ClassTypeRepository
+ * -----------------------------------------------------------------------------
+ * Purpose:
+ *   Centralize all queries related to ClassType (e.g., style, level, title).
+ */
+/**
  * @extends ServiceEntityRepository<ClassType>
  */
 class ClassTypeRepository extends ServiceEntityRepository

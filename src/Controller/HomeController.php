@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * HomeController
+ * -----------------------------------------------------------------------------
+ * Purpose:
+ *   Serve the public "Home" page.
+ */
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

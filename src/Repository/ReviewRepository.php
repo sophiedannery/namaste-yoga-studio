@@ -5,7 +5,13 @@ namespace App\Repository;
 use App\Entity\Review;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+/**
+ * ReviewRepository
+ * -----------------------------------------------------------------------------
+ * Purpose:
+ *   Centralize queries related to user reviews (ratings, comments) shown on
+ *   public pages (testimonials) or in the back office.
+ */
 /**
  * @extends ServiceEntityRepository<Review>
  */

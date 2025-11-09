@@ -8,6 +8,13 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
+ * SessionRepository
+ * -----------------------------------------------------------------------------
+ * Purpose:
+ *   Encapsulate all query logic for yoga sessions (teacher's upcoming/past,
+ *   public listings, and filter-based search).
+ */
+/**
  * @extends ServiceEntityRepository<Session>
  */
 class SessionRepository extends ServiceEntityRepository
@@ -17,17 +24,17 @@ class SessionRepository extends ServiceEntityRepository
         parent::__construct($registry, Session::class);
     }
 
+    /**
+     * Find FUTURE (or ongoing) sessions for a specific teacher.
+     */
     public function findUpcomingByTeacher(User $teacher): array 
     {
         $now = new \DateTimeImmutable('now');
 
         return $this->createQueryBuilder('s')
         ->andWhere('s.teacher = :teacher')
-        // ->andWhere('s.cancelledAt IS NULL')
-        // ->andWhere('s.status = :status')
         ->andWhere('s.endAt >= :now')
         ->setParameter('teacher', $teacher)
-        // ->setParameter('status', 'SCHEDULED')
         ->setParameter('now', $now)
         ->leftJoin('s.classType', 'ct')->addSelect('ct')
         ->leftJoin('s.room', 'room')->addSelect('room')
@@ -37,6 +44,9 @@ class SessionRepository extends ServiceEntityRepository
         ->getResult();
     }
 
+    /**
+     * Find PAST sessions for a specific teacher.
+     */
     public function findPastByTeacher(User $teacher): array 
     {
         $now = new \DateTimeImmutable('now');
@@ -54,6 +64,9 @@ class SessionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Custom "findAll" including common relations and ordering.
+     */
     public function findAll(): array
     {
         return $this->createQueryBuilder('s')
@@ -65,6 +78,9 @@ class SessionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Filter sessions for the public planning by level, teacher name, and style.
+     */
     public function findByFilters(?string $level, ?string $teacher, ?string $style): array
     {
         $qb = $this->createQueryBuilder('s')
@@ -90,55 +106,4 @@ class SessionRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-
-
-    // public function findByLevel(string $level): array 
-    // {
-    //     return $this->createQueryBuilder('s')
-    //         ->join('s.classType', 'ct')
-    //         ->addSelect('ct')
-    //         ->andWhere('ct.level = :lvl')
-    //         ->setParameter('lvl', $level)
-    //         ->getQuery()
-    //         ->getResult();
-    // }
-
-    // public function findByTeacher(string $teacher): array
-    // {
-    //     return $this->createQueryBuilder('s')
-    //         ->join('s.user', 'u')
-    //         ->addSelect('u')
-    //         ->andWhere('u.firstName = :tch')
-    //         ->setParameter('tch', $teacher)
-    //         ->getQuery()
-    //         ->getResult();
-    // }
-
-
-
-
-    //    /**
-    //     * @return Session[] Returns an array of Session objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('s.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Session
-    //    {
-    //        return $this->createQueryBuilder('s')
-    //            ->andWhere('s.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
 }
