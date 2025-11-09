@@ -1,165 +1,157 @@
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `class_type` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `style` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `level` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` longtext COLLATE utf8mb4_unicode_ci,
-  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `updated_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `doctrine_migration_versions` (
-  `version` varchar(191) COLLATE utf8mb3_unicode_ci NOT NULL,
-  `executed_at` datetime DEFAULT NULL,
-  `execution_time` int DEFAULT NULL,
-  PRIMARY KEY (`version`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-
-CREATE TABLE `messenger_messages` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `body` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `headers` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue_name` varchar(190) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `available_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `delivered_at` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
-  PRIMARY KEY (`id`),
-  KEY `IDX_75EA56E0FB7336F0` (`queue_name`),
-  KEY `IDX_75EA56E0E3BD61CE` (`available_at`),
-  KEY `IDX_75EA56E016BA31DB` (`delivered_at`)
+-- ------------------------------------------------------------
+-- Table : user (comptes élèves / professeurs / admin)
+-- ------------------------------------------------------------
+CREATE TABLE `user` (
+  `id`            INT AUTO_INCREMENT PRIMARY KEY,
+  `email`         VARCHAR(180)  NOT NULL,
+  `roles`         JSON          NOT NULL,
+  `password`      VARCHAR(255)  NOT NULL,
+  `first_name`    VARCHAR(255)  NOT NULL,
+  `last_name`     VARCHAR(255)  NOT NULL,
+  `avatar_url`    VARCHAR(255)  NULL,
+  `is_active`     TINYINT(1)    NOT NULL DEFAULT 1,
+  `bio`           LONGTEXT      NULL,
+  `specialties`   LONGTEXT      NULL,
+  `created_at`    DATETIME      NOT NULL,
+  `updated_at`    DATETIME      NOT NULL,
+  CONSTRAINT `UNIQ_user_email` UNIQUE (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `reservation` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `student_id` int NOT NULL,
-  `session_id` int NOT NULL,
-  `cancelled_by_id` int DEFAULT NULL,
-  `statut` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `booked_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `cancelled_at` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `updated_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uniq_reservation_student_session` (`student_id`,`session_id`),
-  KEY `IDX_42C84955CB944F1A` (`student_id`),
-  KEY `IDX_42C84955613FECDF` (`session_id`),
-  KEY `IDX_42C84955187B2D12` (`cancelled_by_id`),
-  CONSTRAINT `FK_42C84955187B2D12` FOREIGN KEY (`cancelled_by_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `FK_42C84955613FECDF` FOREIGN KEY (`session_id`) REFERENCES `session` (`id`),
-  CONSTRAINT `FK_42C84955CB944F1A` FOREIGN KEY (`student_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+-- ------------------------------------------------------------
+-- Table : class_type (typologies de cours)
+-- ------------------------------------------------------------
+CREATE TABLE `class_type` (
+  `id`          INT AUTO_INCREMENT PRIMARY KEY,
+  `title`       VARCHAR(255)  NOT NULL,
+  `style`       VARCHAR(255)  NOT NULL,
+  `level`       VARCHAR(255)  NOT NULL,
+  `description` LONGTEXT      NULL,
+  `created_at`  DATETIME      NOT NULL,
+  `updated_at`  DATETIME      NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `review` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `student_id` int NOT NULL,
-  `class_type_id` int NOT NULL,
-  `rating` int NOT NULL,
-  `comment` longtext COLLATE utf8mb4_unicode_ci,
-  `statut` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'PENDING',
-  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `updated_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  PRIMARY KEY (`id`),
-  KEY `IDX_794381C6CB944F1A` (`student_id`),
-  KEY `IDX_794381C639EB6F` (`class_type_id`),
-  CONSTRAINT `FK_794381C639EB6F` FOREIGN KEY (`class_type_id`) REFERENCES `class_type` (`id`),
-  CONSTRAINT `FK_794381C6CB944F1A` FOREIGN KEY (`student_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+-- ------------------------------------------------------------
+-- Table : room (salles de cours)
+-- ------------------------------------------------------------
 CREATE TABLE `room` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name_room` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `note_room` longtext COLLATE utf8mb4_unicode_ci,
-  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `updated_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `id`         INT AUTO_INCREMENT PRIMARY KEY,
+  `name_room`  VARCHAR(255) NOT NULL,
+  `note_room`  LONGTEXT     NULL,
+  `created_at` DATETIME     NOT NULL,
+  `updated_at` DATETIME     NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+-- ------------------------------------------------------------
+-- Table : session (cours planifiés)
+-- ------------------------------------------------------------
 CREATE TABLE `session` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `teacher_id` int NOT NULL,
-  `cancelled_by_id` int DEFAULT NULL,
-  `class_type_id` int NOT NULL,
-  `room_id` int DEFAULT NULL,
-  `start_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `end_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `capacity` int NOT NULL,
-  `price` decimal(7,2) DEFAULT NULL,
-  `details` longtext COLLATE utf8mb4_unicode_ci,
-  `status` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cancelled_at` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `cancel_reason` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `updated_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  PRIMARY KEY (`id`),
-  KEY `IDX_D044D5D441807E1D` (`teacher_id`),
-  KEY `IDX_D044D5D4187B2D12` (`cancelled_by_id`),
-  KEY `IDX_D044D5D439EB6F` (`class_type_id`),
-  KEY `IDX_D044D5D454177093` (`room_id`),
-  CONSTRAINT `FK_D044D5D4187B2D12` FOREIGN KEY (`cancelled_by_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `FK_D044D5D439EB6F` FOREIGN KEY (`class_type_id`) REFERENCES `class_type` (`id`),
-  CONSTRAINT `FK_D044D5D441807E1D` FOREIGN KEY (`teacher_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `FK_D044D5D454177093` FOREIGN KEY (`room_id`) REFERENCES `room` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `id`             INT AUTO_INCREMENT PRIMARY KEY,
+  `teacher_id`     INT         NOT NULL,
+  `cancelled_by_id` INT        NULL,
+  `class_type_id`  INT         NOT NULL,
+  `room_id`        INT         NULL,
+  `start_at`       DATETIME    NOT NULL,
+  `end_at`         DATETIME    NOT NULL,
+  `capacity`       INT         NOT NULL,
+  `price`          DECIMAL(7,2) NULL,
+  `details`        LONGTEXT    NULL,
+  `status`         VARCHAR(50) NOT NULL,
+  `cancelled_at`   DATETIME    NULL,
+  `cancel_reason`  VARCHAR(255) NULL,
+  `created_at`     DATETIME    NOT NULL,
+  `updated_at`     DATETIME    NOT NULL,
+  KEY `IDX_session_teacher`      (`teacher_id`),
+  KEY `IDX_session_cancelled_by` (`cancelled_by_id`),
+  KEY `IDX_session_class_type`   (`class_type_id`),
+  KEY `IDX_session_room`         (`room_id`),
+  CONSTRAINT `FK_session_teacher`
+    FOREIGN KEY (`teacher_id`) REFERENCES `user`(`id`)
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `FK_session_cancelled_by`
+    FOREIGN KEY (`cancelled_by_id`) REFERENCES `user`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE,
+  CONSTRAINT `FK_session_class_type`
+    FOREIGN KEY (`class_type_id`) REFERENCES `class_type`(`id`)
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `FK_session_room`
+    FOREIGN KEY (`room_id`) REFERENCES `room`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
+-- ------------------------------------------------------------
+-- Table : reservation (inscriptions aux sessions)
+-- ------------------------------------------------------------
+CREATE TABLE `reservation` (
+  `id`             INT AUTO_INCREMENT PRIMARY KEY,
+  `student_id`     INT          NOT NULL,
+  `session_id`     INT          NOT NULL,
+  `cancelled_by_id` INT         NULL,
+  `statut`         VARCHAR(255) NOT NULL,
+  `booked_at`      DATETIME     NOT NULL,
+  `cancelled_at`   DATETIME     NULL,
+  `created_at`     DATETIME     NOT NULL,
+  `updated_at`     DATETIME     NOT NULL,
+  CONSTRAINT `UNIQ_reservation_student_session`
+    UNIQUE (`student_id`, `session_id`),
+  KEY `IDX_reservation_student`     (`student_id`),
+  KEY `IDX_reservation_session`     (`session_id`),
+  KEY `IDX_reservation_cancelled_by`(`cancelled_by_id`),
+  CONSTRAINT `FK_reservation_student`
+    FOREIGN KEY (`student_id`) REFERENCES `user`(`id`)
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `FK_reservation_session`
+    FOREIGN KEY (`session_id`) REFERENCES `session`(`id`)
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `FK_reservation_cancelled_by`
+    FOREIGN KEY (`cancelled_by_id`) REFERENCES `user`(`id`)
+    ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
+-- Table : review (avis des élèves sur un type de cours)
+-- ------------------------------------------------------------
+CREATE TABLE `review` (
+  `id`           INT AUTO_INCREMENT PRIMARY KEY,
+  `student_id`   INT         NOT NULL,
+  `class_type_id` INT        NOT NULL,
+  `rating`       INT         NOT NULL,
+  `comment`      LONGTEXT    NULL,
+  `statut`       VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+  `created_at`   DATETIME    NOT NULL,
+  `updated_at`   DATETIME    NOT NULL,
+  KEY `IDX_review_student`    (`student_id`),
+  KEY `IDX_review_class_type` (`class_type_id`),
+  CONSTRAINT `FK_review_student`
+    FOREIGN KEY (`student_id`) REFERENCES `user`(`id`)
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `FK_review_class_type`
+    FOREIGN KEY (`class_type_id`) REFERENCES `class_type`(`id`)
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `CHK_review_rating`
+    CHECK (`rating` BETWEEN 1 AND 5)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- ------------------------------------------------------------
+-- Table : suspension (suspensions décidées par l’admin)
+-- ------------------------------------------------------------
 CREATE TABLE `suspension` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `student_id` int NOT NULL,
-  `admin_res_id` int NOT NULL,
-  `reason` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `start_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `end_at` datetime DEFAULT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `updated_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  PRIMARY KEY (`id`),
-  KEY `IDX_82AF0500CB944F1A` (`student_id`),
-  KEY `IDX_82AF05001BB8D7FD` (`admin_res_id`),
-  CONSTRAINT `FK_82AF05001BB8D7FD` FOREIGN KEY (`admin_res_id`) REFERENCES `user` (`id`),
-  CONSTRAINT `FK_82AF0500CB944F1A` FOREIGN KEY (`student_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `id`          INT AUTO_INCREMENT PRIMARY KEY,
+  `student_id`  INT          NOT NULL,
+  `admin_res_id` INT         NOT NULL,
+  `reason`      VARCHAR(255) NOT NULL,
+  `start_at`    DATETIME     NOT NULL,
+  `end_at`      DATETIME     NULL,
+  `status`      VARCHAR(255) NOT NULL,
+  `created_at`  DATETIME     NOT NULL,
+  `updated_at`  DATETIME     NOT NULL,
+  KEY `IDX_suspension_student` (`student_id`),
+  KEY `IDX_suspension_admin`   (`admin_res_id`),
+  CONSTRAINT `FK_suspension_student`
+    FOREIGN KEY (`student_id`) REFERENCES `user`(`id`)
+    ON DELETE RESTRICT ON UPDATE CASCADE,
+  CONSTRAINT `FK_suspension_admin`
+    FOREIGN KEY (`admin_res_id`) REFERENCES `user`(`id`)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `user` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `email` varchar(180) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `roles` json NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `first_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `avatar_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `bio` longtext COLLATE utf8mb4_unicode_ci,
-  `specialties` longtext COLLATE utf8mb4_unicode_ci,
-  `created_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  `updated_at` datetime NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `UNIQ_IDENTIFIER_EMAIL` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+
