@@ -1,11 +1,9 @@
     window.loadSessions = async function loadSessions() {
     const status  = document.getElementById('status');   
     const results = document.getElementById('results');   
-
     const level   = document.getElementById('filterLevel').value;
     const teacher = document.getElementById('filterTeacher').value;
     const style   = document.getElementById('filterStyle').value;
-
 
     const params = new URLSearchParams();
     if (level)   params.set('level', level);
