@@ -163,7 +163,7 @@ final class AdminController extends AbstractController
     }
 
 
-     /**
+    /**
      * List all sessions for administrative overview (table view).
      *
      * GET /admin/tableau-cours
