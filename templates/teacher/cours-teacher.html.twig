@@ -42,9 +42,11 @@
 										{{ s.capacity }}
 									</p>
 
-									<p class="text-muted mb-2">Salle :</p>
+									<p class="text-muted mb-2">
+										Salle :
+										{{ s.room ? s.room.nameRoom : '—' }}
+									</p>
 
-									<p>{{ s.room ? s.room.nameRoom : '—' }}</p>
 									<p class="text-muted mb-2">Tarif :
 										{{ s.price }}
 										€</p>
@@ -75,10 +77,9 @@
 												Vous avez annulé ce cours
 											</a>
 										{% else %}
-											<form method='post' action="{{ path('app_session_annuler', {'id': s.id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler ce cours ?')">
-												<input type="hidden" name="_token" value="{{ csrf_token('cancel_session' ~ s.id) }}">
-												<button class="btn btn-sm btn-danger mt-2">Annuler ce cours</button>
-											</form>
+											<button type="button" class="btn btn-sm btn-danger mt-2 w-100" data-bs-toggle="modal" data-bs-target="#confirmCancelSessionModal" data-action="{{ path('app_session_annuler', {'id': s.id}) }}" data-token="{{ csrf_token('cancel_session' ~ s.id) }}" data-title="Confirmer l'annulation" data-body="Voulez-vous vraiment annuler le cours « {{ s.classType.title }} » du {{ s.startAt|date('d/m/Y H:i') }} ?">
+												Annuler ce cours
+											</button>
 										{% endif %}
 									</div>
 
@@ -92,4 +93,30 @@
 			{% endif %}
 		</div>
 	</section>
+
+	{# Modal annulation de la session #}
+	<div class="modal fade" id="confirmCancelSessionModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<form method="post" class="modal-content" id="cancelForm">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="confirmCancelSessionLabel">Confirmer l'annulation</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+
+				<div class="modal-body" id="confirmCancelSessionBody">
+					Voulez-vous vraiment annuler ce cours ?
+				</div>
+
+				<div class="modal-footer">
+					<input type="hidden" name="_token" id="cancelToken">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non, revenir</button>
+					<button type="submit" class="btn btn-danger">Oui, annuler</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script src="/js/modal.js" defer></script>
+
+
 {% endblock %}
