@@ -163,7 +163,7 @@ final class AdminController extends AbstractController
     }
 
 
-     /**
+    /**
      * List all sessions for administrative overview (table view).
      *
      * GET /admin/tableau-cours
@@ -205,11 +205,6 @@ final class AdminController extends AbstractController
         $this->addFlash('success', 'Ce cours a bien été annulé.');
         return $this->redirectToRoute('app_admin_sessions');
     }
-
-
-
-
-
 
 
 }

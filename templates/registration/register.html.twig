@@ -28,6 +28,7 @@
 
 					{{ form_start(registrationForm, { attr: { class: 'form-validate' } }) }}
 
+
 					{{ form_errors(registrationForm) }}
 
 					<div class="mb-4">
@@ -35,37 +36,50 @@
 							<i class="fa fa-envelope me-1"></i>
 							Adresse email
 						</label>
-						{{ form_widget(registrationForm.email, { attr: { class: 'form-control' } }) }}
+						{{ form_widget(registrationForm.email, { attr: {'data-js': 'reg-email', class: 'form-control' } }) }}
 						{% if registrationForm.email.vars.errors|length > 0 %}
 							<div class="alert alert-danger mt-2 p-2">
 								{{ form_errors(registrationForm.email) }}
 							</div>
 						{% endif %}
+						<div class="invalid-feedback">Le mail n'est pas au bon format.
+						</div>
+
 					</div>
 
 					<div class="mb-4">
-            			<label class="form-label" for="{{ registrationForm.firstName.vars.id }}">
-              				<i class="fa fa-user me-1"></i> Prénom
-            			</label>
-           			{{ form_widget(registrationForm.firstName, { attr: { class: 'form-control' } }) }}
+						<label class="form-label" for="{{ registrationForm.firstName.vars.id }}">
+							<i class="fa fa-user me-1"></i>
+							Prénom
+						</label>
+						{{ form_widget(registrationForm.firstName, { attr: {'data-js': 'reg-firstName', class: 'form-control' } }) }}
+
 						{% if registrationForm.firstName.vars.errors|length > 0 %}
 							<div class="alert alert-danger mt-2 p-2">
 								{{ form_errors(registrationForm.firstName) }}
 							</div>
 						{% endif %}
-          			</div>
+						<div class="invalid-feedback">Veuillez renseigner votre prénom.
+						</div>
+
+					</div>
 
 					<div class="mb-4">
-            <label class="form-label" for="{{ registrationForm.lastName.vars.id }}">
-              <i class="fa fa-user me-1"></i> Nom
-            </label>
-            {{ form_widget(registrationForm.lastName, { attr: { class: 'form-control' } }) }}
-            {% if registrationForm.lastName.vars.errors|length > 0 %}
-              <div class="alert alert-danger mt-2 p-2">
-                {{ form_errors(registrationForm.lastName) }}
-              </div>
-            {% endif %}
-          </div>
+						<label class="form-label" for="{{ registrationForm.lastName.vars.id }}">
+							<i class="fa fa-user me-1"></i>
+							Nom
+						</label>
+						{{ form_widget(registrationForm.lastName, { attr: {'data-js': 'reg-lastName', class: 'form-control' } }) }}
+
+						{% if registrationForm.lastName.vars.errors|length > 0 %}
+							<div class="alert alert-danger mt-2 p-2">
+								{{ form_errors(registrationForm.lastName) }}
+							</div>
+						{% endif %}
+						<div class="invalid-feedback">Veuillez renseigner votre nom de famille.
+						</div>
+
+					</div>
 
 
 					<div class="mb-4">
@@ -73,12 +87,18 @@
 							<i class="fa fa-lock me-1"></i>
 							Mot de passe
 						</label>
-						{{ form_widget(registrationForm.plainPassword.first, { attr: { class: 'form-control' } }) }}
+						{{ form_widget(registrationForm.plainPassword.first, { attr: {'data-js': 'reg-password', class: 'form-control' } }) }}
+
 						{% if registrationForm.plainPassword.first.vars.errors|length > 0 %}
 							<div class="alert alert-danger mt-2 p-2">
 								{{ form_errors(registrationForm.plainPassword.first) }}
 							</div>
 						{% endif %}
+						<div class="invalid-feedback">Le mot de passe doit contenir au moins 9 caractères dont 1 majuscule, 1 minuscule et un chiffre.
+						</div>
+						<div class="valid-feedback">Le mot de passe est assez robuste.
+						</div>
+
 					</div>
 
 					<div class="mb-4">
@@ -86,18 +106,22 @@
 							<i class="fa fa-lock me-1"></i>
 							Confirmer le mot de passe
 						</label>
-						{{ form_widget(registrationForm.plainPassword.second, { attr: { class: 'form-control' } }) }}
+						{{ form_widget(registrationForm.plainPassword.second, { attr: {'data-js': 'reg-confirmPassword', class: 'form-control' } }) }}
+
 						{{ form_errors(registrationForm.plainPassword.second) }}
+						<div class="invalid-feedback">Les mots de passe ne correspondent pas.
+						</div>
+
 					</div>
 
 
 					<div class="d-grid gap-2">
-						<button class="btn btn-lg btn-primary" type="submit">
+						<button id="btn-validation-register" class="btn btn-lg btn-primary" type="submit">
 							S’inscrire
 						</button>
 					</div>
 
-					
+
 					{{ form_end(registrationForm) }}
 
 
@@ -119,4 +143,7 @@
 				<div class="bg-cover h-100 me-n3" style="background-image: url(/photos/photo-signin.jpg);"></div>
 			</div>
 		</div>
+
+		<script src="/js/register.js" defer></script>
+
 	{% endblock %}

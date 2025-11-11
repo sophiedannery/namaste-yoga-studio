@@ -29,27 +29,23 @@
 						{% for teacher in teachers %}
 							<tr>
 								<td>{{ teacher.id }}</td>
-
-								{# <td>{{ teacher.password }}</td> #}
-								<td>{{ teacher.LastName }}</td>
+								<td>{{ teacher.lastName }}</td>
 								<td>{{ teacher.firstName }}</td>
 								<td>{{ teacher.email }}</td>
 								<td>{{ teacher.createdAt ? teacher.createdAt|date('d-m-Y') : '' }}</td>
 								<td>
-									<form method="post" action="{{ path('app_teacher_delete', {'id': teacher.id}) }}" onsubmit="return confirm('Voulez-vous supprimer ce compte professeur ?');">
-										<input type="hidden" name="_token" value="{{ csrf_token('delete_teacher' ~ teacher.id) }}">
-
-										<button class="btn  btn-secondary px-4 me-md-2">Supprimer</button>
-									</form>
-
+									<button type="button" class="btn btn-secondary px-4 me-md-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteTeacherModal" data-action="{{ path('app_teacher_delete', {'id': teacher.id}) }}" data-token="{{ csrf_token('delete_teacher' ~ teacher.id) }}" data-title="Confirmer la suppression de ce compte" data-body="Voulez-vous vraiment supprimer le compte de {{ teacher.lastName }} {{ teacher.firstName }} ?">
+										Supprimer
+									</button>
 								</td>
 							</tr>
 						{% else %}
 							<tr>
-								<td colspan="9">Pas de compte professeur.</td>
+								<td colspan="6">Pas de compte professeur.</td>
 							</tr>
 						{% endfor %}
 					</tbody>
+
 				</table>
 			</div>
 
@@ -57,8 +53,30 @@
 				<a href="{{ path('app_teacher_new')}}" class="btn btn-primary px-4 me-md-2">Créer un compte professeur</a>
 				<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_admin')}}">Retour</a>
 			</div>
-
-
 		</div>
 	</section>
+
+
+	{# Modal suppression d'un compte professeur #}
+	<div class="modal fade" id="confirmDeleteTeacherModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<form method="post" class="modal-content" id="confirmDeleteTeacherForm">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="confirmDeleteTeacherLabel">Confirmer la suppression</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+
+				<div class="modal-body" id="confirmDeleteTeacherBody">
+					Voulez-vous vraiment supprimer ce compte ?
+				</div>
+
+				<div class="modal-footer">
+					<input type="hidden" name="_token" id="deleteTeacherToken">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non, revenir</button>
+					<button type="submit" class="btn btn-danger">Oui, supprimer</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script src="/js/modal.js" defer></script>
 {% endblock %}

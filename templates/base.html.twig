@@ -5,9 +5,10 @@
 		<meta
 		name="viewport" content="width=device-width, initial-scale=1">
 
-		{# --- Meta description --- #}
+		{# --- Meta description block: allows child templates to override SEO description --- #}
 		{% block meta_description %}{% endblock %}
 
+		{# Compute a safe page description: #}
 		{% set page_desc = block('meta_description')|striptags|trim %}
 		{% if page_desc is empty %}
 			{% set page_desc = 'Cours de yoga à Buis-les-Baronnies : Hatha, Vinyasa, Yin. Réservation en ligne, 
@@ -15,12 +16,14 @@
 		{% endif %}
 
 		<meta name="description" content="{{ page_desc|slice(0,155) }}">
+
 		<title>
+			{# Title is overridable by child templates; default is the site name #}
 			{% block title %}Namaste Yoga Studio
 			{% endblock %}
 		</title>
 
-		{# favicon #}
+		{# Favicon (served from /public/favicon/) #}
 		<link
 		rel="icon" type="image/x-icon" href="{{ asset('favicon/favicon.ico') }}">
 
@@ -34,9 +37,10 @@
 		<link
 		href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 
-		{# font awesome #}
+		{# FontAwesome #}
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"> {% block stylesheets %}{% endblock %}
 
+		{# JS blocks #}
 		{% block javascripts %}
 			{% block importmap %}
 				{{ importmap('app') }}
@@ -44,7 +48,7 @@
 		{% endblock %}
 	</head>
 
-	<body {% if block('body_class') is defined %} class="{{ block('body_class') }}" {% else %} class="pt-5" {% endif %}>
+	<body {% if block('body_class') is defined %} class="{{ block('body_class') }}" {% else %} class="pt-5" {% endif %} data-turbo="false">
 
 		{% if block('hide_header') is not defined %}
 			{% include "partials/header.html.twig" %}

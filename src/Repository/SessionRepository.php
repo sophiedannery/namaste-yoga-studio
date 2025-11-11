@@ -79,28 +79,54 @@ class SessionRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find all upcoming sessions for the planning.
+     */
+    public function findAllUpcoming(): array
+    {
+        $now = new \DateTimeImmutable('now');
+
+    return $this->createQueryBuilder('s')
+        ->leftJoin('s.teacher', 't')->addSelect('t')
+        ->leftJoin('s.classType', 'ct')->addSelect('ct')
+        ->leftJoin('s.room', 'r')->addSelect('r')
+        ->andWhere('s.startAt >= :now')
+        ->andWhere('s.status = :status') // on n’affiche pas les annulés
+        ->setParameter('now', $now)
+        ->setParameter('status', 'SCHEDULED')
+        ->orderBy('s.startAt', 'ASC')
+        ->getQuery()
+        ->getResult();
+    }
+
+    /**
      * Filter sessions for the public planning by level, teacher name, and style.
      */
-    public function findByFilters(?string $level, ?string $teacher, ?string $style): array
+    public function findUpcomingByFilters(?string $level, ?string $teacher, ?string $style): array
     {
+        $now = new \DateTimeImmutable('now');
+
         $qb = $this->createQueryBuilder('s')
             ->leftJoin('s.classType', 'ct')->addSelect('ct')
             ->leftJoin('s.teacher', 't')->addSelect('t')
-            ->orderBy('s.startAt', 'DESC');
+            ->andWhere('s.startAt >= :now')
+            ->andWhere('s.status = :status')
+            ->setParameter('now', $now)
+            ->setParameter('status', 'SCHEDULED')
+            ->orderBy('s.startAt', 'ASC');
 
         if ($level !== null && $level !== '') {
             $qb->andWhere('LOWER(ct.level) = LOWER(:level)')
-                ->setParameter('level', trim($level));
+            ->setParameter('level', trim($level));
         }
 
         if ($style !== null && $style !== '') {
             $qb->andWhere('LOWER(ct.style) = LOWER(:style)')
-                ->setParameter('style', trim($style));
+            ->setParameter('style', trim($style));
         }
 
         if ($teacher !== null && $teacher !== '') {
             $qb->andWhere('LOWER(t.firstName) = LOWER(:teacher)')
-                ->setParameter('teacher', trim($teacher));
+            ->setParameter('teacher', trim($teacher));
         }
 
         return $qb->getQuery()->getResult();
