@@ -15,13 +15,17 @@
 
 				<div class="col-md-6 mb-3">
 					{{ form_label(form.classType) }}
-					{{ form_widget(form.classType, { attr: { class: 'form-control' } }) }}
+					{{ form_widget(form.classType, { attr: {'data-js': 'sess-classType', class: 'form-control' } }) }}
+
 					{{ form_errors(form.classType) }}
+					<div class="invalid-feedback">Vous devez choisir un type de cours.
+					</div>
+
 				</div>
 
 				<div class="col-md-6 mb-3">
 					{{ form_label(form.room) }}
-					{{ form_widget(form.room, { attr: { class: 'form-control' } }) }}
+					{{ form_widget(form.room, { attr: {'data-js': 'sess-room', class: 'form-control' } }) }}
 					{{ form_errors(form.room) }}
 				</div>
 
@@ -31,14 +35,22 @@
 
 				<div class="col-md-6 mb-3">
 					{{ form_label(form.startAt) }}
-					{{ form_widget(form.startAt, { attr: { class: 'form-control' } }) }}
+					{{ form_widget(form.startAt, { attr: {'data-js': 'sess-startAt', class: 'form-control' } }) }}
+
 					{{ form_errors(form.startAt) }}
+					<div class="invalid-feedback">Vous devez choisir une date et une heure de début.
+					</div>
+
 				</div>
 
 				<div class="col-md-6 mb-3">
 					{{ form_label(form.endAt) }}
-					{{ form_widget(form.endAt, { attr: { class: 'form-control' } }) }}
+					{{ form_widget(form.endAt, { attr: {'data-js': 'sess-endAt', class: 'form-control' } }) }}
+
 					{{ form_errors(form.endAt) }}
+					<div class="invalid-feedback">L'heure de fin doit être après l'heure du début.
+					</div>
+
 				</div>
 
 			</div>
@@ -47,13 +59,18 @@
 
 				<div class="col-md-6 mb-3">
 					{{ form_label(form.capacity) }}
-					{{ form_widget(form.capacity, { attr: { class: 'form-control' } }) }}
+					{{ form_widget(form.capacity, { attr: {'data-js': 'sess-capacity', class: 'form-control' } }) }}
+
 					{{ form_errors(form.capacity) }}
+					<div class="invalid-feedback">Indiquez le nombre de place disponible.
+					</div>
+
 				</div>
 
 				<div class="col-md-6 mb-3">
 					{{ form_label(form.price) }}
-					{{ form_widget(form.price, { attr: { class: 'form-control' } }) }}
+					{{ form_widget(form.price, { attr: {'data-js': 'sess-price', class: 'form-control' } }) }}
+
 					{{ form_errors(form.price) }}
 				</div>
 
@@ -63,15 +80,19 @@
 
 				<div class="col-md-12 mb-12">
 					{{ form_label(form.details) }}
-					{{ form_widget(form.details, { attr: { class: 'form-control' } }) }}
+					{{ form_widget(form.details, { attr: {'data-js': 'sess-details', class: 'form-control' } }) }}
+
 					{{ form_errors(form.details) }}
+					<div class="invalid-feedback">La description ne doit pas dépasser les 500 caractères.
+					</div>
+
 				</div>
 
 
 			</div>
 
 
-			<button class="btn btn-primary mt-2">Créer le cours</button>
+			<button id="btn-validation-session-new" class="btn btn-primary mt-2">Créer le cours</button>
 
 
 			{{ form_end(form) }}
@@ -86,4 +107,7 @@
 		</div>
 
 	</section>
+
+	<script src="/js/session-new.js" defer></script>
+
 {% endblock %}
