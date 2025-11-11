@@ -15,7 +15,8 @@
 			{% if upcoming is empty %}
 				<div>
 					<h4>Vous n’avez pas encore cours à venir.</h4>
-					<a class="btn btn-secondary" href="#">Proposez un cours</a>.
+					<a class="btn btn-secondary" href="{{ path('app_session_new')}}">Proposez un cours</a>
+
 				</div>
 
 			{% else %}
