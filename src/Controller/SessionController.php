@@ -29,7 +29,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class SessionController extends AbstractController
 {
-     /**
+    /**
      * Display the public planning (list of sessions).
      * GET /planning
      */
@@ -38,7 +38,7 @@ final class SessionController extends AbstractController
         SessionRepository $session_repository, 
         UserRepository $user_repository): Response
     {
-        $sessions = $session_repository->findAll();
+        $sessions = $session_repository->findAllUpcoming();
         $teacher = $user_repository->findAll();
 
         return $this->render('session/session-planning.html.twig', [
@@ -55,7 +55,7 @@ final class SessionController extends AbstractController
         $teacher = $request->query->get('teacher');
         $style   = $request->query->get('style');
 
-        $sessions = $repo->findByFilters($level, $teacher, $style);
+        $sessions = $repo->findUpcomingByFilters($level, $teacher, $style);
 
         return $this->render('session/session-partial-card.html.twig', [
             'sessions' => $sessions,
@@ -86,7 +86,7 @@ final class SessionController extends AbstractController
     }
 
 
-     /**
+    /**
      * Create a new session (teacher only).
      *
      * GET|POST /session/ajout
