@@ -37,13 +37,14 @@
 							Adresse email
 						</label>
 						{{ form_widget(registrationForm.email, { attr: {'data-js': 'reg-email',  class: 'form-control' } }) }}
-
-
 						{% if registrationForm.email.vars.errors|length > 0 %}
 							<div class="alert alert-danger mt-2 p-2">
 								{{ form_errors(registrationForm.email) }}
 							</div>
 						{% endif %}
+						<div class="invalid-feedback">Le mail n'est pas au bon format.
+						</div>
+
 					</div>
 
 					<div class="mb-4">
@@ -58,6 +59,9 @@
 								{{ form_errors(registrationForm.firstName) }}
 							</div>
 						{% endif %}
+						<div class="invalid-feedback">Veuillez renseigner votre prénom.
+						</div>
+
 					</div>
 
 					<div class="mb-4">
@@ -72,6 +76,9 @@
 								{{ form_errors(registrationForm.lastName) }}
 							</div>
 						{% endif %}
+						<div class="invalid-feedback">Veuillez renseigner votre nom de famille.
+						</div>
+
 					</div>
 
 
@@ -87,6 +94,11 @@
 								{{ form_errors(registrationForm.plainPassword.first) }}
 							</div>
 						{% endif %}
+						<div class="invalid-feedback">Le mot de passe doit contenir au moins 9 caractères dont 1 majuscule, 1 minuscule et un chiffre.
+						</div>
+						<div class="valid-feedback">Le mot de passe est assez robuste.
+						</div>
+
 					</div>
 
 					<div class="mb-4">
@@ -97,6 +109,9 @@
 						{{ form_widget(registrationForm.plainPassword.second, { attr: {'data-js': 'reg-confirmPassword', class: 'form-control' } }) }}
 
 						{{ form_errors(registrationForm.plainPassword.second) }}
+						<div class="invalid-feedback">Les mots de passe ne correspondent pas.
+						</div>
+
 					</div>
 
 

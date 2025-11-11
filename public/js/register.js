@@ -15,10 +15,10 @@ function validateRegisterForm() {
     const emailOk = validateRegisterMail(inputRegEmail);
     const firstNameOk = validateRegisterRequired(inputRegFirstName);
     const lastNameOk = validateRegisterRequired(inputRegLastName);
-    validateRegisterRequired(inputRegPassword);
-    validateRegisterRequired(inputRegConfirmPassword);
+    const passwordOk = validateRegisterPassword(inputRegPassword);
+    const confirmPasswordOk = validateConfirmationPassword(inputRegPassword, inputRegConfirmPassword);
 
-    if (emailOk && firstNameOk && lastNameOk) {
+    if (emailOk && firstNameOk && lastNameOk && passwordOk && confirmPasswordOk) {
         btnValidationRegister.disabled = false;
     } else {
         btnValidationRegister.disabled = true;
@@ -47,6 +47,32 @@ function validateRegisterMail(input) {
     } else {
         input.classList.add("is-invalid");
         input.classList.remove("is-valid");
+        return false;
+    }
+}
+
+function validateRegisterPassword(input) {
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).+$/;
+    const passwordUser = input.value;
+    if (passwordUser.match(passwordRegex)) {
+        input.classList.add("is-valid");
+        input.classList.remove("is-invalid");
+        return true;
+    } else {
+        input.classList.add("is-invalid");
+        input.classList.remove("is-valid");
+        return false;
+    }
+}
+
+function validateConfirmationPassword(inputPwd, inputConfirPwd) {
+    if (inputPwd.value == inputConfirPwd.value) {
+        inputConfirPwd.classList.add("is-valid");
+        inputConfirPwd.classList.remove("is-invalid");
+        return true;
+    } else {
+        inputConfirPwd.classList.add("is-invalid");
+        inputConfirPwd.classList.remove("is-valid");
         return false;
     }
 }
