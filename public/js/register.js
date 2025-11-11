@@ -1,3 +1,4 @@
+//validation du formulaire d'inscription
 const inputRegEmail = document.querySelector('[data-js="reg-email"]');
 const inputRegFirstName = document.querySelector('[data-js="reg-firstName"]');
 const inputRegLastName = document.querySelector('[data-js="reg-lastName"]');

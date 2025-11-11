@@ -9,7 +9,7 @@
 			<div class="row justify-content-center">
 				<div class="col-12 col-md-8 col-lg-6">
 					<div class="card shadow">
-						<div class="card-header bg-white border-0 text-center py-3">
+						<div class="card-header border-0 text-center py-3">
 							<h2 class="h5 mb-0">Créer un nouveau compte professeur</h2>
 						</div>
 						<div class="card-body">
@@ -20,32 +20,49 @@
 
 							<div class="mb-3">
 								{{ form_label(form.firstName, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
-								{{ form_widget(form.firstName, {'attr': {'class': 'form-control'}}) }}
+								{{ form_widget(form.firstName, {'attr': {'data-js': 'teacherFirstName', 'class': 'form-control'}}) }}
+
 								{{ form_errors(form.firstName) }}
+								<div class="invalid-feedback">Veuillez renseigner le prénom.
+								</div>
+
 							</div>
 
 							<div class="mb-3">
 								{{ form_label(form.lastName, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
-								{{ form_widget(form.lastName, {'attr': {'class': 'form-control'}}) }}
+								{{ form_widget(form.lastName, {'attr': {'data-js': 'teacherLastName', 'class': 'form-control'}}) }}
+
 								{{ form_errors(form.lastName) }}
+								<div class="invalid-feedback">Veuillez renseigner le nom.
+								</div>
+
 							</div>
 
 
 							<div class="mb-3">
 								{{ form_label(form.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
-								{{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+								{{ form_widget(form.email, {'attr': {'data-js': 'teacherEmail', 'class': 'form-control'}}) }}
+
 								{{ form_errors(form.email) }}
+								<div class="invalid-feedback">Le mail n'est pas au bon format.
+								</div>
+
 							</div>
 
 							<div class="mb-3">
 								{{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
-								{{ form_widget(form.password, {'attr': {'class': 'form-control'}}) }}
+								{{ form_widget(form.password, {'attr': {'data-js': 'teacherPassword', 'class': 'form-control'}}) }}
 								{{ form_errors(form.password) }}
+								<div class="invalid-feedback">Le mot de passe doit contenir au moins 9 caractères dont 1 majuscule, 1 minuscule et un chiffre.
+								</div>
+								<div class="valid-feedback">Le mot de passe est assez robuste.
+								</div>
+
 							</div>
 
 
-							<div class="card-footer bg-white border-0 text-center py-3">
-								<button type="submit" class="btn btn-primary">
+							<div class="card-footer border-0 text-center py-3">
+								<button type="submit" class="btn btn-primary" id="btn-validation-teacher-register">
 									{{ button_label|default('Créer') }}
 								</button>
 								<a href="{{ path('app_teacher_edit') }}" class="btn btn-outline-secondary">
@@ -60,4 +77,7 @@
 			</div>
 		</div>
 	</section>
+
+	<script src="/js/teacher-new.js" defer></script>
+
 {% endblock %}
