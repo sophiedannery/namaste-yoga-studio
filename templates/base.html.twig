@@ -5,9 +5,14 @@
 		<meta
 		name="viewport" content="width=device-width, initial-scale=1">
 
-		{# --- Meta description --- #}
+		{# --- Meta description block: allows child templates to override SEO description --- #}
 		{% block meta_description %}{% endblock %}
 
+		{# Compute a safe page description:
+					- Take the meta_description block content
+					- Strip HTML + trim
+					- Fallback to a default sentence if empty
+					- Finally, slice to ~155 chars (common SERP snippet length) #}
 		{% set page_desc = block('meta_description')|striptags|trim %}
 		{% if page_desc is empty %}
 			{% set page_desc = 'Cours de yoga à Buis-les-Baronnies : Hatha, Vinyasa, Yin. Réservation en ligne, 

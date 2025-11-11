@@ -33,10 +33,10 @@
 								<td>{{ student.email }}</td>
 								<td>{{ student.createdAt ? student.createdAt|date('Y-m-d') : '' }}</td>
 								<td>
-									<form method="post" action="{{ path('app_student_delete', {'id': student.id}) }}" onsubmit="return confirm('Voulez-vous suspendre ce compte utilisateur ?');">
-										<input type="hidden" name="_token" value="{{ csrf_token('delete_student' ~ student.id) }}">
-										<button class="btn  btn-outline-primary px-4 me-md-2">Suspendre</button>
-									</form>
+									<button type="button" class="btn btn-secondary px-4 me-md-2" data-bs-toggle="modal" data-bs-target="#confirmDeleteStudentModal" data-action="{{ path('app_student_delete', {'id': student.id}) }}" data-token="{{ csrf_token('delete_student' ~ student.id) }}" data-title="Confirmer la suppression de ce compte" data-body="Voulez-vous vraiment supprimer le compte de {{ student.lastName }} {{ student.firstName }} ?">
+										Supprimer
+									</button>
+
 								</td>
 							</tr>
 						{% else %}
@@ -49,10 +49,35 @@
 			</div>
 
 			<div class="text-center m-5">
-				<a class="btn btn-outline-primary px-4 me-md-2" href="{{ path('app_admin')}}">Retour</a>
+				<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_admin')}}">Retour</a>
+
 			</div>
 
 
 		</div>
 	</section>
+
+	{# Modal suppression d'un compte élève #}
+	<div class="modal fade" id="confirmDeleteStudentModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<form method="post" class="modal-content" id="confirmDeleteStudentForm">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="confirmDeleteStudentLabel">Confirmer la suppression</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+
+				<div class="modal-body" id="confirmDeleteStudentBody">
+					Voulez-vous vraiment supprimer ce compte ?
+				</div>
+
+				<div class="modal-footer">
+					<input type="hidden" name="_token" id="deleteStudentToken">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non, revenir</button>
+					<button type="submit" class="btn btn-danger">Oui, supprimer</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script src="/js/modal.js" defer></script>
+
 {% endblock %}
