@@ -84,10 +84,12 @@
 												Vous avez annulé votre réservation
 											</a>
 										{% else %}
-											<form method='post' action="{{ path('app_reservation_annuler', {'id': reservation.id}) }}" onsubmit="return confirm('Voulez-vous vraiment annuler cette réservation ?')">
-												<input type="hidden" name="_token" value="{{ csrf_token('cancel_reservation' ~ reservation.id) }}">
-												<button class="btn btn-sm btn-danger mt-2">Annuler ma réservation</button>
-											</form>
+
+
+											<button type="button" class="btn btn-sm btn-danger mt-2 w-100" data-bs-toggle="modal" data-bs-target="#confirmCancelReservationModal" data-action="{{ path('app_reservation_annuler', {'id': reservation.id}) }}" data-token="{{ csrf_token('cancel_reservation' ~ reservation.id) }}" data-title="Confirmer l'annulation" data-body="Voulez-vous vraiment annuler votre réservation « {{ s.classType.title }} » du {{ s.startAt|date('d/m/Y') }} à  {{ s.startAt|date('H:i') }}?">
+												Annuler ma réservation
+											</button>
+
 										{% endif %}
 
 
@@ -111,6 +113,31 @@
 			<a class="btn btn-primary" href="{{ path('app_profile')}}">Retour</a>
 		</div>
 	</div>
+
+
+	{# Modal annulation de la réservation #}
+	<div class="modal fade" id="confirmCancelReservationModal" aria-hidden="true">
+		<div class="modal-dialog">
+			<form method="post" class="modal-content" id="cancelReservationForm">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="confirmCancelReservationLabel">Confirmer l'annulation</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+
+				<div class="modal-body" id="confirmCancelReservationBody">
+					Voulez-vous vraiment annuler votre réservation ?
+				</div>
+
+				<div class="modal-footer">
+					<input type="hidden" name="_token" id="cancelReservationToken">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non, revenir</button>
+					<button type="submit" class="btn btn-danger">Oui, annuler</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<script src="/js/modal.js" defer></script>
 
 
 {% endblock %}
