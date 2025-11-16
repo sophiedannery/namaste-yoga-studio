@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ClassTypeRepository::class)]
 class ClassType
@@ -17,15 +18,19 @@ class ClassType
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getSessions"])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getSessions"])]
     private ?string $style = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getSessions"])]
     private ?string $level = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["getSessions"])]
     private ?string $description = null;
 
     #[ORM\Column]
