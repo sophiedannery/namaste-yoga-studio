@@ -34,6 +34,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class AdminController extends AbstractController
 {
 
+    #[Route('/admin/admin-test', name: 'app_admin_test')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function adminTest(): Response
+    {
+
+        return $this->render('admin/admin-test.html.twig', [
+            
+        ]);
+    }
+
+
     /**
      * Admin dashboard showing statistics.
      * 
@@ -105,7 +116,7 @@ final class AdminController extends AbstractController
     }
 
 
-     /**
+    /**
      * Delete a teacher account.
      *
      * POST /admin/teacher/{id}/delete

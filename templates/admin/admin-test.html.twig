@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin
+{% endblock %}
+
+
+{% block body %}
+
+	<section class="container py-5">
+
+		<div class="d-flex justify-content-between align-items-end mb-5">
+			<h1 class="hero-heading mb-0">Les cours à venir</h1>
+			<a class="btn btn-link text-muted" href="#">Historique des cours</a>
+		</div>
+
+		{# FILTRES #}
+		<div class="row mb-3">
+			<div class="col-md-4">
+				<label for="teacher-filter" class="form-label">Filtrer par professeur</label>
+				<select id="teacher-filter" class="form-select">
+					<option value="">Tous les professeurs</option>
+					{# Les autres options sont ajoutées en JS #}
+				</select>
+			</div>
+			<div class="col-md-4">
+				<label for="status-filter" class="form-label">Filtrer par statut</label>
+				<select id="status-filter" class="form-select">
+					<option value="">Tous les statuts</option>
+					<option value="SCHEDULED">Cours à venir</option>
+					<option value="CANCELLED">Cours annulés</option>
+				</select>
+			</div>
+		</div>
+
+		<p id="session-status" class="text-muted small mb-2"></p>
+
+		<div class="table-responsive">
+			<table class="table table-striped align-middle">
+				<thead>
+					<tr>
+						<th>N°</th>
+						<th>Date</th>
+						<th>Cours</th>
+						<th>Professeur</th>
+						<th>Places</th>
+						<th>Tarif</th>
+						<th>Statut</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody id="session-table-body"></tbody>
+			</table>
+		</div>
+
+		{# Modal de confirmation d'annulation #}
+		<div class="modal fade" id="confirmCancelSessionAdminModal" tabindex="-1" aria-labelledby="confirmCancelSessionAdminLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="confirmCancelSessionAdminLabel">
+							Confirmer l'annulation
+						</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+					</div>
+					<div class="modal-body" id="confirmCancelSessionAdminBody">
+						Voulez-vous vraiment annuler ce cours ?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+							Retour
+						</button>
+						<button type="button" class="btn btn-danger" id="confirmCancelSessionAdminButton">
+							Annuler le cours
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</secion>
+
+
+	<script src="/js/admin-test.js" defer></script>
+	<script src="/js/modal.js" defer></script>
+
+{% endblock %}

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SessionRepository::class)]
@@ -15,37 +16,46 @@ class Session
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getSessions"])]
     private ?int $id = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
     #[Assert\Type(\DateTimeImmutable::class)]
+    #[Groups(["getSessions"])]
     private ?\DateTimeImmutable $startAt = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
     #[Assert\Type(\DateTimeImmutable::class)]
     #[Assert\Expression('this.getEndAt() > this.getStartAt()', message: 'La fin doit être après le début.')]
+    #[Groups(["getSessions"])]
     private ?\DateTimeImmutable $endAt = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
     #[Assert\Positive]
+    #[Groups(["getSessions"])]
     private ?int $capacity = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 7, scale: 2, nullable: true)]
+    #[Groups(["getSessions"])]
     private ?string $price = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["getSessions"])]
     private ?string $details = null;
 
     #[ORM\Column(length: 50)]
+    #[Groups(["getSessions"])]
     private string $status = 'SCHEDULED';
 
     #[ORM\Column(nullable: true)]
+    #[Groups(["getSessions"])]
     private ?\DateTimeImmutable $cancelledAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["getSessions"])]
     private ?string $cancelReason = null;
 
     #[ORM\Column]
@@ -59,16 +69,20 @@ class Session
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getSessions"])]
     private ?User $teacher = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionsCanceled')]
+    #[Groups(["getSessions"])]
     private ?User $cancelledBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getSessions"])]
     private ?ClassType $classType = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
+    #[Groups(["getSessions"])]
     private ?Room $room = null;
 
     /**
