@@ -11,9 +11,11 @@
 
 namespace App\Controller;
 
+use App\Form\SessionForm;
 use App\Repository\ReservationRepository;
 use App\Repository\SessionRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -46,27 +48,16 @@ final class TeacherController extends AbstractController
      */
     #[Route('/espace-professeur/planning', name: 'app_profile_teacher_planning')]
     #[IsGranted('ROLE_TEACHER')]
-    public function upComingSessionTeacher(SessionRepository $session_repository, ReservationRepository $reservation_repository): Response
+    public function upComingSessionTeacher(): Response
     {
-
-        /** @var \App\Entity\User $teacher */
-        $teacher = $this->getUser();
-
-        // Fetch future sessions owned by this teacher.
-        $upcoming = $session_repository->findUpcomingByTeacher($teacher);
-
-        // Build a map: sessionId => list of active reservations (students).
-        $studentsBySession = [];
-        foreach($upcoming as $sess) {
-            $studentsBySession[$sess->getId()] = $reservation_repository->findActiveBySession($sess);
-        }
+        
 
         return $this->render('teacher/cours-teacher.html.twig', [
-            'upcoming' => $upcoming,
-            'studentsBySession' => $studentsBySession,
+            
         ]);
     }
 
+    
 
     /**
      * List past sessions (history) for the logged-in teacher.
@@ -76,17 +67,11 @@ final class TeacherController extends AbstractController
      */
     #[Route('/espace-professeur/historique', name: 'app_profile_teacher_historique')]
     #[IsGranted('ROLE_TEACHER')]
-    public function pastSessionTeacher(SessionRepository $session_repository): Response
+    public function pastSessionTeacher(): Response
     {
-
-        /** @var \App\Entity\User $teacher */
-        $teacher = $this->getUser();
-
-        // Fetch past sessions owned by this teacher.
-        $past = $session_repository->findPastByTeacher($teacher);
-
         return $this->render('teacher/cours-teacher-historique.html.twig', [
-            'past' => $past,
         ]);
     }
+
+
 }

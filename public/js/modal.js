@@ -1,24 +1,4 @@
-// Session cancel modal by teacher
-document.addEventListener('DOMContentLoaded', function () {
-    const modalEl   = document.getElementById('confirmCancelSessionModal');
-    const form      = document.getElementById('cancelForm');
-    const tokenEl   = document.getElementById('cancelToken');
-    const titleEl   = document.getElementById('confirmCancelSessionLabel');
-    const bodyEl    = document.getElementById('confirmCancelSessionBody');
 
-modalEl.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget; // le bouton qui a ouvert la modale
-        const action = button.getAttribute('data-action');
-        const token  = button.getAttribute('data-token');
-        const title  = button.getAttribute('data-title') || "Confirmer l'annulation";
-        const body   = button.getAttribute('data-body')  || "Voulez-vous vraiment annuler ce cours ?";
-
-form.setAttribute('action', action);
-tokenEl.value = token;
-titleEl.textContent = title;
-bodyEl.textContent = body;
-});
-});
 
 // Reservation cancel modal by student
 document.addEventListener('DOMContentLoaded', function () {

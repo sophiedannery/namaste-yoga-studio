@@ -4,6 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Session;
 use App\Repository\ClassTypeRepository;
+use App\Repository\ReservationRepository;
 use App\Repository\RoomRepository;
 use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
@@ -14,6 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -60,6 +62,10 @@ final class SessionApiController extends AbstractController
         return new JsonResponse($jsonSession, Response::HTTP_CREATED, ["Location" => $location], true);
     }
 
+
+
+
+
     // READ - toutes les sessions
     #[Route('/show', name: 'showSessions', methods: ['GET'])]
     public function showAllSessions(SessionRepository $session_repository, SerializerInterface $serializer): JsonResponse
@@ -79,6 +85,70 @@ final class SessionApiController extends AbstractController
         return new JsonResponse($jsonSession, Response::HTTP_OK, [], true);
     }
 
+    // READ - sessions du professeur connecté
+    #[Route('/my', name: 'showMySessions', methods: ['GET'])]
+    #[IsGranted('ROLE_TEACHER')]
+    public function showMySessions(
+        SessionRepository $session_repository,
+        SerializerInterface $serializer
+    ): JsonResponse
+    {
+    // Récupérer l'utilisateur connecté
+    $user = $this->getUser();
+
+    if (!$user) {
+        return new JsonResponse(
+            ['error' => 'Utilisateur non authentifié'],
+            Response::HTTP_UNAUTHORIZED
+        );
+    }
+
+    // Récupérer uniquement les sessions de ce teacher
+    $sessions = $session_repository->findBy(
+        ['teacher' => $user],
+        ['startAt' => 'ASC'] // tri par date croissante
+    );
+
+    $jsonSessions = $serializer->serialize($sessions, 'json', ['groups' => 'getSessions']);
+
+    return new JsonResponse($jsonSessions, Response::HTTP_OK, [], true);
+    }
+
+
+    // READ - élèves d'une session
+    #[Route('/{id}/students', name: 'session_students', methods: ['GET'])]
+    public function getSessionStudents(
+        Session $session,
+        ReservationRepository $reservasion_repository,
+        SerializerInterface $serializer
+    ): JsonResponse
+    {
+        // On récupère uniquement les réservations CONFIRMED pour cette session
+        $reservations = $reservasion_repository->findBy([
+            'session' => $session,
+            'statut'  => 'CONFIRMED',
+        ]);
+
+        $students = [];
+        foreach ($reservations as $reservation) {
+            $student = $reservation->getStudent();
+            if ($student) {
+                $students[] = $student;
+            }
+        }
+
+        // Sérialisation des élèves
+        $json = $serializer->serialize($students, 'json', ['groups' => 'getUsers']);
+
+        return new JsonResponse($json, Response::HTTP_OK, [], true);
+    }
+
+
+
+
+
+
+    
     // UPDATE - modifier une session
     #[Route('/update/{id}', name: 'updateSession', methods: ['PUT'])]
     public function updateSession(
@@ -117,7 +187,6 @@ final class SessionApiController extends AbstractController
     #[Route('/cancel/{id}', name: 'cancelSession', methods: ['PATCH'])]
     public function cancelSession(Session $session, EntityManagerInterface $em): JsonResponse
     {
-        // Tu adaptes la valeur selon ce que tu utilises en BDD : CANCELLED, canceled, ANNULÉ, etc.
         $session->setStatus('CANCELLED');
 
         $em->flush();
@@ -125,6 +194,8 @@ final class SessionApiController extends AbstractController
         // 204 = pas de contenu, juste "ok"
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
+
+    
 
 
 
