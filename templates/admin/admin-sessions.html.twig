@@ -1,99 +1,93 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Gérer les comptes élève
+{% block title %}Les cours à venir
 {% endblock %}
+
 
 {% block body %}
 
-	{% set now = date() %}
+	<section class="container py-5">
 
+		<div class="d-flex justify-content-between align-items-end mb-5">
+			<h1 class="hero-heading mb-0">Les cours à venir</h1>
+			<a class="btn btn-link text-muted" href="{{ path('app_admin_sessions_historique')}}">Historique des cours</a>
+		</div>
 
-	<section class="py-5">
-		<div class="container">
-
-
-			<h1 class="hero-heading mb-5 mt-3 mt-md-0">Liste des cours</h1>
-
-			<div class="table-responsive">
-				<table class="table table-striped table-hover">
-					<thead>
-						<tr>
-							<th>Date</th>
-							<th>Horaires</th>
-							<th>Professeur</th>
-							<th>Cours</th>
-							<th>Salle</th>
-							<th>Statut</th>
-							<th>Actions</th>
-						</tr>
-					</thead>
-					<tbody>
-						{% for session in sessions %}
-
-							{% set state = session.status == 'CANCELLED' ? 'CANCELLED' : (session.endAt < now ? 'FINISHED' : 'UPCOMING') %}
-
-							<tr>
-								<td>{{ session.startAt|date('d/m/Y') }}</td>
-								<td>{{ session.startAt|date('H:i') }}
-									–
-									{{ session.endAt|date('H:i') }}</td>
-								<td>{{ session.teacher.lastName }}
-									{{ session.teacher.firstName }}</td>
-
-								<td>{{ session.classType.title }}</td>
-								<td>{{ session.room ? session.room.nameRoom : '—'  }}</td>
-								<td>
-									{% if state == 'CANCELLED' %}
-										<span class="badge text-bg-danger">Annulé</span>
-									{% elseif state == 'FINISHED' %}
-										<span class="badge text-bg-secondary">Terminé</span>
-									{% else %}
-										<span class="badge text-bg-success">À venir</span>
-									{% endif %}
-								</td>
-								<td>
-									{% if state not in ['CANCELLED', 'FINISHED'] %}
-										<button type="button" class="btn btn-secondary px-4 me-md-2" data-bs-toggle="modal" data-bs-target="#confirmCancelSessionAdminModal" data-action="{{ path('app_session_annuler_admin', {'id': session.id}) }}" data-token="{{ csrf_token('cancel_session_admin' ~ session.id) }}" data-title="Confirmer l'annulation de ce cours'" data-body="Voulez-vous vraiment supprimer le cours {{ session.classType.title }} du {{ session.startAt|date('d/m/Y') }}, organisé par {{ session.teacher.lastName }} {{ session.teacher.firstName }} ?">
-											Supprimer
-										</button>
-									{% endif %}
-								</td>
-							</tr>
-						{% else %}
-							<tr>
-								<td colspan="7">Pas de cours.</td>
-							</tr>
-						{% endfor %}
-					</tbody>
-				</table>
+		{# FILTRES #}
+		<div class="row mb-3">
+			<div class="col-md-4">
+				<label for="teacher-filter" class="form-label">Filtrer par professeur</label>
+				<select id="teacher-filter" class="form-select">
+					<option value="">Tous les professeurs</option>
+					{# Les autres options sont ajoutées en JS #}
+				</select>
 			</div>
-			<div class="text-center m-5">
-				<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_admin')}}">Retour</a>
+			<div class="col-md-4">
+				<label for="status-filter" class="form-label">Filtrer par statut</label>
+				<select id="status-filter" class="form-select">
+					<option value="">Tous les statuts</option>
+					<option value="SCHEDULED">Cours à venir</option>
+					<option value="CANCELLED">Cours annulés</option>
+				</select>
 			</div>
 		</div>
-	</section>
 
-	{# Modal suppression d'une session par admin #}
-	<div class="modal fade" id="confirmCancelSessionAdminModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<form method="post" class="modal-content" id="confirmCancelSessionAdminForm">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="confirmCancelSessionAdminLabel">Confirmer la suppression</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-				</div>
+		<p id="session-status" class="text-muted small mb-2"></p>
 
-				<div class="modal-body" id="confirmCancelSessionAdminBody">
-					Voulez-vous vraiment supprimer ce cours ?
-				</div>
-
-				<div class="modal-footer">
-					<input type="hidden" name="_token" id="cancelSessionAdminToken">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non, revenir</button>
-					<button type="submit" class="btn btn-danger">Oui, supprimer</button>
-				</div>
-			</form>
+		<div class="table-responsive">
+			<table class="table table-striped align-middle">
+				<thead>
+					<tr>
+						<th>N°</th>
+						<th>Date</th>
+						<th>Cours</th>
+						<th>Professeur</th>
+						<th>Places</th>
+						<th>Tarif</th>
+						<th>Statut</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+				<tbody id="session-table-body"></tbody>
+			</table>
 		</div>
-	</div>
+
+		<div class="text-center m-5">
+			<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_admin')}}">Retour</a>
+
+		</div>
+
+
+		{# Modal de confirmation d'annulation #}
+		<div class="modal fade" id="confirmCancelSessionAdminModal" tabindex="-1" aria-labelledby="confirmCancelSessionAdminLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="confirmCancelSessionAdminLabel">
+							Confirmer l'annulation
+						</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+					</div>
+					<div class="modal-body" id="confirmCancelSessionAdminBody">
+						Voulez-vous vraiment annuler ce cours ?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+							Retour
+						</button>
+						<button type="button" class="btn btn-danger" id="confirmCancelSessionAdminButton">
+							Annuler le cours
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</secion>
+
+
+	<script src="/js/admin-sessions.js" defer></script>
 	<script src="/js/modal.js" defer></script>
 
 {% endblock %}
