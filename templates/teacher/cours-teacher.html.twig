@@ -1,122 +1,104 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Planning Professeur
+{% block title %}Mon planning
 {% endblock %}
 
 {% block body %}
 
-	<section class="py-5">
-		<div class="container">
+	<section class="container py-5">
 
-			<div class="d-flex justify-content-between align-items-end mb-5">
-				<h1 class="hero-heading mb-0">Vos cours à venir</h1>
-			</div>
+		<div class="d-flex justify-content-between align-items-end mb-5">
+			<h1 class="hero-heading mb-0">Mes cours à venir</h1>
+		</div>
 
-			{% if upcoming is empty %}
-				<div>
-					<h4>Vous n’avez pas encore cours à venir.</h4>
-					<a class="btn btn-secondary" href="{{ path('app_session_new')}}">Proposez un cours</a>
+		<div
+			class="row">
+			{# Colonne gauche : filtres #}
+			<div class="col-md-3 mb-4">
+				<div class="card shadow-sm">
+					<div class="card-body">
+						<h2 class="h5 mb-3">Filtres</h2>
 
-				</div>
-
-			{% else %}
-
-				<div class="row g-4">
-					{% for s in upcoming %}
-
-						<div class="col-12 col-md-6 col-lg-4">
-							<div class="card h-100 shadow-sm">
-								<div class="card-body d-flex flex-column">
-
-									<h5 class="card-title mb-1">
-										{{ s.classType.title }}
-									</h5>
-
-									<p class="text-muted mb-2">
-										{{ s.startAt|date('d/m/Y H:i') }}
-										→
-										{{ s.endAt|date('H:i') }}
-									</p>
-									<p class="text-muted mb-2">
-										Places :
-										{{ s.capacity }}
-									</p>
-
-									<p class="text-muted mb-2">
-										Salle :
-										{{ s.room ? s.room.nameRoom : '—' }}
-									</p>
-
-									<p class="text-muted mb-2">Tarif :
-										{{ s.price }}
-										€</p>
-									<p class="text-muted mb-2">Inscrits :
-										<br>
-										{% for r in studentsBySession[s.id] ?? [] %}
-											-
-											{{ r.student.firstName }}
-											{{ r.student.lastName }}
-											({{ r.student.email }})
-											<br>
-										{% else %}
-											<p>Aucun élève inscrit</p>
-										{% endfor %}
-
-									</p>
-									<div class="mt-auto">
-										{% if s.id is defined %}
-											<a href="{{ path('app_session_details', {id: s.id}) }}" class="btn btn-primary w-100">
-												Détails du cours
-											</a>
-										{% endif %}
-									</div>
-
-									<div class="mt-auto">
-										{% if s.status == 'CANCELLED' %}
-											<a href="#" class="mt-2 btn btn-primary w-100 disabled">
-												Vous avez annulé ce cours
-											</a>
-										{% else %}
-											<button type="button" class="btn btn-sm btn-danger mt-2 w-100" data-bs-toggle="modal" data-bs-target="#confirmCancelSessionModal" data-action="{{ path('app_session_annuler', {'id': s.id}) }}" data-token="{{ csrf_token('cancel_session' ~ s.id) }}" data-title="Confirmer l'annulation" data-body="Voulez-vous vraiment annuler le cours « {{ s.classType.title }} » du {{ s.startAt|date('d/m/Y H:i') }} ?">
-												Annuler ce cours
-											</button>
-										{% endif %}
-									</div>
-
-
-								</div>
-							</div>
+						<div class="mb-3">
+							<label for="status-filter" class="form-label">Filtrer par statut</label>
+							<select id="status-filter" class="form-select">
+								<option value="">Tous les statuts</option>
+								<option value="SCHEDULED">Cours à venir</option>
+								<option value="CANCELLED">Cours annulés</option>
+							</select>
 						</div>
 
-					{% endfor %}
+
+					</div>
 				</div>
-			{% endif %}
+
+
+			</div>
+
+			{# Colonne droite : cards des sessions #}
+			<div class="col-md-9">
+				<p id="session-status" class="text-muted small mb-0"></p>
+
+				<div
+					id="session-cards-container" class="d-flex flex-column gap-3">{# Cards générées en JS #}
+				</div>
+			</div>
 		</div>
+
+		<div class="text-center m-5">
+			<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_profile_teacher')}}">Retour</a>
+		</div>
+
+
+		{# Modal de confirmation d'annulation #}
+		<div class="modal fade" id="confirmCancelSessionAdminModal" tabindex="-1" aria-labelledby="confirmCancelSessionAdminLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="confirmCancelSessionAdminLabel">
+							Confirmer l'annulation
+						</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+					</div>
+					<div class="modal-body" id="confirmCancelSessionAdminBody">
+						Voulez-vous vraiment annuler ce cours ?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+							Retour
+						</button>
+						<button type="button" class="btn btn-danger" id="confirmCancelSessionAdminButton" data-bs-dismiss="modal">
+							Annuler le cours
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		{# Modal pour la liste des élèves #}
+		<div class="modal fade" id="sessionStudentsModal" tabindex="-1" aria-labelledby="sessionStudentsModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="sessionStudentsModalLabel">
+							Élèves inscrits
+						</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+					</div>
+					<div class="modal-body">
+						<ul id="sessionStudentsList" class="list-group small">
+							<li class="list-group-item text-muted">Chargement...</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 	</section>
 
-	{# Modal annulation de la session #}
-	<div class="modal fade" id="confirmCancelSessionModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<form method="post" class="modal-content" id="cancelForm">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="confirmCancelSessionLabel">Confirmer l'annulation</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-				</div>
 
-				<div class="modal-body" id="confirmCancelSessionBody">
-					Voulez-vous vraiment annuler ce cours ?
-				</div>
-
-				<div class="modal-footer">
-					<input type="hidden" name="_token" id="cancelToken">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non, revenir</button>
-					<button type="submit" class="btn btn-danger">Oui, annuler</button>
-				</div>
-			</form>
-		</div>
-	</div>
-
-	<script src="/js/modal.js" defer></script>
-
+	<script src="/js/teacher-sessions.js" defer></script>
 
 {% endblock %}

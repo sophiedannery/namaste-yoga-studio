@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Historique de mes cours
+{% block title %}Historique des cours
 {% endblock %}
 
 
@@ -9,12 +9,19 @@
 	<section class="container py-5">
 
 		<div class="d-flex justify-content-between align-items-end mb-5">
-			<h1 class="hero-heading mb-0">Historique de mes cours</h1>
+			<h1 class="hero-heading mb-0">Historique des cours</h1>
+			<a class="btn btn-link text-muted" href="{{ path('app_admin_sessions')}}">Les cours à venir</a>
 		</div>
 
 		{# FILTRES #}
 		<div class="row mb-3">
-
+			<div class="col-md-4">
+				<label for="teacher-filter" class="form-label">Filtrer par professeur</label>
+				<select id="teacher-filter" class="form-select">
+					<option value="">Tous les professeurs</option>
+					{# Les autres options sont ajoutées en JS #}
+				</select>
+			</div>
 			<div class="col-md-4">
 				<label for="status-filter" class="form-label">Filtrer par statut</label>
 				<select id="status-filter" class="form-select">
@@ -34,6 +41,7 @@
 						<th>N°</th>
 						<th>Date</th>
 						<th>Cours</th>
+						<th>Professeur</th>
 						<th>Places</th>
 						<th>Tarif</th>
 						<th>Statut</th>
@@ -44,8 +52,7 @@
 		</div>
 
 		<div class="text-center m-5">
-			<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_profile_teacher')}}">Retour</a>
-
+			<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_admin_sessions')}}">Retour</a>
 
 		</div>
 
@@ -53,6 +60,6 @@
 	</secion>
 
 
-	<script src="/js/teacher-sessions-historique.js" defer></script>
+	<script src="/js/admin-sessions-historique.js" defer></script>
 
 {% endblock %}

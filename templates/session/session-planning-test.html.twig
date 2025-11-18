@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Planning des cours
+{% endblock %}
+
+{% block body %}
+
+	<section class="container py-5">
+
+		<div class="d-flex justify-content-between align-items-end mb-5">
+			<h1 class="hero-heading mb-0">Les cours à venir</h1>
+		</div>
+
+		<div
+			class="row">
+			{# Colonne gauche : filtres #}
+			<div class="col-md-3 mb-4">
+				<div class="card shadow-sm">
+					<div class="card-body">
+						<h2 class="h5 mb-3">Filtres</h2>
+
+						<div class="mb-3">
+							<label for="type-filter" class="form-label">Cours</label>
+							<select id="type-filter" class="form-select">
+								<option value="">Tous les cours</option>
+								{# Les autres options sont ajoutées en JS #}
+							</select>
+						</div>
+
+						<div class="mb-3">
+							<label for="teacher-filter" class="form-label">Professeurs</label>
+							<select id="teacher-filter" class="form-select">
+								<option value="">Tous les professeurs</option>
+								{# Les autres options sont ajoutées en JS #}
+							</select>
+						</div>
+
+						<div class="mb-3">
+							<label for="level-filter" class="form-label">Niveau</label>
+							<select id="level-filter" class="form-select">
+								<option value="">Tous les niveaux</option>
+								{# Les autres options sont ajoutées en JS #}
+							</select>
+						</div>
+
+						<div class="mb-3">
+							<button type="button" id="reset-filters" class="btn btn-secondary w-100">
+								Effacer les filtres
+							</button>
+						</div>
+
+					</div>
+				</div>
+
+
+			</div>
+
+			{# Colonne droite : cards des sessions #}
+			<div class="col-md-9">
+
+				<p id="session-status" class="text-muted small mb-0"></p>
+
+				<div
+					id="session-cards-container" class="d-flex flex-column gap-3">{# Cards générées en JS #}
+				</div>
+
+			</div>
+		</div>
+
+		<div class="text-center m-5">
+			<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_home')}}">Retour</a>
+		</div>
+
+	</section>
+
+
+	<script src="/js/sessions-planning.js" defer></script>
+
+{% endblock %}

@@ -34,6 +34,17 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class AdminController extends AbstractController
 {
 
+    #[Route('/admin/admin-test', name: 'app_admin_test')]
+    #[IsGranted('ROLE_ADMIN')]
+    public function adminTest(): Response
+    {
+
+        return $this->render('admin/admin-test.html.twig', [
+            
+        ]);
+    }
+
+
     /**
      * Admin dashboard showing statistics.
      * 
@@ -105,7 +116,7 @@ final class AdminController extends AbstractController
     }
 
 
-     /**
+    /**
      * Delete a teacher account.
      *
      * POST /admin/teacher/{id}/delete
@@ -164,47 +175,33 @@ final class AdminController extends AbstractController
 
 
     /**
-     * List all sessions for administrative overview (table view).
+     * List all upcoming sessions for administrative overview (table view).
      *
      * GET /admin/tableau-cours
      * Requires ROLE_ADMIN.
      */
     #[Route('/admin/tableau-cours', name: 'app_admin_sessions')]
     #[IsGranted('ROLE_ADMIN')]
-    public function findSessions(SessionRepository $session_repository): Response
+    public function findUpcomingSessions(): Response
     {
-        // Custom finder returning sessions
-        $sessions = $session_repository->findAll();
         return $this->render('admin/admin-sessions.html.twig', [
-            'sessions' => $sessions,
         ]);
     }
 
     /**
-     * Cancel a session as an administrator.
+     * List all past sessions for administrative overview (table view).
      *
-     * POST /session/{id}/annuler-admin
+     * GET /admin/tableau-cours
      * Requires ROLE_ADMIN.
      */
-    #[Route('/session/{id}/annuler-admin', name: 'app_session_annuler_admin', methods: ['POST'])]
+    #[Route('/admin/tableau-cours-historique', name: 'app_admin_sessions_historique')]
     #[IsGranted('ROLE_ADMIN')]
-    public function annulerSession(Session $session,EntityManagerInterface $em,Request $request): Response
+    public function findPastSessions(): Response
     {
-        // Reject if CSRF token is invalid
-        if (!$this->isCsrfTokenValid('cancel_session_admin' . $session->getId(), $request->request->get('_token'))) {
-        $this->addFlash('error', 'Token invalide.');
-        return $this->redirectToRoute('app_admin_sessions');
-        }
-        // Mark the session as cancelled
-        $session->setStatus('CANCELLED');
-        $session->setCancelledAt(new \DateTimeImmutable('now'));
-        $session->setCancelledBy($this->getUser());
-        $session->setUpdatedAt(new \DateTimeImmutable('now'));
-        // Persist changes to the database
-        $em->flush();
-        $this->addFlash('success', 'Ce cours a bien été annulé.');
-        return $this->redirectToRoute('app_admin_sessions');
+        return $this->render('admin/admin-sessions-historique.html.twig', [
+        ]);
     }
 
+    
 
 }
