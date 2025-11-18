@@ -47,6 +47,18 @@ final class SessionController extends AbstractController
         ]);
     }
 
+    /**
+     * Display the public planning (list of sessions).
+     * GET /planning
+     */
+    #[Route('/planning-test', name: 'app_session_planning_test')]
+    public function planningTest(): Response
+    {
+        
+        return $this->render('session/session-planning-test.html.twig', [
+        ]);
+    }
+
 
     #[Route('/sessions/fragment', name: 'sessions_fragment', methods: ['GET'])]
     public function fragment(Request $request, SessionRepository $repo)
