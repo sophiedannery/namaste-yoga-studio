@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\UniqueConstraint(name: 'uniq_reservation_student_session', columns: ['student_id', 'session_id'])]
 #[ORM\Table(name: 'reservation')]
@@ -13,9 +14,11 @@ class Reservation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["getReservations"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["getReservations"])]
     private ?string $statut = null;
 
     #[ORM\Column]
@@ -33,13 +36,16 @@ class Reservation
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getReservations"])]
     private ?User $student = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["getReservations"])]
     private ?Session $session = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations_cancelled')]
+    #[Groups(["getReservations"])]
     private ?User $cancelledBy = null;
 
     public function __construct()

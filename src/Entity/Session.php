@@ -16,46 +16,46 @@ class Session
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?int $id = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
     #[Assert\Type(\DateTimeImmutable::class)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?\DateTimeImmutable $startAt = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
     #[Assert\Type(\DateTimeImmutable::class)]
     #[Assert\Expression('this.getEndAt() > this.getStartAt()', message: 'La fin doit être après le début.')]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?\DateTimeImmutable $endAt = null;
 
     #[ORM\Column]
     #[Assert\NotNull]
     #[Assert\Positive]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?int $capacity = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 7, scale: 2, nullable: true)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $price = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $details = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private string $status = 'SCHEDULED';
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?\DateTimeImmutable $cancelledAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $cancelReason = null;
 
     #[ORM\Column]
@@ -69,20 +69,20 @@ class Session
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?User $teacher = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionsCanceled')]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?User $cancelledBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?ClassType $classType = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?Room $room = null;
 
     /**

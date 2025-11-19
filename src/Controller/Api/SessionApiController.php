@@ -185,9 +185,21 @@ final class SessionApiController extends AbstractController
 
     // UPDATE - annuler une session
     #[Route('/cancel/{id}', name: 'cancelSession', methods: ['PATCH'])]
+    #[IsGranted('ROLE_TEACHER')]
     public function cancelSession(Session $session, EntityManagerInterface $em): JsonResponse
     {
+        $user = $this->getUser();
+
+        if ($session->getTeacher() !== $user) {
+            return new JsonResponse(
+                ['error' => 'Accès interdit'],
+                Response::HTTP_FORBIDDEN
+            );
+        }
+
         $session->setStatus('CANCELLED');
+        $session->setCancelledAt(new \DateTimeImmutable());
+        $session->setCancelledBy($user);
 
         $em->flush();
 

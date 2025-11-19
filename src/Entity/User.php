@@ -20,7 +20,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getUsers"])]
+    #[Groups(["getUsers", "getReservations"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
@@ -31,7 +31,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    #[Groups(["getUsers"])]
+    #[Groups(["getUsers", "getReservations"])]
     private array $roles = [];
 
     /**
@@ -41,11 +41,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getUsers", "getSessions"])]
+    #[Groups(["getUsers", "getSessions", "getReservations"])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getUsers", "getSessions"])]
+    #[Groups(["getUsers", "getSessions", "getReservations"])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
