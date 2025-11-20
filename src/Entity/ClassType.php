@@ -18,19 +18,19 @@ class ClassType
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $style = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $level = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $description = null;
 
     #[ORM\Column]

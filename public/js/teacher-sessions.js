@@ -244,7 +244,7 @@ async function loadSessions() {
                         <span class="badge session-status ${
                             isCancelled ? 'bg-secondary text-bg-secondary' : 'bg-success text-bg-success'
                         }">
-                            ${status}
+                            ${status === 'CANCELLED' ? 'Séance annulée' : 'Séance confirmée'}
                         </span>
                         <button 
                             class="btn btn-sm btn-secondary btn-students-session me-1"

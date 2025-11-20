@@ -62,6 +62,7 @@ async function loadSessions() {
         }
 
         pastSessions.forEach((session) => {
+            
             const tr = document.createElement('tr');
 
             const startDate = session.startAt

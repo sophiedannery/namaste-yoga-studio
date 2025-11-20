@@ -18,7 +18,7 @@ class Room
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $nameRoom = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]

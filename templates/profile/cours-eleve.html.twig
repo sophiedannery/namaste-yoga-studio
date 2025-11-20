@@ -1,143 +1,64 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes cours à venir
+{% block title %}Mon planning
 {% endblock %}
 
 
 {% block body %}
 
-	{% set now = "now"|date("U") %}
+	<section class="container py-5">
 
-	<section class="py-5">
-		<div class="container">
+		<div class="d-flex justify-content-between align-items-end mb-5">
+			<h1 class="hero-heading mb-0">Mes cours à venir</h1>
+		</div>
 
-			<div class="d-flex justify-content-between align-items-end mb-5">
-				<h1 class="hero-heading mb-0">Vos cours à venir</h1>
+		{# Colonne droite : cards des reservations #}
+		<div>
+			<p id="reservation-status" class="text-muted small mb-0"></p>
+
+
+			<div
+				id="reservation-cards-container" class="row">{# Cards générées en JS #}
 			</div>
 
-			{% if upcoming is empty %}
-				<div>
-					<h4>Vous n’avez pas encore de réservation à venir.</h4>
-					<a class="btn btn-secondary" href="{{ path('app_session_planning') }}">Voir le planning</a>.
-				</div>
-
-			{% else %}
-				<div class="row g-4">
-
-					{% for reservation in upcoming %}
-
-
-						{% set s = reservation.session %}
-
-						<div class="col-12 col-md-6 col-lg-4">
-							<div class="card h-100 shadow-sm">
-								<div class="card-body d-flex flex-column">
-
-									<h5 class="card-title mb-1">
-										{{ s.classType.title }}
-									</h5>
-
-									<p class="text-muted mb-2">
-										{% if s.teacher %}Avec
-											{{ s.teacher.firstname }}
-											•
-										{% endif %}
-										{{ s.startAt|date('d/m/Y H:i') }}
-										→
-										{{ s.endAt|date('H:i') }}
-									</p>
-									{% if s.room %}
-										<p class="mb-2">Salle :
-											{{ s.room.nameRoom }}</p>
-									{% endif %}
-									{% if s.price %}
-										<p class="mb-2">Tarif :
-											{{ s.price }}
-											€</p>
-									{% endif %}
-
-
-									{% if s.status == 'SCHEDULED' %}
-										<span class="badge text-bg-success align-self-start mb-3">Cours confirmée</span>
-									{% else %}
-										<span class="badge text-bg-danger align-self-start mb-3">Cours annulé</span>
-									{% endif %}
-
-
-									{% if reservation.statut == 'CONFIRMED' %}
-										<span class="badge text-bg-success align-self-start mb-3">Réservation confirmée</span>
-									{% endif %}
-
-
-									<div class="mt-auto">
-										{% if s.id is defined %}
-											<a href="{{ path('app_session_details', {id: s.id}) }}" class="btn btn-primary w-100">
-												Détails du cours
-											</a>
-										{% endif %}
-									</div>
-									<div class="mt-auto">
-
-										{% if reservation.statut =='CANCELLED'%}
-
-											<a href="#" class="btn btn-primary w-100 disabled">
-												Vous avez annulé votre réservation
-											</a>
-										{% else %}
-
-
-											<button type="button" class="btn btn-sm btn-danger mt-2 w-100" data-bs-toggle="modal" data-bs-target="#confirmCancelReservationModal" data-action="{{ path('app_reservation_annuler', {'id': reservation.id}) }}" data-token="{{ csrf_token('cancel_reservation' ~ reservation.id) }}" data-title="Confirmer l'annulation" data-body="Voulez-vous vraiment annuler votre réservation « {{ s.classType.title }} » du {{ s.startAt|date('d/m/Y') }} à  {{ s.startAt|date('H:i') }}?">
-												Annuler ma réservation
-											</button>
-
-										{% endif %}
-
-
-									</div>
-								</div>
-							</div>
-						</div>
-
-
-					{% endfor %}
-
-				</div>
-			{% endif %}
-
-
 		</div>
+
+
+		<div class="text-center m-5">
+			<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_profile')}}">Retour</a>
+		</div>
+
+
+		{# Modal de confirmation d'annulation #}
+		<div class="modal fade" id="confirmCancelReservationModal" tabindex="-1" aria-labelledby="confirmCancelReservationLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="confirmCancelReservationLabel">
+							Confirmer l'annulation
+						</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+					</div>
+					<div class="modal-body" id="confirmCancelReservationBody">
+						Voulez-vous vraiment annuler cette réservation ?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+							Retour
+						</button>
+						<button type="button" class="btn btn-danger" id="confirmCancelReservationButton" data-bs-dismiss="modal">
+							Annuler votre réservation
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
 	</section>
 
-	<div class="container pt-5">
-		<div class="text-center my-5">
-			<a class="btn btn-primary" href="{{ path('app_profile')}}">Retour</a>
-		</div>
-	</div>
 
-
-	{# Modal annulation de la réservation #}
-	<div class="modal fade" id="confirmCancelReservationModal" aria-hidden="true">
-		<div class="modal-dialog">
-			<form method="post" class="modal-content" id="cancelReservationForm">
-				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="confirmCancelReservationLabel">Confirmer l'annulation</h1>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-				</div>
-
-				<div class="modal-body" id="confirmCancelReservationBody">
-					Voulez-vous vraiment annuler votre réservation ?
-				</div>
-
-				<div class="modal-footer">
-					<input type="hidden" name="_token" id="cancelReservationToken">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non, revenir</button>
-					<button type="submit" class="btn btn-danger">Oui, annuler</button>
-				</div>
-			</form>
-		</div>
-	</div>
-
-	<script src="/js/modal.js" defer></script>
+	<script src="/js/student-session.js" defer></script>
 
 
 {% endblock %}
