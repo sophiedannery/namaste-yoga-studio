@@ -93,9 +93,7 @@ async function loadReservations() {
             const statusSession   = reservation.session?.status ?? '—';
             const statutReservation   = reservation.statut ?? '—';
             const title    = reservation.session?.classType?.title ?? '—';
-            const room    = reservation.session?.room?.nameRoom ?? '—';
             const teacher    = reservation.session?.teacher?.firstName ?? '—';
-            const level    = reservation.session?.classType?.level ?? '—';
 
             const isReservationCancelled = String(statutReservation).toUpperCase() === 'CANCELLED';
             const isSessionCancelled = String(statusSession).toUpperCase() === 'CANCELLED';
