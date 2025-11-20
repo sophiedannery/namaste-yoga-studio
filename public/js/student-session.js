@@ -95,6 +95,12 @@ async function loadReservations() {
 
         const reservations = await response.json();
 
+        reservations.sort((a, b) => {
+            const aDate = new Date(a.session.startAt);
+            const bDate = new Date(b.session.startAt);
+            return aDate - bDate;
+        });
+
         const now = new Date();
         const upcomingReservations = reservations.filter((reservation) => {
             if (!reservation.session.startAt) {
