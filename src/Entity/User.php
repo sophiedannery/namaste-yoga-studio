@@ -49,16 +49,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getUsers"])]
     private ?string $avatarUrl = null;
 
     #[ORM\Column(options: ['default' => true])]
     private bool $isActive = true;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["getUsers"])]
     private ?string $bio = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["getUsers"])]
     private ?string $specialties = null;
 
     #[ORM\Column]

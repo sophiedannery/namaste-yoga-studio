@@ -82,5 +82,15 @@ final class ProfileController extends AbstractController
         ]);
     }
 
+    
+    #[Route('/mon-espace/modifier', name: 'app_profile_modifier')]
+    #[IsGranted('ROLE_USER')]
+    public function modifProfile(): Response
+    {
+
+        return $this->render('profile/espace-eleve-modif.html.twig', [
+        ]);
+    }
+
 
 }
