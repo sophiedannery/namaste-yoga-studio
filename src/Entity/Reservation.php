@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 #[ORM\UniqueConstraint(name: 'uniq_reservation_student_session', columns: ['student_id', 'session_id'])]
 #[ORM\Table(name: 'reservation')]
@@ -18,29 +20,43 @@ class Reservation
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: "Le statut de la réservation est obligatoire.")]
+    #[Assert\Choice(
+        choices: ['CONFIRMED', 'CANCELLED'],
+        message: "Le statut de la réservation est invalide."
+    )]
     #[Groups(["getReservations"])]
     private ?string $statut = null;
 
     #[ORM\Column]
+    #[Assert\NotNull(message: "La date de réservation est obligatoire.")]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $bookedAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $cancelledAt = null;
 
     #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $createdAt = null;
 
 
     #[ORM\Column]
+    #[Assert\NotNull]
+    #[Assert\Type(\DateTimeImmutable::class)]
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: "Une réservation doit être associée à un élève.")]
     #[Groups(["getReservations"])]
     private ?User $student = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotNull(message: "Une réservation doit être liée à un cours.")]
     #[Groups(["getReservations"])]
     private ?Session $session = null;
 

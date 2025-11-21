@@ -16,28 +16,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('api/reservations', name: 'app_api_reservations_')]
 final class ReservationApiController extends AbstractController
 {
-    // READ - toutes les réservations
-    #[Route('/show', name: 'showReservations', methods: ['GET'])]
-    public function showAllSessions(ReservationRepository $reservation_repository, SerializerInterface $serializer): JsonResponse
-    {
-        $reservations = $reservation_repository->findAll();
-        // Convertion en json
-        $jsonSessions = $serializer->serialize($reservations, 'json', ['groups' => 'getReservations']);
-
-        return new JsonResponse($jsonSessions, Response::HTTP_OK, [], true);
-    }
-
-
-
-    // READ - une réservation
-    #[Route('/show/{id}', name: 'showReservation', methods: ['GET'])]
-    public function showDetailSession(Reservation $reservation, SerializerInterface $serializer) : JsonResponse
-    {
-        $jsonReservation = $serializer->serialize($reservation, 'json',  ['groups' => 'getReservations']);
-        return new JsonResponse($jsonReservation, Response::HTTP_OK, [], true);
-    }
-
-
 
 
     // READ - réservation de l'élève connecté
@@ -69,7 +47,12 @@ final class ReservationApiController extends AbstractController
     }
 
 
-    // UPDATE - annuler une réservation
+
+
+
+    
+
+    // UPDATE - annuler une réservation (setStatut CANCELLED)
     #[Route('/cancel/{id}', name: 'cancelReservation', methods: ['PATCH'])]
     #[IsGranted('ROLE_USER')]
     public function cancelReservation(Reservation $reservation, EntityManagerInterface $em): JsonResponse

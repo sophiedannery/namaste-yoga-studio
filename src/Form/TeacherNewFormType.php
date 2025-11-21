@@ -33,7 +33,7 @@ class TeacherNewFormType extends AbstractType
                     'class' => 'form-control mb-3',
                 ],
             ])
-            ->add('password', PasswordType::class, [
+            ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
                 'attr' => [
                     'autocomplete' => 'new-password',

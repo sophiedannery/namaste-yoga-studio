@@ -22,6 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ReservationController extends AbstractController
 {
@@ -32,7 +33,14 @@ final class ReservationController extends AbstractController
      * POST /reservation/{id}/reserver
      */
     #[Route('/reservation/{id}/reserver', name: 'app_reservation_reserver', methods: ['POST'])]
-    public function reserver(int $id, Request $request, SessionRepository $session_repository, EntityManagerInterface $em, ReservationRepository $reservation_repository, StatsCounter $counter
+    public function reserver(
+        int $id, 
+        Request $request, 
+        SessionRepository $session_repository, 
+        EntityManagerInterface $em, 
+        ReservationRepository $reservation_repository, 
+        StatsCounter $counter,
+        ValidatorInterface $validator
         ): Response
     {
         // Require authenticated user.
@@ -84,6 +92,18 @@ final class ReservationController extends AbstractController
             ->setStudent($user)
             ->setStatut('CONFIRMED')
             ->setBookedAt(new \DateTimeImmutable());
+
+        // ✅ Validation des Assert de Reservation
+        $errors = $validator->validate($reservation);
+
+        if (count($errors) > 0) {
+            // En prod tu ferais plutôt un flash + log
+            foreach ($errors as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
+            return $this->redirectToRoute('app_session_details', ['id' => $id]);
+        }
+
         // Update stats 
         $counter->incConfirmed(1);
         // Persist and commit.
@@ -94,43 +114,8 @@ final class ReservationController extends AbstractController
         return $this->redirectToRoute('app_profile_cours');
     }
 
-    /**
-     * Cancel an existing reservation of the current user.
-     *
-     * POST /reservation/{id}/annuler
-     */
-    #[Route('/reservation/{id}/annuler', name: 'app_reservation_annuler', methods: ['POST'])]
-    public function annulerReservation(StatsCounter $counter, int $id,Request $request,ReservationRepository $reservation_repository,EntityManagerInterface $em): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-        /** @var Reservation|null $reservation */
-        $reservation = $reservation_repository->find($id);
-        if (!$reservation) {
-            $this->addFlash('error', 'Réservation introuvable.');
-            return $this->redirectToRoute('app_profile_cours');
-        }
-        // CSRF protection
-        if (!$this->isCsrfTokenValid('cancel_reservation' . $reservation->getId(), $request->request->get('_token'))) {
-        $this->addFlash('error', 'Token invalide.');
-        return $this->redirectToRoute('app_profile_cours');
-        }
-        // Ownership check: only the student who booked can cancel their reservation.
-        if ($reservation->getStudent() !== $this->getUser()) {
-        throw $this->createAccessDeniedException();
-        }
-        // Set status
-        $reservation->setStatut('CANCELLED');
-        $reservation->setCancelledAt(new \DateTimeImmutable('now'));
-        $reservation->setCancelledBy($this->getUser());
-        $reservation->setUpdatedAt(new \DateTimeImmutable('now'));
-        // Update stats
-        $counter->incCancelled(1);
-        // Commit changes.
-        $em->flush();
 
-        $this->addFlash('success', 'Votre réservation a bien été annulée.');
-        return $this->redirectToRoute('app_profile_cours');
-    }
+
 
 
 
