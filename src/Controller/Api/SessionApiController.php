@@ -8,6 +8,7 @@ use App\Repository\ReservationRepository;
 use App\Repository\RoomRepository;
 use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
+use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -126,7 +127,11 @@ final class SessionApiController extends AbstractController
     // UPDATE - annuler une session
     #[Route('/cancel/{id}', name: 'cancelSession', methods: ['PATCH'])]
     #[IsGranted('ROLE_TEACHER')]
-    public function cancelSession(Session $session, EntityManagerInterface $em): JsonResponse
+    public function cancelSession(
+        Session $session, 
+        EntityManagerInterface $em,
+        StatsCounter $counter
+        ): JsonResponse
     {
         $user = $this->getUser();
 
@@ -140,6 +145,9 @@ final class SessionApiController extends AbstractController
         $session->setStatus('CANCELLED');
         $session->setCancelledAt(new \DateTimeImmutable());
         $session->setCancelledBy($user);
+
+        // Update stats 
+        $counter->decCreated(1);
 
         $em->flush();
 
