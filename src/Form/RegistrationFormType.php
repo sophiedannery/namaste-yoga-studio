@@ -22,25 +22,13 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class, [
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Email(),
-                    new Assert\Length(max: 180),
-                ],
+                'label' => 'Email',
             ])
             ->add('firstName', TextType::class, [
                 'label' => 'Prénom',
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(max: 255),
-                ],
             ])
             ->add('lastName', TextType::class, [
                 'label' => 'Nom',
-                'constraints' => [
-                    new Assert\NotBlank(),
-                    new Assert\Length(max: 255),
-                ],
             ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,

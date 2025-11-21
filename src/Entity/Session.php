@@ -16,46 +16,67 @@ class Session
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Assert\NotNull]
-    #[Assert\Type(\DateTimeImmutable::class)]
-    #[Groups(["getSessions"])]
+    #[Assert\NotNull(message: "La date de début est obligatoire.")]
+    #[Assert\Type(\DateTimeImmutable::class, message: "Format de date invalide.")]
+    #[Assert\GreaterThan("now", message: "La session doit commencer dans le futur.")]
+    #[Groups(["getSessions", "getReservations"])]
     private ?\DateTimeImmutable $startAt = null;
 
     #[ORM\Column]
-    #[Assert\NotNull]
+    #[Assert\NotNull(message: "La date de fin est obligatoire.")]
     #[Assert\Type(\DateTimeImmutable::class)]
-    #[Assert\Expression('this.getEndAt() > this.getStartAt()', message: 'La fin doit être après le début.')]
-    #[Groups(["getSessions"])]
+    #[Assert\Expression(
+        "this.getEndAt() > this.getStartAt()",
+        message: "La fin doit être après le début."
+    )]
+    #[Groups(["getSessions", "getReservations"])]
     private ?\DateTimeImmutable $endAt = null;
 
     #[ORM\Column]
-    #[Assert\NotNull]
-    #[Assert\Positive]
-    #[Groups(["getSessions"])]
+    #[Assert\NotNull(message: "La capacité est obligatoire.")]
+    #[Assert\Positive(message: "La capacité doit être supérieure à 0.")]
+    #[Assert\Range(
+        min: 1,
+        max: 99,
+        notInRangeMessage: "La capacité doit être comprise entre {{ min }} et {{ max }}."
+    )]
+    #[Groups(["getSessions", "getReservations"])]
     private ?int $capacity = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 7, scale: 2, nullable: true)]
-    #[Groups(["getSessions"])]
+    #[Assert\Regex(
+        pattern: "/^\d+(\.\d{1,2})?$/",
+        message: "Le prix doit être un nombre valide avec 0 à 2 décimales."
+    )]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $price = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    #[Groups(["getSessions"])]
+    #[Assert\Length(
+        max: 2000,
+        maxMessage: "La description ne peut pas dépasser {{ limit }} caractères."
+    )]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $details = null;
 
     #[ORM\Column(length: 50)]
-    #[Groups(["getSessions"])]
+    #[Assert\Choice(
+        choices: ['SCHEDULED', 'CANCELLED', 'COMPLETED'],
+        message: "Le statut n'est pas valide."
+    )]
+    #[Groups(["getSessions", "getReservations"])]
     private string $status = 'SCHEDULED';
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?\DateTimeImmutable $cancelledAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?string $cancelReason = null;
 
     #[ORM\Column]
@@ -69,20 +90,22 @@ class Session
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["getSessions"])]
+    #[Assert\NotNull(message: "Un professeur doit être sélectionné.")]
+    #[Groups(["getSessions", "getReservations"])]
     private ?User $teacher = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessionsCanceled')]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?User $cancelledBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["getSessions"])]
+    #[Assert\NotNull(message: "Un type de cours doit être sélectionné.")]
+    #[Groups(["getSessions", "getReservations"])]
     private ?ClassType $classType = null;
 
     #[ORM\ManyToOne(inversedBy: 'sessions')]
-    #[Groups(["getSessions"])]
+    #[Groups(["getSessions", "getReservations"])]
     private ?Room $room = null;
 
     /**

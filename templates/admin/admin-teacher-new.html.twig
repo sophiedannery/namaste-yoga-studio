@@ -50,9 +50,9 @@
 							</div>
 
 							<div class="mb-3">
-								{{ form_label(form.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
-								{{ form_widget(form.password, {'attr': {'data-js': 'teacherPassword', 'class': 'form-control'}}) }}
-								{{ form_errors(form.password) }}
+								{{ form_label(form.plainPassword, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+								{{ form_widget(form.plainPassword, {'attr': {'data-js': 'teacherPassword', 'class': 'form-control'}}) }}
+								{{ form_errors(form.plainPassword) }}
 								<div class="invalid-feedback">Le mot de passe doit contenir au moins 9 caractères dont 1 majuscule, 1 minuscule et un chiffre.
 								</div>
 								<div class="valid-feedback">Le mot de passe est assez robuste.

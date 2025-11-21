@@ -33,7 +33,7 @@ final class TeacherController extends AbstractController
     #[IsGranted('ROLE_TEACHER')]
     public function index(): Response
     {
-        
+    
         return $this->render('teacher/espace-professeur.html.twig', [
             'controller_name' => 'TeacherController',
         ]);
@@ -51,7 +51,6 @@ final class TeacherController extends AbstractController
     public function upComingSessionTeacher(): Response
     {
         
-
         return $this->render('teacher/cours-teacher.html.twig', [
             
         ]);
