@@ -17,8 +17,6 @@ namespace App\Controller;
 use App\Entity\Session;
 use App\Form\SessionForm;
 use App\Repository\ReservationRepository;
-use App\Repository\SessionRepository;
-use App\Repository\UserRepository;
 use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

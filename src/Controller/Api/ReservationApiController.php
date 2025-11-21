@@ -5,6 +5,7 @@ namespace App\Controller\Api;
 use App\Entity\Reservation;
 use App\Repository\ReservationRepository;
 use App\Repository\SessionRepository;
+use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -55,7 +56,11 @@ final class ReservationApiController extends AbstractController
     // UPDATE - annuler une réservation (setStatut CANCELLED)
     #[Route('/cancel/{id}', name: 'cancelReservation', methods: ['PATCH'])]
     #[IsGranted('ROLE_USER')]
-    public function cancelReservation(Reservation $reservation, EntityManagerInterface $em): JsonResponse
+    public function cancelReservation(
+        Reservation $reservation, 
+        EntityManagerInterface $em,
+        StatsCounter $counter
+        ): JsonResponse
     {
         $user = $this->getUser();
 
@@ -71,6 +76,9 @@ final class ReservationApiController extends AbstractController
         $reservation->setCancelledAt(new \DateTimeImmutable());
         $reservation->setUpdatedAt(new \DateTimeImmutable());
         $reservation->setCancelledBy($user);
+
+        // Update stats 
+        $counter->incCancelled(1);
 
         $em->flush();
 
