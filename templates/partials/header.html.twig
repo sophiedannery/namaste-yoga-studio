@@ -1,7 +1,7 @@
 <header class="header">
 
 	<nav class="navbar navbar-expand-lg fixed-top {% if app.request.get('_route') == 'app_home' %}navbar-scroll
-										{% else %}bg-white shadow{% endif %}">
+													{% else %}bg-white shadow{% endif %}">
 
 		<div class="container">
 
@@ -20,7 +20,7 @@
 						<a class="nav-link" href="/">ACCUEIL</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_session_planning_test')}}">LES COURS</a>
+						<a class="nav-link" href="{{ path('app_session_planning')}}">LES COURS</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('app_contact')}}">CONTACT</a>

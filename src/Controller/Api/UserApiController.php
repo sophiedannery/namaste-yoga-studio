@@ -16,26 +16,6 @@ final class UserApiController extends AbstractController
 {
 
 
-    #[Route('/show', name: 'show', methods: ['GET'])]
-    public function showAllUsers(UserRepository $user_repository, SerializerInterface $serializer): JsonResponse
-    {
-        $users = $user_repository->findAll();
-        // Convertion en json
-        $jsonUsers = $serializer->serialize($users, 'json', ['groups' => 'getUsers']);
-
-        return new JsonResponse($jsonUsers, Response::HTTP_OK, [], true);
-    }
-
-
-    #[Route('/show/{id}', name: 'showUser', methods: ['GET'])]
-    public function showDetailUser(User $user, SerializerInterface $serializer) : JsonResponse
-    {
-        $jsonUser = $serializer->serialize($user, 'json',  ['groups' => 'getUsers']);
-
-        return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
-
-    }
-
     // READ infos de l'élève connecté
     #[Route('/me', name: 'showMyProfile', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]

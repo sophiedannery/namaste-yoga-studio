@@ -46,9 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Mise à jour du statut dans la card
                 const statusEl = cancelModalCard.querySelector('.reservation-status');
                 if (statusEl) {
-                    statusEl.textContent = 'Réservation annulée';
+                    statusEl.textContent = 'Vous avez annulé votre réservation';
                     statusEl.classList.remove('bg-success', 'text-bg-success');
-                    statusEl.classList.add('bg-secondary', 'text-bg-secondary');
+                    statusEl.classList.remove('bg-secondary', 'text-bg-secondary');
+                    statusEl.classList.add('bg-warning', 'text-bg-warning');
                 }
 
                 const button = cancelModalCard.querySelector('.btn-cancel-reservation');

@@ -34,15 +34,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class AdminController extends AbstractController
 {
 
-    #[Route('/admin/admin-test', name: 'app_admin_test')]
-    #[IsGranted('ROLE_ADMIN')]
-    public function adminTest(): Response
-    {
-
-        return $this->render('admin/admin-test.html.twig', [
-            
-        ]);
-    }
 
 
     /**
@@ -98,7 +89,7 @@ final class AdminController extends AbstractController
         // Validate only after submission
         if ($form->isSubmitted() && $form->isValid()) {
             // 1) Hash the plain password coming from the form field.
-            $plainPassword = $form->get('password')->getData();
+            $plainPassword = $form->get('plainPassword')->getData();
             $hashed = $passwordHasher->hashPassword($user, $plainPassword);
             $user->setPassword($hashed);
             // 2) Assign the proper role for a teacher.
@@ -174,12 +165,7 @@ final class AdminController extends AbstractController
     }
 
 
-    /**
-     * List all upcoming sessions for administrative overview (table view).
-     *
-     * GET /admin/tableau-cours
-     * Requires ROLE_ADMIN.
-     */
+  
     #[Route('/admin/tableau-cours', name: 'app_admin_sessions')]
     #[IsGranted('ROLE_ADMIN')]
     public function findUpcomingSessions(): Response
@@ -188,12 +174,7 @@ final class AdminController extends AbstractController
         ]);
     }
 
-    /**
-     * List all past sessions for administrative overview (table view).
-     *
-     * GET /admin/tableau-cours
-     * Requires ROLE_ADMIN.
-     */
+
     #[Route('/admin/tableau-cours-historique', name: 'app_admin_sessions_historique')]
     #[IsGranted('ROLE_ADMIN')]
     public function findPastSessions(): Response

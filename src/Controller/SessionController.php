@@ -29,48 +29,14 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class SessionController extends AbstractController
 {
-    /**
-     * Display the public planning (list of sessions).
-     * GET /planning
-     */
+    
+
+    
     #[Route('/planning', name: 'app_session_planning')]
-    public function planning(
-        SessionRepository $session_repository, 
-        UserRepository $user_repository): Response
-    {
-        $sessions = $session_repository->findAllUpcoming();
-        $teacher = $user_repository->findAll();
-
-        return $this->render('session/session-planning.html.twig', [
-            'sessions' => $sessions,
-            'teacher' => $teacher,
-        ]);
-    }
-
-    /**
-     * Display the public planning (list of sessions).
-     * GET /planning
-     */
-    #[Route('/planning-test', name: 'app_session_planning_test')]
     public function planningTest(): Response
     {
         
-        return $this->render('session/session-planning-test.html.twig', [
-        ]);
-    }
-
-
-    #[Route('/sessions/fragment', name: 'sessions_fragment', methods: ['GET'])]
-    public function fragment(Request $request, SessionRepository $repo)
-    {
-        $level   = $request->query->get('level');
-        $teacher = $request->query->get('teacher');
-        $style   = $request->query->get('style');
-
-        $sessions = $repo->findUpcomingByFilters($level, $teacher, $style);
-
-        return $this->render('session/session-partial-card.html.twig', [
-            'sessions' => $sessions,
+        return $this->render('session/session-planning.html.twig', [
         ]);
     }
 
@@ -117,13 +83,17 @@ final class SessionController extends AbstractController
             $teacher = $this->getUser();
             
         $session = new Session();
+
+        // Ensure the session is owned by the logged-in teacher.
+        $session->setTeacher($teacher);
+
+
         $form = $this->createForm(SessionForm::class, $session);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Ensure the session is owned by the logged-in teacher.
-            $session->setTeacher($teacher);
+            
              // Initial status for a new class.
             $session->setStatus('SCHEDULED');
             $session->setUpdatedAt(new \DateTimeImmutable('now'));
@@ -138,50 +108,12 @@ final class SessionController extends AbstractController
             return $this->redirectToRoute('app_profile_teacher_planning');
 
         }
+
+        
         
         return $this->render('session/session-new.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
-/**
-     * Cancel a session owned by the current teacher.
-     *
-     * POST /session/{id}/annuler
-     */
-    #[Route('/session/{id}/annuler', name: 'app_session_annuler', methods: ['POST'])]
-    #[IsGranted('ROLE_TEACHER')]
-    public function annulerSession(
-        StatsCounter $counter,
-        Session $session,
-        EntityManagerInterface $em,
-        Request $request): Response
-    {
-        // CSRF protection
-        if (!$this->isCsrfTokenValid('cancel_session' . $session->getId(), $request->request->get('_token'))) {
-        $this->addFlash('error', 'Token invalide.');
-        return $this->redirectToRoute('app_profile_teacher_planning');
-        }
-
-        // Ownership: only the session's teacher can cancel it.
-        if ($session->getTeacher() !== $this->getUser()) {
-        throw $this->createAccessDeniedException();
-        }
-
-        // Mark as cancelled and set audit fields.
-        $session->setStatus('CANCELLED');
-        $session->setCancelledAt(new \DateTimeImmutable('now'));
-        $session->setCancelledBy($this->getUser());
-        $session->setUpdatedAt(new \DateTimeImmutable('now'));
-
-         // Update stats
-        $counter->decCreated(1);
-
-        $em->flush();
-
-        $this->addFlash('success', 'Votre cours a bien été annulé.');
-
-        return $this->redirectToRoute('app_profile_teacher_planning');
-
-    }
 }
