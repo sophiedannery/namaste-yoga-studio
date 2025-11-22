@@ -37,10 +37,17 @@
 
 			{# Colonne droite : cards des sessions #}
 			<div class="col-md-9">
-				<p id="session-status" class="text-muted small mb-0"></p>
+				<p id="session-status" class="text-muted small mb-0" role="status" aria-live="polite"></p>
+
 
 				<div
-					id="session-cards-container" class="d-flex flex-column gap-3">{# Cards générées en JS #}
+					id="session-cards-container" class="d-flex flex-column gap-3">
+					{# Cards générées en JS #}
+					<noscript>
+						<p class="text-danger">
+							Le planning n’est pas disponible pour le moment.
+						</p>
+					</noscript>
 				</div>
 			</div>
 		</div>
@@ -87,7 +94,7 @@
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 					</div>
 					<div class="modal-body">
-						<ul id="sessionStudentsList" class="list-group small">
+						<ul id="sessionStudentsList" class="list-group small" aria-live="polite">
 							<li class="list-group-item text-muted">Chargement...</li>
 						</ul>
 					</div>

@@ -156,8 +156,10 @@ final class AdminController extends AbstractController
     {
         // Same CSRF pattern as teachers, but with a different token id.
         if ($this->isCsrfTokenValid('delete_student' . $user->getId(), $request->getPayload()->getString('_token'))) {
+
             $entityManager->remove($user);
             $entityManager->flush();
+            
             $this->addFlash('success', 'Le compte a bien été supprimé.');
         }
 
@@ -165,7 +167,8 @@ final class AdminController extends AbstractController
     }
 
 
-  
+
+
     #[Route('/admin/tableau-cours', name: 'app_admin_sessions')]
     #[IsGranted('ROLE_ADMIN')]
     public function findUpcomingSessions(): Response

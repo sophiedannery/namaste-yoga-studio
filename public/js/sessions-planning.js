@@ -11,22 +11,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if (typeSelect) {
         typeSelect.addEventListener('change', applyFilters);
     }
-
     if (teacherSelect) {
         teacherSelect.addEventListener('change', applyFilters);
     }
-
     if (levelSelect) {
         levelSelect.addEventListener('change', applyFilters);
     }
-
     if (resetBtn) {
         resetBtn.addEventListener('click', () => {
             if (typeSelect)    typeSelect.value = '';
             if (teacherSelect) teacherSelect.value = '';
             if (levelSelect)   levelSelect.value = '';
 
-            // Ré-applique les filtres → tout redevient visible
             applyFilters();
         });
     }
@@ -162,15 +158,12 @@ async function loadSessions() {
             container.appendChild(card);
         });
 
-        // On remplit les filtres
         buildFiltersOptions();
 
-        // On vide le statut qui était sur Chargement...
         if (statusEl) {
             statusEl.textContent = '';
         }
 
-        // Appliquer les filtres une première fois (au cas où un statut serait déjà sélectionné)
         applyFilters();
 
     } catch (error) {
@@ -187,7 +180,6 @@ async function loadSessions() {
 }
 
 
-// Remplir les filtres 
 function buildFiltersOptions() {
     const typeSelect    = document.getElementById('type-filter');
     const teacherSelect = document.getElementById('teacher-filter');
@@ -209,10 +201,11 @@ function buildFiltersOptions() {
         if (level && level !== '—')  levels.add(level);
     });
 
-    // petite fonction utilitaire
     function fillSelect(select, values, defaultLabel) {
         if (!select) return;
+
         select.innerHTML = `<option value="">${defaultLabel}</option>`;
+
         Array.from(values).sort().forEach((val) => {
             const option = document.createElement('option');
             option.value = val;
@@ -227,17 +220,14 @@ function buildFiltersOptions() {
 }
 
 
-// Appliquer les filtres 
 function applyFilters() {
     const typeSelect    = document.getElementById('type-filter');
     const teacherSelect = document.getElementById('teacher-filter');
     const levelSelect   = document.getElementById('level-filter');
     const statusEl      = document.getElementById('session-status');
-
     const selectedType    = typeSelect ? typeSelect.value.toUpperCase() : '';
     const selectedTeacher = teacherSelect ? teacherSelect.value.toUpperCase() : '';
     const selectedLevel   = levelSelect ? levelSelect.value.toUpperCase() : '';
-
     const cards = document.querySelectorAll('.session-card');
 
     let anyVisible = false;
@@ -254,11 +244,9 @@ function applyFilters() {
         if (selectedType !== '') {
             matchType = (cardType === selectedType);
         }
-
         if (selectedTeacher !== '') {
             matchTeacher = (cardTeacher === selectedTeacher);
         }
-
         if (selectedLevel !== '') {
             matchLevel = (cardLevel === selectedLevel);
         }

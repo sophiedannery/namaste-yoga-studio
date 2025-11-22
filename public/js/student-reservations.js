@@ -2,7 +2,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadReservations();
 
-
     // --- Gestion du modal d'annulation ---
     const modalEl    = document.getElementById('confirmCancelReservationModal');
     const titleEl    = document.getElementById('confirmCancelReservationLabel');

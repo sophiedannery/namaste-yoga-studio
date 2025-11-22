@@ -14,7 +14,8 @@
 
 		{# Colonne droite : cards des reservations #}
 		<div>
-			<p id="reservation-status" class="text-muted small mb-0"></p>
+			<p id="reservation-status" class="text-muted small mb-0" role="status" aria-live="polite"></p>
+
 
 			<div class="table-responsive">
 				<table class="table table-striped align-middle">
@@ -34,7 +35,13 @@
 
 
 			<div
-				id="reservation-cards-container" class="row">{# Cards générées en JS #}
+				id="reservation-cards-container" class="row">
+				{# Cards générées en JS #}
+				<noscript>
+					<p class="text-danger">
+						Le planning n’est pas disponible pour le moment.
+					</p>
+				</noscript>
 			</div>
 
 		</div>

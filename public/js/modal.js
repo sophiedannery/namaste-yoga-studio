@@ -1,27 +1,3 @@
-
-
-// Reservation cancel modal by student
-document.addEventListener('DOMContentLoaded', function () {
-    const modalEl   = document.getElementById('confirmCancelReservationModal');
-    const form      = document.getElementById('cancelReservationForm');
-    const tokenEl   = document.getElementById('cancelReservationToken');
-    const titleEl   = document.getElementById('confirmCancelReservationLabel');
-    const bodyEl    = document.getElementById('confirmCancelReservationBody');
-
-modalEl.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget; // le bouton qui a ouvert la modale
-        const action = button.getAttribute('data-action');
-        const token  = button.getAttribute('data-token');
-        const title  = button.getAttribute('data-title') || "Confirmer l'annulation";
-        const body   = button.getAttribute('data-body')  || "Voulez-vous vraiment annuler ce cours ?";
-
-form.setAttribute('action', action);
-tokenEl.value = token;
-titleEl.textContent = title;
-bodyEl.textContent = body;
-});
-});
-
 // Reservation confirmation modal by student
 document.addEventListener('DOMContentLoaded', function () {
     const modalEl   = document.getElementById('confirmReservationModal');
@@ -89,24 +65,3 @@ bodyEl.textContent = body;
 });
 
 
-// Admin: confirm session cancellation
-document.addEventListener('DOMContentLoaded', function () {
-    const modalEl   = document.getElementById('confirmCancelSessionAdminModal');
-    const form      = document.getElementById('confirmCancelSessionAdminForm');
-    const tokenEl   = document.getElementById('cancelSessionAdminToken');
-    const titleEl   = document.getElementById('confirmCancelSessionAdminLabel');
-    const bodyEl    = document.getElementById('confirmCancelSessionAdminBody');
-
-modalEl.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget; // le bouton qui a ouvert la modale
-        const action = button.getAttribute('data-action');
-        const token  = button.getAttribute('data-token');
-        const title  = button.getAttribute('data-title') || "Confirmer l'annulation";
-        const body   = button.getAttribute('data-body')  || "Voulez-vous vraiment annuler ce cours ?";
-
-form.setAttribute('action', action);
-tokenEl.value = token;
-titleEl.textContent = title;
-bodyEl.textContent = body;
-});
-});
