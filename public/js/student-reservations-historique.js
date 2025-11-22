@@ -1,11 +1,8 @@
-// Remplissage de la page une fois le DOM prêt
+
 document.addEventListener('DOMContentLoaded', () => {
     loadReservations();
-
 });
 
-
-// Chargement des reservations
 async function loadReservations() {
 
     const statusEl  = document.getElementById('reservation-status');
@@ -40,6 +37,7 @@ async function loadReservations() {
         });
 
         const now = new Date();
+
         const pastReservations = reservations.filter((reservation) => {
             if (!reservation.session.startAt) {
                 return false;
@@ -70,19 +68,15 @@ async function loadReservations() {
             if (!reservation.session?.startAt || !reservation.session?.endAt) {
             return; 
             }
-
             const startDateObj = new Date(reservation.session.startAt);
             const endDateObj = new Date(reservation.session.endAt);
-    
             const dateLabel = startDateObj.toLocaleDateString('fr-FR', {
                 dateStyle: 'short'
             })
-
             const startTimeLabel = startDateObj.toLocaleTimeString('fr-FR', {
                 hour: '2-digit',
                 minute: '2-digit'
             })
-
             const endTimeLabel = endDateObj.toLocaleTimeString('fr-FR', {
                 hour: '2-digit',
                 minute: '2-digit'
@@ -94,7 +88,6 @@ async function loadReservations() {
             const statutReservation   = reservation.statut ?? '—';
             const title    = reservation.session?.classType?.title ?? '—';
             const teacher    = reservation.session?.teacher?.firstName ?? '—';
-
             const isReservationCancelled = String(statutReservation).toUpperCase() === 'CANCELLED';
             const isSessionCancelled = String(statusSession).toUpperCase() === 'CANCELLED';
             const isCancelled = isSessionCancelled || isReservationCancelled;

@@ -7,37 +7,35 @@
 	<section class="container py-5">
 		<h1 class="hero-heading mb-4">Mon profil</h1>
 
-		<p id="profile-status" class="text-muted small mb-4">
-			Chargement du profil...
-		</p>
+		<p id="profile-status" class="text-muted small mb-4" role="status" aria-live="polite"></p>
+		Chargement du profil...
+	</p>
 
-		<div class="card shadow-sm">
-			<div class="card-body">
+	<div class="card shadow-sm">
+		<div class="card-body">
 
-				<div class="row mb-3">
-					<div class="col-md-3 text-muted fw-semibold">Prénom</div>
-					<div class="col-md-9" id="profile-firstname">—</div>
-				</div>
-
-				<hr>
-
-				<div class="row mb-3">
-					<div class="col-md-3 text-muted fw-semibold">Nom</div>
-					<div class="col-md-9" id="profile-lastname">—</div>
-				</div>
-
-				<hr>
-
-				<div class="row mb-3">
-					<div class="col-md-3 text-muted fw-semibold">E-mail</div>
-					<div class="col-md-9" id="profile-email">—</div>
-				</div>
-
+			<div class="row mb-3">
+				<div class="col-md-3 text-muted fw-semibold">Prénom</div>
+				<div class="col-md-9" id="profile-firstname">—</div>
 			</div>
+
+			<hr>
+
+			<div class="row mb-3">
+				<div class="col-md-3 text-muted fw-semibold">Nom</div>
+				<div class="col-md-9" id="profile-lastname">—</div>
+			</div>
+
+			<hr>
+
+			<div class="row mb-3">
+				<div class="col-md-3 text-muted fw-semibold">E-mail</div>
+				<div class="col-md-9" id="profile-email">—</div>
+			</div>
+
 		</div>
-	</section>
+	</div>
+</section>
 
 
-	<script src="/js/student-modif.js" defer></script>
-
-{% endblock %}
+<script src="/js/student-modif.js" defer></script>{% endblock %}
