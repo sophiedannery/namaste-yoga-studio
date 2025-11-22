@@ -86,4 +86,11 @@ final class ReservationApiController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
+    #[Route('/test/error', name: 'app_api_test_error', methods:['GET'])]
+    public function testError(): JsonResponse
+    {
+        // Panne volontaire pour tester l'EsceptionSubscriber
+        throw new \Exception('Erreur de test pour démonstration');
+    }
+
 }

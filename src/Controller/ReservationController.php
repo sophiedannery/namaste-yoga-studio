@@ -54,12 +54,9 @@ final class ReservationController extends AbstractController
 
         // Fetch the target session
         $session = $session_repository->find($id);
-
-
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
-        
         // Guard: session must exist
         if (!$session) {
             $this->addFlash('error', 'Session introuvable.');
@@ -119,10 +116,4 @@ final class ReservationController extends AbstractController
         $this->addFlash('success', 'Votre réservation est confirmée !');
         return $this->redirectToRoute('app_profile_cours');
     }
-
-
-
-
-
-
 }

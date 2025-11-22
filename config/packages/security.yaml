@@ -27,6 +27,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/teacher, roles: ROLE_TEACHER }
         - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api/reservations/test/error, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: ROLE_USER }
 
     role_hierarchy: 
