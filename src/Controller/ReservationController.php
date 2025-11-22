@@ -45,15 +45,21 @@ final class ReservationController extends AbstractController
     {
         // Require authenticated user.
         $this->denyAccessUnlessGranted('ROLE_USER');
+
         // CSRF protection
         if (!$this->isCsrfTokenValid('reserver' . $id, $request->request->get('_token'))) {
             $this->addFlash('error', 'Requête invalide, token CSRF non validé.');
             return $this->redirectToRoute('app_session_details', ['id' => $id]);
         }
+
         // Fetch the target session
         $session = $session_repository->find($id);
+
+
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
+
+        
         // Guard: session must exist
         if (!$session) {
             $this->addFlash('error', 'Session introuvable.');

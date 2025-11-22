@@ -25,7 +25,8 @@
 			</div>
 		</div>
 
-		<p id="session-status" class="text-muted small mb-2"></p>
+		<p id="session-status" class="text-muted small mb-2" role="status" aria-live="polite"></p>
+
 
 		<div class="table-responsive">
 			<table class="table table-striped align-middle">
@@ -39,7 +40,17 @@
 						<th>Statut</th>
 					</tr>
 				</thead>
-				<tbody id="session-table-body"></tbody>
+				<tbody id="session-table-body">
+					<noscript>
+						<tr>
+							<td colspan="7" class="text-danger">
+								Le planning n’est pas disponible pour le moment.
+							</td>
+						</tr>
+					</noscript>
+
+				</tbody>
+
 			</table>
 		</div>
 
