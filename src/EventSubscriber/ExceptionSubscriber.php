@@ -18,8 +18,6 @@ class ExceptionSubscriber implements EventSubscriberInterface
         ];
     }
 
-
-
     public function onKernelException(ExceptionEvent $event): void
     {
         $request = $event->getRequest();

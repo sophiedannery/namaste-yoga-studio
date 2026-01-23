@@ -2,7 +2,6 @@
 namespace App\Stats;
 
 use MongoDB\Client;
-
 final class StatsCounter
 {
     private \MongoDB\Collection $col;

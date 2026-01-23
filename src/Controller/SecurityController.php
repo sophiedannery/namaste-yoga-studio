@@ -22,7 +22,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
 
-     /**
+    /**
      * Display the login page (GET) and show the latest authentication error if any.
      *
      * GET /login
@@ -45,10 +45,8 @@ class SecurityController extends AbstractController
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
-
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
         // Generate a CSRF token for the login form
         $csrfToken = $csrfTokenManager->getToken('authenticate')->getValue();
 

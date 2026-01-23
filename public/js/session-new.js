@@ -73,7 +73,6 @@ function validateSessionCapacity(input) {
 
 }
 
-
 // Checks the price
 function validateSessionPrice(input) {
     if (!input) return true;

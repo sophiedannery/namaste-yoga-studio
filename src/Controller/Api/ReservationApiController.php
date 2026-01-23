@@ -63,8 +63,7 @@ final class ReservationApiController extends AbstractController
         ): JsonResponse
     {
         $user = $this->getUser();
-
-        // Vérifier que c’est bien la réservation de l’utilisateur connecté
+        
         if ($reservation->getStudent() !== $user) {
             return new JsonResponse(
                 ['error' => 'Accès interdit'],
@@ -82,7 +81,6 @@ final class ReservationApiController extends AbstractController
 
         $em->flush();
 
-        // 204 = pas de contenu, juste "ok"
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 

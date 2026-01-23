@@ -27,7 +27,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class ReservationController extends AbstractController
 {
 
-     /**
+    /**
      * Reserve a place in a session for the current user.
      *
      * POST /reservation/{id}/reserver
@@ -88,6 +88,7 @@ final class ReservationController extends AbstractController
         $this->addFlash('error', 'Plus de place disponible sur ce cours.');
         return $this->redirectToRoute('app_session_details', ['id' => $id]);
         }
+        
         // Create the reservation and set initial status
         $reservation = new Reservation();
         $reservation 
@@ -96,9 +97,8 @@ final class ReservationController extends AbstractController
             ->setStatut('CONFIRMED')
             ->setBookedAt(new \DateTimeImmutable());
 
-        // ✅ Validation des Assert de Reservation
+        // Validation des Assert de Reservation
         $errors = $validator->validate($reservation);
-
         if (count($errors) > 0) {
             // En prod tu ferais plutôt un flash + log
             foreach ($errors as $error) {

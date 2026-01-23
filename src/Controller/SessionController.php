@@ -85,13 +85,11 @@ final class SessionController extends AbstractController
         // Ensure the session is owned by the logged-in teacher.
         $session->setTeacher($teacher);
 
-
         $form = $this->createForm(SessionForm::class, $session);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            
              // Initial status for a new class.
             $session->setStatus('SCHEDULED');
             $session->setUpdatedAt(new \DateTimeImmutable('now'));
@@ -107,8 +105,6 @@ final class SessionController extends AbstractController
 
         }
 
-        
-        
         return $this->render('session/session-new.html.twig', [
             'form' => $form->createView(),
         ]);

@@ -116,7 +116,9 @@
 
 <div class="mt-4 text-center">
 	{% if app.user %}
-		<button type="button" class="btn btn-primary {% if remaining <= 0 %}disabled{% endif %}" data-bs-toggle="modal" data-bs-target="#confirmReservationModal" data-action="{{ path('app_reservation_reserver', {'id': session.id}) }}" data-token="{{ csrf_token('reserver' ~ session.id) }}" data-title="Confirmer la réservation" data-body="Voulez-vous réserver une place pour le cours « {{ session.classType.title }} » du {{ session.startAt|date('d/m/Y') }} à  {{ session.startAt|date('H:i') }}? Prix : {{ session.price}} €">
+		<button type="button" class="btn btn-primary
+											{% if remaining <= 0 %}disabled{% endif %}" data-bs-toggle="modal" data-bs-target="#confirmReservationModal" data-action="{{ path('app_reservation_reserver', {'id': session.id}) }}" data-token="{{ csrf_token('reserver' ~ session.id) }}" data-title="Confirmer la réservation" data-body="Voulez-vous réserver une place pour le cours « {{ session.classType.title }} »
+														du {{ session.startAt|date('d/m/Y') }} à  {{ session.startAt|date('H:i') }}? Prix : {{ session.price}} €">
 			{% if remaining <= 0 %}Complet{% else %}Réserver ce cours
 			{% endif %}
 		</button>
@@ -141,11 +143,9 @@
 				<h1 class="modal-title fs-5" id="confirmReservationLabel">Confirmer la réservation</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
 			</div>
-
 			<div class="modal-body" id="confirmReservationBody">
 				Voulez-vous réserver ce cours ?
 			</div>
-
 			<div class="modal-footer">
 				<input type="hidden" name="_token" id="ReservationToken">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non, revenir</button>
