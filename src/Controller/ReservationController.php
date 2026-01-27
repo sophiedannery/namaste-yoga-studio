@@ -16,6 +16,7 @@ namespace App\Controller;
 use App\Entity\Reservation;
 use App\Repository\ReservationRepository;
 use App\Repository\SessionRepository;
+use App\Service\ReservationService;
 use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,7 +41,8 @@ final class ReservationController extends AbstractController
         EntityManagerInterface $em, 
         ReservationRepository $reservation_repository, 
         StatsCounter $counter,
-        ValidatorInterface $validator
+        ValidatorInterface $validator, 
+        ReservationService $rules
         ): Response
     {
         // Require authenticated user.
@@ -62,32 +64,15 @@ final class ReservationController extends AbstractController
             $this->addFlash('error', 'Session introuvable.');
             return $this->redirectToRoute('app_session_planning');
         }
-        // Guard: teachers cannot book their own class.
-        if ($session->getTeacher() === $user) {
-            $this->addFlash('error', 'Vous ne pouvez pas participer à votre propre cours.');
-            return $this->redirectToRoute('app_session_planning', ['id' => $id]);
-        }
-        // Guard: cannot book after the class has started
-        if ((new \DateTimeImmutable('now')) >= $session->getStartAt()) {
-            $this->addFlash('warning', 'Le cours a commencé : réservation impossible.');
+
+        $errors = $rules->validateCanReserve($session, $user);
+        if(!empty($errors)) {
+            foreach ($errors as $msg) {
+                $this->addFlash('error', $msg);
+            }
             return $this->redirectToRoute('app_session_details', ['id' => $id]);
         }
-        // Prevent duplicate active reservations for this user & session
-        $exists = $reservation_repository->findOneBy([
-            'session' => $session,
-            'student' => $user
-        ]);
-        if ($exists && $exists->getCancelledAt() === null) {
-            $this->addFlash('warning', 'Vous participez déjà à ce cours.');
-            return $this->redirectToRoute('app_session_details', ['id' => $id]);
-        }
-        // Capacity check
-        $active = $reservation_repository->countActiveBySession($session); 
-        $remaining = $session->getCapacity() - $active;
-        if ($remaining <= 0) {
-        $this->addFlash('error', 'Plus de place disponible sur ce cours.');
-        return $this->redirectToRoute('app_session_details', ['id' => $id]);
-        }
+
         // Create the reservation and set initial status
         $reservation = new Reservation();
         $reservation 
@@ -98,7 +83,6 @@ final class ReservationController extends AbstractController
 
         // ✅ Validation des Assert de Reservation
         $errors = $validator->validate($reservation);
-
         if (count($errors) > 0) {
             // En prod tu ferais plutôt un flash + log
             foreach ($errors as $error) {
