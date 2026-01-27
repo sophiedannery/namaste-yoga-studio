@@ -16,7 +16,7 @@ namespace App\Controller;
 
 use App\Entity\Session;
 use App\Form\SessionForm;
-use App\Repository\ReservationRepository;
+use App\Service\ReservationService;
 use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,8 +28,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class SessionController extends AbstractController
 {
     
-
-    
     #[Route('/planning', name: 'app_session_planning')]
     public function planningTest(): Response
     {
@@ -38,7 +36,6 @@ final class SessionController extends AbstractController
         ]);
     }
 
-
     /**
      * Show a single session details page.
      *
@@ -46,13 +43,17 @@ final class SessionController extends AbstractController
      * Route requires id.
      */
     #[Route('/session-details/{id}', name: 'app_session_details', requirements: ['id' => '\d+'])]
-    public function details(Session $session, Request $request, ReservationRepository $reservation_repository): Response
+    public function details(
+        Session $session, 
+        Request $request,
+        ReservationService $reservationService
+        ): Response
     {
+        // Récupère URL de la page précédente
         $referer = $request->headers->get('referer');
 
         // Remaining seats = capacity - active reservations (never negative).
-        $active = $reservation_repository->countActiveBySession($session);
-        $remaining = max(0, $session->getCapacity() - $active);
+        $remaining = $reservationService->getRemainingPlaces($session);
 
         return $this->render('session/session-details.html.twig', [
             'session' => $session,
@@ -60,7 +61,6 @@ final class SessionController extends AbstractController
             'remaining' => $remaining,
         ]);
     }
-
 
     /**
      * Create a new session (teacher only).
@@ -107,8 +107,6 @@ final class SessionController extends AbstractController
 
         }
 
-        
-        
         return $this->render('session/session-new.html.twig', [
             'form' => $form->createView(),
         ]);

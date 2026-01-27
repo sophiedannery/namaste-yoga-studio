@@ -18,9 +18,6 @@ use Doctrine\Persistence\ManagerRegistry;
  *   - counts used for capacity checks.
  */
 
-/**
- * @extends ServiceEntityRepository<Reservation>
- */
 class ReservationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -28,7 +25,7 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
-     /**
+    /**
      * Return all FUTURE reservations for a given student.
      */
     public function findUpcomingByStudent(User $student): array

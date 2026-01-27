@@ -2,14 +2,19 @@
 
 namespace App\Service;
 
+use App\Entity\Reservation;
 use App\Entity\Session;
 use App\Entity\User;
 use App\Repository\ReservationRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ReservationService
 {
     public function __construct(
         private ReservationRepository $reservationRepository,
+        private EntityManagerInterface $em,
+        private ValidatorInterface $validator,
     ) {}
 
 
@@ -38,7 +43,7 @@ final class ReservationService
             $errors[] = 'Vous participez déjà à ce cours.';
         }
 
-        //capacité
+        //verification place dispo
         $remaining = $this->getRemainingPlaces($session);
         if ($remaining <= 0) {
             $errors[] = 'Plus de place disponible sur ce cours.';
@@ -52,5 +57,34 @@ final class ReservationService
     {
         $active = $this->reservationRepository->countActiveBySession($session);
         return max(0, $session->getCapacity() - $active);
+    }
+
+
+    public function reserve(Session $session, User $user): array 
+    {
+        $errors = $this->validateCanReserve($session, $user);
+        if (!empty($errors)) {
+            return ['reservation' => null, 'errors' => $errors];
+        }
+
+        $reservation = (new Reservation())
+            ->setSession($session)
+            ->setStudent($user)
+            ->setStatut('CONFIRMED')
+            ->setBookedAt(new \DateTimeImmutable());
+
+        $violations = $this->validator->validate($reservation);
+        if (count($violations) > 0) {
+        foreach ($violations as $violation) {
+            $errors[] = $violation->getMessage();
+        }
+            return ['reservation' => null, 'errors' => $errors];
+        }
+
+        $this->em->persist($reservation);
+        $this->em->flush();
+
+        return ['reservation' => $reservation, 'errors' => []];
+
     }
 }

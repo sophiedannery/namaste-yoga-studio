@@ -13,36 +13,25 @@
 
 namespace App\Controller;
 
-use App\Entity\Reservation;
-use App\Repository\ReservationRepository;
 use App\Repository\SessionRepository;
 use App\Service\ReservationService;
 use App\Stats\StatsCounter;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ReservationController extends AbstractController
 {
 
-     /**
-     * Reserve a place in a session for the current user.
-     *
-     * POST /reservation/{id}/reserver
-     */
+
     #[Route('/reservation/{id}/reserver', name: 'app_reservation_reserver', methods: ['POST'])]
     public function reserver(
         int $id, 
         Request $request, 
         SessionRepository $session_repository, 
-        EntityManagerInterface $em, 
-        ReservationRepository $reservation_repository, 
         StatsCounter $counter,
-        ValidatorInterface $validator, 
-        ReservationService $rules
+        ReservationService $reservationService
         ): Response
     {
         // Require authenticated user.
@@ -65,37 +54,18 @@ final class ReservationController extends AbstractController
             return $this->redirectToRoute('app_session_planning');
         }
 
-        $errors = $rules->validateCanReserve($session, $user);
-        if(!empty($errors)) {
-            foreach ($errors as $msg) {
+        //appel du service
+        $result = $reservationService->reserve($session, $user);
+
+        if(!empty($result['errors'])) {
+            foreach ($result['errors'] as $msg) {
                 $this->addFlash('error', $msg);
-            }
-            return $this->redirectToRoute('app_session_details', ['id' => $id]);
-        }
-
-        // Create the reservation and set initial status
-        $reservation = new Reservation();
-        $reservation 
-            ->setSession($session)
-            ->setStudent($user)
-            ->setStatut('CONFIRMED')
-            ->setBookedAt(new \DateTimeImmutable());
-
-        // ✅ Validation des Assert de Reservation
-        $errors = $validator->validate($reservation);
-        if (count($errors) > 0) {
-            // En prod tu ferais plutôt un flash + log
-            foreach ($errors as $error) {
-                $this->addFlash('error', $error->getMessage());
             }
             return $this->redirectToRoute('app_session_details', ['id' => $id]);
         }
 
         // Update stats 
         $counter->incConfirmed(1);
-        // Persist and commit.
-        $em->persist($reservation);
-        $em->flush();
 
         $this->addFlash('success', 'Votre réservation est confirmée !');
         return $this->redirectToRoute('app_profile_cours');
