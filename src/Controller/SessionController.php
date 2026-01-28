@@ -17,6 +17,7 @@ namespace App\Controller;
 use App\Entity\Session;
 use App\Form\SessionForm;
 use App\Service\ReservationService;
+use App\Service\SessionService;
 use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,39 +73,26 @@ final class SessionController extends AbstractController
     #[Route('/session/ajout', name: 'app_session_new')]
     #[IsGranted('ROLE_TEACHER')]
     public function newSession(
-        StatsCounter $counter, 
         Request $request, 
-        EntityManagerInterface $em
+        SessionService $sessionService
         ): Response
     {
+
         /** @var \App\Entity\User $user */
             $teacher = $this->getUser();
             
         $session = new Session();
-
-        // Ensure the session is owned by the logged-in teacher.
-        $session->setTeacher($teacher);
-
+        $sessionService->prepareNewSession($session, $teacher);
 
         $form = $this->createForm(SessionForm::class, $session);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            
-             // Initial status for a new class.
-            $session->setStatus('SCHEDULED');
-            $session->setUpdatedAt(new \DateTimeImmutable('now'));
-
-            // Update stats
-            $counter->incCreated(1);
-
-            $em->persist($session);
-            $em->flush();
+            $sessionService->create($session);
 
             $this->addFlash('success', 'Cours ajouté avec succès !');
             return $this->redirectToRoute('app_profile_teacher_planning');
-
         }
 
         return $this->render('session/session-new.html.twig', [
