@@ -4,7 +4,7 @@ namespace App\Controller\Api;
 
 use App\Entity\Reservation;
 use App\Repository\ReservationRepository;
-use App\Repository\SessionRepository;
+use App\Service\ReservationService;
 use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,8 +17,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('api/reservations', name: 'app_api_reservations_')]
 final class ReservationApiController extends AbstractController
 {
-
-
     // READ - réservation de l'élève connecté
     #[Route('/my', name: 'showMyReservations', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
@@ -30,8 +28,7 @@ final class ReservationApiController extends AbstractController
     // Récupérer l'utilisateur connecté
     $user = $this->getUser();
 
-    if (!$user) {
-        return new JsonResponse(
+    if (!$user) {return new JsonResponse(
             ['error' => 'Utilisateur non authentifié'],
             Response::HTTP_UNAUTHORIZED
         );
@@ -43,46 +40,37 @@ final class ReservationApiController extends AbstractController
     );
 
     $jsonReservations = $serializer->serialize($reservations, 'json', ['groups' => 'getReservations']);
-
     return new JsonResponse($jsonReservations, Response::HTTP_OK, [], true);
     }
 
-
-
-
-
-    
 
     // UPDATE - annuler une réservation (setStatut CANCELLED)
     #[Route('/cancel/{id}', name: 'cancelReservation', methods: ['PATCH'])]
     #[IsGranted('ROLE_USER')]
     public function cancelReservation(
-        Reservation $reservation, 
-        EntityManagerInterface $em,
+        Reservation $reservation,
+        ReservationService $reservationService,
         StatsCounter $counter
-        ): JsonResponse
+    ): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
-        // Vérifier que c’est bien la réservation de l’utilisateur connecté
-        if ($reservation->getStudent() !== $user) {
-            return new JsonResponse(
-                ['error' => 'Accès interdit'],
-                Response::HTTP_FORBIDDEN
-            );
+        $result = $reservationService->cancel($reservation, $user);
+
+        if (!empty($result['errors'])) {
+            // 403 si accès interdit, 422 si déjà annulée (tu peux affiner)
+            $msg = $result['errors'][0];
+
+            if ($msg === 'Accès interdit') {
+                return new JsonResponse(['error' => $msg], Response::HTTP_FORBIDDEN);
+            }
+
+            return new JsonResponse(['errors' => $result['errors']], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $reservation->setStatut('CANCELLED');
-        $reservation->setCancelledAt(new \DateTimeImmutable());
-        $reservation->setUpdatedAt(new \DateTimeImmutable());
-        $reservation->setCancelledBy($user);
-
-        // Update stats 
         $counter->incCancelled(1);
 
-        $em->flush();
-
-        // 204 = pas de contenu, juste "ok"
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 

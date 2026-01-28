@@ -1,12 +1,5 @@
 <?php
 
-/**
- * ContactController
- * -----------------------------------------------------------------------------
- * Purpose:
- *   Serve the public "Contact" page.
- */
-
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ContactController extends AbstractController
 {
-    
+
     #[Route('/contact', name: 'app_contact')]
     public function index(): Response
     {

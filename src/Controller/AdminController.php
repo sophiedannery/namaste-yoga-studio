@@ -28,7 +28,6 @@ final class AdminController extends AbstractController
                 'totals' => $totals,
             ]);
         }
-
     
     // Liste des sessions à venir
     #[Route('/admin/tableau-cours', name: 'app_admin_sessions')]
@@ -39,7 +38,6 @@ final class AdminController extends AbstractController
             ]);
         }
 
-
     // Historique des sessions
     #[Route('/admin/tableau-cours-historique', name: 'app_admin_sessions_historique')]
         #[IsGranted('ROLE_ADMIN')]
@@ -48,9 +46,6 @@ final class AdminController extends AbstractController
             return $this->render('admin/admin-sessions-historique.html.twig', [
             ]);
         }
-
-    
-
         
     // Tableau des professeurs
     #[Route('/admin/teacher-edit', name: 'app_teacher_edit', methods: ['GET'])]
@@ -99,6 +94,7 @@ final class AdminController extends AbstractController
         AdminService $adminService
         ): Response
     {
+
         if ($this->isCsrfTokenValid('delete_teacher' . $user->getId(), $request->getPayload()->getString('_token'))) {
             $adminService->deleteTeacher($user);
             $this->addFlash('success', 'Le compte a bien été supprimé.');
@@ -127,13 +123,12 @@ final class AdminController extends AbstractController
         AdminService $adminService
         ): Response
     {
+
         if ($this->isCsrfTokenValid('delete_student' . $user->getId(), $request->getPayload()->getString('_token'))) {
             $adminService->deleteStudent($user);
             $this->addFlash('success', 'Le compte a bien été supprimé.');
         }
-
         return $this->redirectToRoute('app_student_edit', [], Response::HTTP_SEE_OTHER);
     }
 
-    
 }

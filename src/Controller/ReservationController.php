@@ -1,16 +1,5 @@
 <?php
 
-/**
- * ReservationController
- * -----------------------------------------------------------------------------
- * Purpose:
- *   Manage student reservations for sessions (book & cancel).
- *
- * What it does:
- *   - Allow an authenticated user to reserve a session.
- *   - Allow the same user to cancel their reservation.
- */
-
 namespace App\Controller;
 
 use App\Repository\SessionRepository;
@@ -24,7 +13,6 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ReservationController extends AbstractController
 {
 
-
     #[Route('/reservation/{id}/reserver', name: 'app_reservation_reserver', methods: ['POST'])]
     public function reserver(
         int $id, 
@@ -34,27 +22,22 @@ final class ReservationController extends AbstractController
         ReservationService $reservationService
         ): Response
     {
-        // Require authenticated user.
         $this->denyAccessUnlessGranted('ROLE_USER');
 
-        // CSRF protection
         if (!$this->isCsrfTokenValid('reserver' . $id, $request->request->get('_token'))) {
             $this->addFlash('error', 'Requête invalide, token CSRF non validé.');
             return $this->redirectToRoute('app_session_details', ['id' => $id]);
         }
 
-        // Fetch the target session
         $session = $session_repository->find($id);
         /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
-        // Guard: session must exist
         if (!$session) {
             $this->addFlash('error', 'Session introuvable.');
             return $this->redirectToRoute('app_session_planning');
         }
 
-        //appel du service
         $result = $reservationService->reserve($session, $user);
 
         if(!empty($result['errors'])) {
@@ -64,7 +47,6 @@ final class ReservationController extends AbstractController
             return $this->redirectToRoute('app_session_details', ['id' => $id]);
         }
 
-        // Update stats 
         $counter->incConfirmed(1);
 
         $this->addFlash('success', 'Votre réservation est confirmée !');

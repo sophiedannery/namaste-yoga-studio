@@ -1,25 +1,11 @@
 <?php
 
-/**
- * SessionController
- * -----------------------------------------------------------------------------
- * Purpose:
- *   Manage yoga class sessions.
- *
- * What it does:
- *   - Show the planning.
- *   - Show the detail page of a single session.
- *   - Allow teachers to create and cancel their own sessions.
- */
-
 namespace App\Controller;
 
 use App\Entity\Session;
 use App\Form\SessionForm;
 use App\Service\ReservationService;
 use App\Service\SessionService;
-use App\Stats\StatsCounter;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,17 +18,10 @@ final class SessionController extends AbstractController
     #[Route('/planning', name: 'app_session_planning')]
     public function planningTest(): Response
     {
-        
         return $this->render('session/session-planning.html.twig', [
         ]);
     }
 
-    /**
-     * Show a single session details page.
-     *
-     * GET /session-details/{id}
-     * Route requires id.
-     */
     #[Route('/session-details/{id}', name: 'app_session_details', requirements: ['id' => '\d+'])]
     public function details(
         Session $session, 
@@ -50,12 +29,8 @@ final class SessionController extends AbstractController
         ReservationService $reservationService
         ): Response
     {
-        // Récupère URL de la page précédente
         $referer = $request->headers->get('referer');
-
-        // Remaining seats = capacity - active reservations (never negative).
         $remaining = $reservationService->getRemainingPlaces($session);
-
         return $this->render('session/session-details.html.twig', [
             'session' => $session,
             'previousUrl' => $referer ?? '/',
@@ -63,13 +38,6 @@ final class SessionController extends AbstractController
         ]);
     }
 
-    /**
-     * Create a new session (teacher only).
-     *
-     * GET|POST /session/ajout
-     *   - GET: display the creation form.
-     *   - POST: validate, set teacher/status, persist, update stats, redirect.
-     */
     #[Route('/session/ajout', name: 'app_session_new')]
     #[IsGranted('ROLE_TEACHER')]
     public function newSession(
@@ -88,9 +56,7 @@ final class SessionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $sessionService->create($session);
-
             $this->addFlash('success', 'Cours ajouté avec succès !');
             return $this->redirectToRoute('app_profile_teacher_planning');
         }
@@ -99,5 +65,4 @@ final class SessionController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-
 }

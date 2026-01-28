@@ -32,4 +32,30 @@ final class SessionService
     }
 
 
+    public function cancel(Session $session, User $teacher): array
+    {
+        $errors = [];
+
+        if ($session->getTeacher() !== $teacher) {
+            $errors[] = 'Accès interdit';
+            return ['errors' => $errors];
+        }
+
+        if ($session->getStatus() === 'CANCELLED') {
+            $errors[] = 'Session déjà annulée.';
+            return ['errors' => $errors];
+        }
+
+        $session->setStatus('CANCELLED');
+        $session->setCancelledAt(new \DateTimeImmutable());
+        $session->setCancelledBy($teacher);
+
+        $this->counter->decCreated(1);
+
+        $this->em->flush();
+
+        return ['errors' => []];
+    }
+
+
 }

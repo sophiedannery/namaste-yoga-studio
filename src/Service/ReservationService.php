@@ -85,6 +85,33 @@ final class ReservationService
         $this->em->flush();
 
         return ['reservation' => $reservation, 'errors' => []];
-
     }
+
+    public function cancel(Reservation $reservation, User $user): array
+    {
+        $errors = [];
+
+        if ($reservation->getStudent() !== $user) {
+            $errors[] = 'Accès interdit';
+            return ['errors' => $errors];
+        }
+
+        if ($reservation->getStatut() === 'CANCELLED') {
+            $errors[] = 'Réservation déjà annulée.';
+            return ['errors' => $errors];
+        }
+
+        $now = new \DateTimeImmutable();
+
+        $reservation->setStatut('CANCELLED');
+        $reservation->setCancelledAt($now);
+        $reservation->setUpdatedAt($now);
+        $reservation->setCancelledBy($user);
+
+        $this->em->flush();
+
+        return ['errors' => []];
+    }
+
+
 }
