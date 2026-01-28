@@ -9,8 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 final class SessionService
 {
     public function __construct(
-        private EntityManagerInterface $em,
-        private StatsCounter $counter,
+        private EntityManagerInterface $em
     )
     {}
 
@@ -23,8 +22,6 @@ final class SessionService
     {
         $session->setStatus('SCHEDULED');
         $session->setUpdatedAt(new \DateTimeImmutable());
-
-        $this->counter->incCreated(1);
 
         $this->em->persist($session);
         $this->em->flush();
@@ -50,12 +47,9 @@ final class SessionService
         $session->setCancelledAt(new \DateTimeImmutable());
         $session->setCancelledBy($teacher);
 
-        $this->counter->decCreated(1);
-
         $this->em->flush();
 
         return ['errors' => []];
     }
-
 
 }

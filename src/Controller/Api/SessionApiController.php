@@ -130,7 +130,8 @@ final class SessionApiController extends AbstractController
     #[IsGranted('ROLE_TEACHER')]
     public function cancelSession(
         Session $session, 
-        SessionService $sessionService
+        SessionService $sessionService,
+        StatsCounter $counter
         ): JsonResponse
     {
         /** @var \App\Entity\User $user */
@@ -138,6 +139,9 @@ final class SessionApiController extends AbstractController
 
         $result = $sessionService->cancel($session, $user);
 
+        if ($result['errors'] === []) {
+            $counter->decCreated(1);
+        }
         if (!empty($result['errors'])) {
             $msg = $result['errors'][0];
 

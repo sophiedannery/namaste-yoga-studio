@@ -6,6 +6,7 @@ use App\Entity\Session;
 use App\Form\SessionForm;
 use App\Service\ReservationService;
 use App\Service\SessionService;
+use App\Stats\StatsCounter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,8 @@ final class SessionController extends AbstractController
     #[IsGranted('ROLE_TEACHER')]
     public function newSession(
         Request $request, 
-        SessionService $sessionService
+        SessionService $sessionService,
+        StatsCounter $counter
         ): Response
     {
 
@@ -57,6 +59,7 @@ final class SessionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $sessionService->create($session);
+            $counter->incCreated(1);
             $this->addFlash('success', 'Cours ajouté avec succès !');
             return $this->redirectToRoute('app_profile_teacher_planning');
         }

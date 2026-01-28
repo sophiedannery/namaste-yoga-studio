@@ -32,14 +32,12 @@ final class AdminServiceTest extends TestCase
         $em = $this->createMock(EntityManagerInterface::class);
         $hasher = $this->createMock(UserPasswordHasherInterface::class);
 
-        // hashPassword doit être appelé avec (User, plainPassword) et retourner un hash.
         $hasher
             ->expects($this->once())
             ->method('hashPassword')
             ->with($this->identicalTo($user), $this->equalTo($plainPassword))
             ->willReturn($hashedPassword);
 
-        // persist puis flush doivent être appelés
         $em
             ->expects($this->once())
             ->method('persist')

@@ -15,9 +15,8 @@ final class SessionServiceTest extends TestCase
     {
         // Arrange
         $em = $this->createMock(EntityManagerInterface::class);
-        $counter = $this->createMock(StatsCounter::class);
 
-        $service = new SessionService($em, $counter);
+        $service = new SessionService($em);
 
         $session = $this->createMock(Session::class);
         $teacher = $this->createMock(User::class);
@@ -38,30 +37,21 @@ final class SessionServiceTest extends TestCase
     {
         // Arrange
         $em = $this->createMock(EntityManagerInterface::class);
-        $counter = $this->createMock(StatsCounter::class);
 
-        $service = new SessionService($em, $counter);
+        $service = new SessionService($em);
 
         $session = $this->createMock(Session::class);
 
-        // Vérifie les valeurs par défaut
         $session->expects($this->once())
             ->method('setStatus')
             ->with('SCHEDULED')
             ->willReturnSelf();
 
-        // On ne vérifie pas la date exacte, juste que c'est un DateTimeImmutable
         $session->expects($this->once())
             ->method('setUpdatedAt')
             ->with($this->isInstanceOf(\DateTimeImmutable::class))
             ->willReturnSelf();
 
-        // Vérifie incrément stats
-        $counter->expects($this->once())
-            ->method('incCreated')
-            ->with(1);
-
-        // Vérifie persist + flush
         $em->expects($this->once())
             ->method('persist')
             ->with($session);
@@ -69,10 +59,8 @@ final class SessionServiceTest extends TestCase
         $em->expects($this->once())
             ->method('flush');
 
-        // Act
         $service->create($session);
 
-        // Assert : géré par expects()
         $this->assertTrue(true);
     }
 }
