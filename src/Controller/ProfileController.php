@@ -1,20 +1,7 @@
 <?php
 
-/**
- * ProfileController
- * -----------------------------------------------------------------------------
- * Purpose:
- *   Provide the private "My Space" area for authenticated students.
- *
- * What it does:
- *   - Shows the user profile landing page.
- *   - Lists upcoming sessions reserved by the current user.
- *   - Lists past sessions (history) reserved by the current user.
- */
-
 namespace App\Controller;
 
-use App\Repository\ReservationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -33,7 +20,7 @@ final class ProfileController extends AbstractController
 
     #[Route('/mon-espace/mes-cours', name: 'app_profile_cours')]
     #[IsGranted('ROLE_USER')]
-    public function upcomingSession(ReservationRepository $reservation_repository): Response
+    public function upcomingSession(): Response
     {
         return $this->render('profile/cours-eleve.html.twig', [
         ]);
@@ -41,7 +28,7 @@ final class ProfileController extends AbstractController
 
     #[Route('/mon-espace/mes-historique', name: 'app_profile_historique')]
     #[IsGranted('ROLE_USER')]
-    public function pastSession(ReservationRepository $reservation_repository): Response
+    public function pastSession(): Response
     {
         return $this->render('profile/cours-eleve-historique.html.twig', [
         ]);

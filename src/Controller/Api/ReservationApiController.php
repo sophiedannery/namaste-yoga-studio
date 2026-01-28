@@ -4,9 +4,8 @@ namespace App\Controller\Api;
 
 use App\Entity\Reservation;
 use App\Repository\ReservationRepository;
-use App\Repository\SessionRepository;
+use App\Service\ReservationService;
 use App\Stats\StatsCounter;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,78 +16,62 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route('api/reservations', name: 'app_api_reservations_')]
 final class ReservationApiController extends AbstractController
 {
-
-
-    // READ - réservation de l'élève connecté
+    // READ - réservations de l'élève connecté
     #[Route('/my', name: 'showMyReservations', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
     public function showMyReservations(
         ReservationRepository $reservation_repository,
         SerializerInterface $serializer
-    ): JsonResponse
-    {
-    // Récupérer l'utilisateur connecté
-    $user = $this->getUser();
-
-    if (!$user) {
-        return new JsonResponse(
-            ['error' => 'Utilisateur non authentifié'],
-            Response::HTTP_UNAUTHORIZED
-        );
-    }
-
-    // Récupérer uniquement les réservations de ce student
-    $reservations = $reservation_repository->findBy(
-        ['student' => $user],
-    );
-
-    $jsonReservations = $serializer->serialize($reservations, 'json', ['groups' => 'getReservations']);
-
-    return new JsonResponse($jsonReservations, Response::HTTP_OK, [], true);
-    }
-
-
-
-
-
-    
-
-    // UPDATE - annuler une réservation (setStatut CANCELLED)
-    #[Route('/cancel/{id}', name: 'cancelReservation', methods: ['PATCH'])]
-    #[IsGranted('ROLE_USER')]
-    public function cancelReservation(
-        Reservation $reservation, 
-        EntityManagerInterface $em,
-        StatsCounter $counter
-        ): JsonResponse
-    {
+    ): JsonResponse {
+        // Récupérer l'utilisateur connecté
         $user = $this->getUser();
-        
-        if ($reservation->getStudent() !== $user) {
+
+        if (!$user) {
             return new JsonResponse(
-                ['error' => 'Accès interdit'],
-                Response::HTTP_FORBIDDEN
+                ['error' => 'Utilisateur non authentifié'],
+                Response::HTTP_UNAUTHORIZED
             );
         }
 
-        $reservation->setStatut('CANCELLED');
-        $reservation->setCancelledAt(new \DateTimeImmutable());
-        $reservation->setUpdatedAt(new \DateTimeImmutable());
-        $reservation->setCancelledBy($user);
+        // Récupérer uniquement les réservations de ce student
+        $reservations = $reservation_repository->findBy(['student' => $user]);
 
-        // Update stats 
+        $jsonReservations = $serializer->serialize($reservations, 'json', ['groups' => 'getReservations']);
+        return new JsonResponse($jsonReservations, Response::HTTP_OK, [], true);
+    }
+
+    // UPDATE - annuler une réservation (via le service)
+    #[Route('/cancel/{id}', name: 'cancelReservation', methods: ['PATCH'])]
+    #[IsGranted('ROLE_USER')]
+    public function cancelReservation(
+        Reservation $reservation,
+        ReservationService $reservationService,
+        StatsCounter $counter
+    ): JsonResponse {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        $result = $reservationService->cancel($reservation, $user);
+
+        if (!empty($result['errors'])) {
+            $msg = $result['errors'][0];
+
+            if ($msg === 'Accès interdit') {
+                return new JsonResponse(['error' => $msg], Response::HTTP_FORBIDDEN);
+            }
+
+            return new JsonResponse(['errors' => $result['errors']], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $counter->incCancelled(1);
-
-        $em->flush();
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/test/error', name: 'app_api_test_error', methods:['GET'])]
+    #[Route('/test/error', name: 'app_api_test_error', methods: ['GET'])]
     public function testError(): JsonResponse
     {
-        // Panne volontaire pour tester l'EsceptionSubscriber
+        // Panne volontaire pour tester l'ExceptionSubscriber
         throw new \Exception('Erreur de test pour démonstration');
     }
-
 }

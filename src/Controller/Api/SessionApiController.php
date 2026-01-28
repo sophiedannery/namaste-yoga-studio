@@ -8,6 +8,7 @@ use App\Repository\ReservationRepository;
 use App\Repository\RoomRepository;
 use App\Repository\SessionRepository;
 use App\Repository\UserRepository;
+use App\Service\SessionService;
 use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -129,27 +130,27 @@ final class SessionApiController extends AbstractController
     #[IsGranted('ROLE_TEACHER')]
     public function cancelSession(
         Session $session, 
-        EntityManagerInterface $em,
+        SessionService $sessionService,
         StatsCounter $counter
         ): JsonResponse
     {
+        /** @var \App\Entity\User $user */
         $user = $this->getUser();
 
-        if ($session->getTeacher() !== $user) {
-            return new JsonResponse(
-                ['error' => 'Accès interdit'],
-                Response::HTTP_FORBIDDEN
-            );
+        $result = $sessionService->cancel($session, $user);
+
+        if ($result['errors'] === []) {
+            $counter->decCreated(1);
         }
+        if (!empty($result['errors'])) {
+            $msg = $result['errors'][0];
 
-        $session->setStatus('CANCELLED');
-        $session->setCancelledAt(new \DateTimeImmutable());
-        $session->setCancelledBy($user);
+            if ($msg === 'Accès interdit') {
+                return new JsonResponse(['error' => $msg], Response::HTTP_FORBIDDEN);
+            }
 
-        // Update stats 
-        $counter->decCreated(1);
-
-        $em->flush();
+            return new JsonResponse(['errors' => $result['errors']], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
 
         // 204 = pas de contenu, juste "ok"
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);

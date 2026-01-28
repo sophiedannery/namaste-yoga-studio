@@ -1,12 +1,5 @@
 <?php
 
-/**
- * LegalController
- * -----------------------------------------------------------------------------
- * Purpose:
- *   Serve the public "Legal" page.
- */
-
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
