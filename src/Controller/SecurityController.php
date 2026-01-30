@@ -8,33 +8,28 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-
 class SecurityController extends AbstractController
 {
-    /**
-     * Display the login page (GET) and show the latest authentication error if any.
-     *
-     * GET /login
-     */
+    
     #[Route(path: '/login', name: 'app_login')]
     public function login(
         AuthenticationUtils $authenticationUtils,
         CsrfTokenManagerInterface $csrfTokenManager,
         Security $security
     ): Response {
-        if ($user = $security->getUser()) {
+        
+    if ($user = $security->getUser()) {
             if (in_array('ROLE_TEACHER', $user->getRoles(), true)) {
                 return $this->redirectToRoute('app_profile_teacher');
             }
             return $this->redirectToRoute('app_profile');
         }
 
-        $error = $authenticationUtils->getLastAuthenticationError();
 
-        // last username entered by the user
+        // Pour ne pas avoir à retaper le mail en cas d'erreur
+        $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
-        // Generate a CSRF token for the login form
         $csrfToken = $csrfTokenManager->getToken('authenticate')->getValue();
 
         return $this->render('security/login.html.twig', [
