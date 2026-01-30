@@ -38,10 +38,6 @@ final class SessionApiController extends AbstractController
         return new JsonResponse($jsonSessions, Response::HTTP_OK, [], true);
     }
 
-
-
-
-
     // // READ - une session 
     // #[Route('/show/{id}', name: 'showSession', methods: ['GET'])]
     // public function showDetailSession(Session $session, SerializerInterface $serializer) : JsonResponse
@@ -49,11 +45,6 @@ final class SessionApiController extends AbstractController
     //     $jsonSession = $serializer->serialize($session, 'json',  ['groups' => 'getSessions']);
     //     return new JsonResponse($jsonSession, Response::HTTP_OK, [], true);
     // }
-
-
-
-
-
 
 
     // READ - sessions du professeur connecté
@@ -87,9 +78,6 @@ final class SessionApiController extends AbstractController
 
 
 
-
-
-
     // READ - élèves d'une session
     #[Route('/{id}/students', name: 'session_students', methods: ['GET'])]
     public function getSessionStudents(
@@ -118,12 +106,6 @@ final class SessionApiController extends AbstractController
         return new JsonResponse($json, Response::HTTP_OK, [], true);
     }
 
-
-
-
-
-
-    
 
     // UPDATE - annuler une session
     #[Route('/cancel/{id}', name: 'cancelSession', methods: ['PATCH'])]
