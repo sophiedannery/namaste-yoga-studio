@@ -8,6 +8,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class LegalController extends AbstractController
 {
+    // =========================
+    // Page des mentions légales
+    // =========================
     #[Route('/mentions-légales', name: 'app_mentions_legales')]
     public function mentionLegales(): Response
     {
@@ -16,6 +19,10 @@ final class LegalController extends AbstractController
         ]);
     }
 
+    
+    // =========================
+    // Page de la politique de confidentialité
+    // =========================
     #[Route('/politique-de-confidentialité', name: 'app_politique_confidentialite')]
     public function politiqueConfidentialite(): Response
     {

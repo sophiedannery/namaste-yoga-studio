@@ -13,17 +13,19 @@ use Symfony\Component\Serializer\SerializerInterface;
 final class UserApiController extends AbstractController
 {
 
-
-    // READ infos de l'élève connecté
+    // =========================
+    // READ - afficher le profil de l'utilisateur connecté
+    // =========================
     #[Route('/me', name: 'showMyProfile', methods: ['GET'])]
-    #[IsGranted('ROLE_USER')]
+    #[IsGranted('ROLE_USER')] // Accessible uniquement à un utilisateur connecté
     public function showMyProfile(
         SerializerInterface $serializer
-    ): JsonResponse 
+    ): JsonResponse
     {
-        // Récupérer l'utilisateur connecté 
+        // Récupérer l'utilisateur connecté
         $user = $this->getUser();
 
+        //Si aucun utilisateur n'est connecté
         if (!$user) {
             return new JsonResponse(
                 ['error' => 'Utilisateur non authentifié'],
@@ -31,10 +33,13 @@ final class UserApiController extends AbstractController
             );
         }
 
-        // Ici on sérialise directement l'utilisateur connecté
-        $jsonUser = $serializer->serialize($user, 'json', ['groups' => 'getUsers']);
+        // Sérialisation de l'utilisateur connecté avec le gourpe "getUSers"
+        $jsonUser = $serializer->serialize(
+            $user, 'json',
+            ['groups' => 'getUsers']
+        );
 
-        // true = le contenu est déjà du JSON encodé
+        // Retourner le profil de l'utilisateur au format JSON
         return new JsonResponse($jsonUser, Response::HTTP_OK, [], true);
     }
 

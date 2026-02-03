@@ -9,6 +9,9 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ContactController extends AbstractController
 {
 
+    // =========================
+    // Page de contact
+    // =========================
     #[Route('/contact', name: 'app_contact')]
     public function index(): Response
     {

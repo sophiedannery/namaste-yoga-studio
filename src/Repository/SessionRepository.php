@@ -7,16 +7,6 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * SessionRepository
- * -----------------------------------------------------------------------------
- * Purpose:
- *   Encapsulate all query logic for yoga sessions (teacher's upcoming/past,
- *   public listings, and filter-based search).
- */
-/**
- * @extends ServiceEntityRepository<Session>
- */
 class SessionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -24,29 +14,29 @@ class SessionRepository extends ServiceEntityRepository
         parent::__construct($registry, Session::class);
     }
 
-    /**
-     * Find FUTURE (or ongoing) sessions for a specific teacher.
-     */
+    // =========================
+    // Sessions à venir d’un professeur
+    // =========================
     public function findUpcomingByTeacher(User $teacher): array 
     {
         $now = new \DateTimeImmutable('now');
 
         return $this->createQueryBuilder('s')
-        ->andWhere('s.teacher = :teacher')
-        ->andWhere('s.endAt >= :now')
-        ->setParameter('teacher', $teacher)
-        ->setParameter('now', $now)
-        ->leftJoin('s.classType', 'ct')->addSelect('ct')
-        ->leftJoin('s.room', 'room')->addSelect('room')
-        ->leftJoin('s.reservations', 'r')->addSelect('r')
-        ->orderBy('s.startAt', 'ASC')
-        ->getQuery()
-        ->getResult();
+            ->andWhere('s.teacher = :teacher')
+            ->andWhere('s.endAt >= :now')
+            ->setParameter('teacher', $teacher)
+            ->setParameter('now', $now)
+            ->leftJoin('s.classType', 'ct')->addSelect('ct')
+            ->leftJoin('s.room', 'room')->addSelect('room')
+            ->leftJoin('s.reservations', 'r')->addSelect('r')
+            ->orderBy('s.startAt', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
-    /**
-     * Find PAST sessions for a specific teacher.
-     */
+    // =========================
+    // Sessions passées d’un professeur
+    // =========================
     public function findPastByTeacher(User $teacher): array 
     {
         $now = new \DateTimeImmutable('now');
@@ -64,9 +54,9 @@ class SessionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * Custom "findAll" including common relations and ordering.
-     */
+    // =========================
+    // Récupérer toutes les sessions
+    // =========================
     public function findAll(): array
     {
         return $this->createQueryBuilder('s')
@@ -78,29 +68,29 @@ class SessionRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * Find all upcoming sessions for the planning.
-     */
+    // =========================
+    // Récupérer toutes les sessions à venir
+    // =========================
     public function findAllUpcoming(): array
     {
         $now = new \DateTimeImmutable('now');
 
-    return $this->createQueryBuilder('s')
-        ->leftJoin('s.teacher', 't')->addSelect('t')
-        ->leftJoin('s.classType', 'ct')->addSelect('ct')
-        ->leftJoin('s.room', 'r')->addSelect('r')
-        ->andWhere('s.startAt >= :now')
-        ->andWhere('s.status = :status') // on n’affiche pas les annulés
-        ->setParameter('now', $now)
-        ->setParameter('status', 'SCHEDULED')
-        ->orderBy('s.startAt', 'ASC')
-        ->getQuery()
-        ->getResult();
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.teacher', 't')->addSelect('t')
+            ->leftJoin('s.classType', 'ct')->addSelect('ct')
+            ->leftJoin('s.room', 'r')->addSelect('r')
+            ->andWhere('s.startAt >= :now')
+            ->andWhere('s.status = :status') // on n’affiche pas les annulés
+            ->setParameter('now', $now)
+            ->setParameter('status', 'SCHEDULED')
+            ->orderBy('s.startAt', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
-    /**
-     * Filter sessions for the public planning by level, teacher name, and style.
-     */
+    // =========================
+    // Sessions à venir avec filtres (niveau, professeur, style)
+    // =========================
     public function findUpcomingByFilters(?string $level, ?string $teacher, ?string $style): array
     {
         $now = new \DateTimeImmutable('now');
@@ -114,16 +104,19 @@ class SessionRepository extends ServiceEntityRepository
             ->setParameter('status', 'SCHEDULED')
             ->orderBy('s.startAt', 'ASC');
 
+        // Filtre niveau
         if ($level !== null && $level !== '') {
             $qb->andWhere('LOWER(ct.level) = LOWER(:level)')
             ->setParameter('level', trim($level));
         }
 
+        // Filtre style
         if ($style !== null && $style !== '') {
             $qb->andWhere('LOWER(ct.style) = LOWER(:style)')
             ->setParameter('style', trim($style));
         }
 
+        // Filtre professeur
         if ($teacher !== null && $teacher !== '') {
             $qb->andWhere('LOWER(t.firstName) = LOWER(:teacher)')
             ->setParameter('teacher', trim($teacher));
@@ -131,5 +124,4 @@ class SessionRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-
 }

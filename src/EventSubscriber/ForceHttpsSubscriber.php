@@ -17,33 +17,50 @@ class ForceHttpsSubscriber implements EventSubscriberInterface
         $this->env = $kernel->getEnvironment();
     }
 
+    // =========================
+    // Méthode appelée à chaque requête HTTP
+    // =========================
     public function onKernelRequest(RequestEvent $event)
     {
+        // En environnement de développement, on ne force rien
         if ($this->env === 'dev') {
             return;
         }
 
+        // Récupération de la requête courante
         $request = $event->getRequest();
+        // Nom de domaine
         $host = $request->getHost();
+        // URI complète (chemin + paramètres)
         $uri = $request->getRequestUri();
 
+        // Protocole transmis par le proxy
         $proto = $request->headers->get('X-Forwarded-Proto');
+
+        // Vérifie si la requête est en HTTPS
         $isHttps = $proto === 'https';
 
+        // Domaine cible par défaut
         $targetHost = $host;
+        // Indique si une redirection est nécessaire
         $shouldRedirect = false;
 
+        // Si la requête n'est pas en HTTPS, on force la redirection
         if (!$isHttps) {
             $shouldRedirect = true;
         }
 
+        // Si le domaine sans www est utilisé, on redirige vers la version avec www
         if ($host === 'namaste-yoga-studio.fr') {
             $targetHost = 'www.namaste-yoga-studio.fr';
             $shouldRedirect = true;
         }
 
+        // Si une redirection est nécessaire
         if ($shouldRedirect) {
+            // Construction de l'URL HTTPS finale
             $redirectUrl = 'https://' . $targetHost . $uri;
+            // Redirection permanente
             $event->setResponse(new RedirectResponse($redirectUrl, 301));
         }
     }

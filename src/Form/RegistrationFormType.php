@@ -10,26 +10,35 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class RegistrationFormType extends AbstractType
 {
+
+    // =========================
+    // Construction du formulaire d’inscription
+    // =========================
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // Champ email
             ->add('email', EmailType::class, [
                 'label' => 'Email',
             ])
+
+            // Champ prénom
             ->add('firstName', TextType::class, [
                 'label' => 'Prénom',
             ])
+
+            // Champ nom
             ->add('lastName', TextType::class, [
                 'label' => 'Nom',
             ])
+
+            // Champ mot de passe avec confirmation
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
@@ -41,10 +50,14 @@ class RegistrationFormType extends AbstractType
                         'autocomplete' => 'new-password'
                     ],
                 ],
+
+                // Options du champ de confirmation
                 'second_options' => [
                     'label' => 'Confirmer le mot de passe',
                     'attr' => ['class' => 'form-control'],
                 ],
+
+                // Contraintes de sécurité sur le mot de passe
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez renseigner un mot de passe.',
@@ -61,7 +74,6 @@ class RegistrationFormType extends AbstractType
                         majuscule, une minuscule et un chiffre.'
                     ])
                 ],
-
             ])
         ;
     }
