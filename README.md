@@ -115,8 +115,64 @@ Résumé des User Stories / fonctionnalités implémentées :
 5. Merge de `dev` vers `master` uniquement lors d'un déploiement.
 
 ## Sécurité et bonnes pratiques
+L’application Namaste Yoga Studio applique les bonnes pratiques de sécurité recommandées pour une application web professionnelle.  
+*Veille appliquée sur les recommandations OWASP Top 10 et ANSSI*
+
+### Authentification & autorisation
+
+* Authentification sécurisée via Symfony Security
+* Mots de passe hashés avec l’algorithme recommandé par Symfony
+* Gestion des rôles : ROLE_USER (élève), ROLE_TEACHER (professeur), ROLE_ADMIN (administrateur)
+* Accès aux routes protégées via attributs #[IsGranted()]
+* Redirections automatiques selon le rôle après connexion
+
+### Protection contre les attaques courantes
+
+* Protection CSRF sur tous les formulaires sensibles (connexion, réservation, annulation, création de compte)
+* Validation systématique des données : côté client (HTML5) et côté serveur (Form Types + Validator Symfony)
+* Requêtes SQL sécurisées via Doctrine ORM (prévention des injections SQL)
+* Messages d’erreur génériques pour éviter toute fuite d’information sensible
+
+### Gestion des données sensibles
+
+* Variables sensibles stockées hors du code source (.env.local, variables Heroku)
 
 ## Tests
+Les tests ont été réalisés à différents niveaux afin de garantir la stabilité et la fiabilité de l’application.  
+
+### Tests unitaires
+Des tests unitaires PHPUnit ont été mis en place sur les services métier, afin de valider les règles de gestion indépendamment des contrôleurs et de la base de données.
+
+### Tests fonctionnels
+
+**Parcours utilisateur complets testés :**
+- création de compte élève
+- connexion / déconnexion
+- réservation et annulation d’un cours
+- gestion des cours côté professeur
+- accès et statistiques côté administrateur
+
+**Vérification des règles métier :**
+- impossibilité de réserver un cours complet
+- impossibilité de réserver son propre cours
+- impossibilité de réserver un cours déjà commencé
+- gestion correcte des statuts de réservation
+
+**Tests techniques**
+- Vérification des conteneurs Docker (docker compose ps)
+- Vérification des connexions aux bases MySQL et MongoDB
+- Validation du schéma Doctrine (doctrine:schema:validate)
+
+**Vérification du code :**
+- PHP CodeSniffer (PSR-12)
+- ESLint pour JavaScript
+
+**Tests de qualité et accessibilité (Audit Lighthouse) :**
+- Accessibilité ≥ 90
+- Bonnes pratiques ≥ 90
+- SEO ≥ 90
+- Validation HTML via W3C Validator
+- Tests responsive via DevTools (desktop / tablette / mobile)
 
 
 ## Déploiement
@@ -186,10 +242,9 @@ Toutes les requêtes sont redirigées vers l'URL https://namaste-yoga-studio.fr.
 
 ## Fichiers SQL
 
-### schema.sql
+### backup.sql
 
 Le fichier [backup.sql](https://github.com/sophiedannery/namaste-yoga-studio/blob/master/db/backup.sql) contient une sauvegarde complète de la base (structure + données) à un instant T. Il permet de restaurer rapidement un environnement identique
-
 
 **Commande pour exécuter :**
 ```bash
@@ -230,14 +285,14 @@ mysql -u root -p namaste_test2 < data.sql
 
 Il est possible d'adapter les identifiants, mots de passe et autre selon vos besoins.
 
+## Axes d’amélioration possibles
+Dans une logique d’évolution continue, plusieurs pistes ont été identifiées :
+- Pipeline CI/CD (GitHub Actions)
+- Gestion plus fine des statistiques (historisation avancée)
+- Paiement en ligne 
 
 
-## Identifiants de test
-
-Les identifiants de test sont disponibles dans le [Manuel d'utilisation]().
-
-
-## Ressources supplémentaires
+## Ressources complémentaires
 
 ### Visuels
 
