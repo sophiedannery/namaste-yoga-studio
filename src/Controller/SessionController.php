@@ -60,7 +60,6 @@ final class SessionController extends AbstractController
         StatsCounter $counter
         ): Response
     {
-
         // Récupérer le professeur connecté
         /** @var \App\Entity\User $user */
             $teacher = $this->getUser();

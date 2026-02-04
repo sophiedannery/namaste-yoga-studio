@@ -18,6 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SessionForm extends AbstractType
 {
+    
     // =========================
     // Construction du formulaire de création d’une session
     // =========================

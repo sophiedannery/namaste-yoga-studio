@@ -3,7 +3,6 @@ namespace App\Service;
 
 use App\Entity\Session;
 use App\Entity\User;
-use App\Stats\StatsCounter;
 use Doctrine\ORM\EntityManagerInterface;
 
 final class SessionService
@@ -35,9 +34,7 @@ final class SessionService
         // Enregistrement en base
         $this->em->persist($session);
         $this->em->flush();
-
     }
-
 
     // =========================
     // Annuler une session (changement de statut)
