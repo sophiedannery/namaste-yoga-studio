@@ -18,23 +18,32 @@ final class LoginSuccessSubscriber implements EventSubscriberInterface
         ];
     }
 
+    // =========================
+    // Méthode appelée après une authentification réussie
+    // =========================
     public function onLoginSuccess(LoginSuccessEvent $event): void 
     {
-        $token = $event->getAuthenticatedToken(); 
+        // Récupère le token de sécurité de l’utilisateur authentifié
+        $token = $event->getAuthenticatedToken();
+        // Récupère la liste des rôles de l’utilisateur
         $roles = $token->getRoleNames();
 
+        // Si l'utilisateur est professeur, redirection vers l’espace professeur
         if (in_array('ROLE_TEACHER', $roles, true)) {
             $event->setResponse(new RedirectResponse($this->router->generate('app_profile_teacher')));
-            return; 
+            return;
         }
 
+         // Si l'utilisateur est administrateur, redirection vers le tableau de bord admin
         if (in_array('ROLE_ADMIN', $roles, true)) {
             $event->setResponse(new RedirectResponse($this->router->generate('app_admin')));
             return;
         }
 
-        $event->setResponse(new RedirectResponse($this->router->generate('app_profile')));
+        // Par défaut (élève), redirection vers l’espace élève
+        $event->setResponse(
+            new RedirectResponse(
+                $this->router->generate('app_profile'))
+            );
     }
-
-
 }

@@ -15,24 +15,31 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class TeacherNewFormType extends AbstractType
 {
+    // =========================
+    // Formulaire de création d’un professeur (admin)
+    // =========================
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // Champ prénom du professeur
             ->add('firstName', TextType::class, [
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],
             ])
+            // Champ nom du professeur
             ->add('lastName', TextType::class, [
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],
             ])
+            // Champ email du professeur
             ->add('email', EmailType::class, [
                 'attr' => [
                     'class' => 'form-control mb-3',
                 ],
             ])
+            // Champ mot de passe
             ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
                 'attr' => [

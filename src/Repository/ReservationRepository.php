@@ -8,16 +8,6 @@ use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * ReservationRepository
- * -----------------------------------------------------------------------------
- * Purpose:
- *   Encapsulate all query logic related to reservations:
- *   - upcoming/past reservations for a student,
- *   - active reservations for a given session,
- *   - counts used for capacity checks.
- */
-
 class ReservationRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -25,9 +15,9 @@ class ReservationRepository extends ServiceEntityRepository
         parent::__construct($registry, Reservation::class);
     }
 
-    /**
-     * Return all FUTURE reservations for a given student.
-     */
+    // =========================
+    // Réservations à venir d’un élève
+    // =========================
     public function findUpcomingByStudent(User $student): array
     {
         $now = new \DateTimeImmutable('now');
@@ -47,33 +37,33 @@ class ReservationRepository extends ServiceEntityRepository
     }
 
 
-    /**
-     * Return all PAST reservations for a given student.
-     */
+    // =========================
+    // Réservations passées d’un élève (historique)
+    // =========================
     public function findPastByStudent(User $student): array
     {
         $now = new \DateTimeImmutable('now');
 
-    return $this->createQueryBuilder('r')
-        ->innerJoin('r.session', 's')->addSelect('s')
-        ->innerJoin('s.classType', 'ct')->addSelect('ct')
-        ->leftJoin('s.teacher', 't')->addSelect('t')
-        ->leftJoin('s.room', 'room')->addSelect('room')
-        ->andWhere('r.student = :student')
-        ->andWhere('r.statut = :status')
-        ->andWhere('s.startAt < :now')
-        ->setParameter('student', $student)
-        ->setParameter('status', 'CONFIRMED')
-        ->setParameter('now', $now)
-        ->orderBy('s.startAt', 'DESC')
-        ->getQuery()
-        ->getResult();
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.session', 's')->addSelect('s')
+            ->innerJoin('s.classType', 'ct')->addSelect('ct')
+            ->leftJoin('s.teacher', 't')->addSelect('t')
+            ->leftJoin('s.room', 'room')->addSelect('room')
+            ->andWhere('r.student = :student')
+            ->andWhere('r.statut = :status')
+            ->andWhere('s.startAt < :now')
+            ->setParameter('student', $student)
+            ->setParameter('status', 'CONFIRMED')
+            ->setParameter('now', $now)
+            ->orderBy('s.startAt', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
-    /**
-     * Count ACTIVE (confirmed & not cancelled) reservations for a session.
-     */
-    public function countActiveBySession(Session $session): int 
+    // =========================
+    // Compter les réservations actives d’une session
+    // =========================
+    public function countActiveBySession(Session $session): int
     {
         return (int) $this->createQueryBuilder('r')
         ->select('COUNT(r.id)')
@@ -86,10 +76,10 @@ class ReservationRepository extends ServiceEntityRepository
         ->getSingleScalarResult();
     }
 
-    /**
-     * Return ACTIVE reservations (confirmed & not cancelled) for a session,
-     * including the enrolled students (joined and selected).
-     */
+
+    // =========================
+    // Récupérer les réservations actives d’une session (liste des élèves)
+    // =========================
     public function findActiveBySession(Session $session, string $status = 'CONFIRMED'): array 
     {
         return $this->createQueryBuilder('r')
@@ -103,5 +93,4 @@ class ReservationRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-    
 }

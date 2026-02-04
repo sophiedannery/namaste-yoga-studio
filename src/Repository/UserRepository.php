@@ -9,15 +9,6 @@ use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
-/**
- * UserRepository
- * -----------------------------------------------------------------------------
- * Purpose:
- *   Centralize all User entity queries and password-upgrade logic.
- */
-/**
- * @extends ServiceEntityRepository<User>
- */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     public function __construct(ManagerRegistry $registry)
@@ -25,9 +16,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-    /**
-     * Used to upgrade (rehash) the user's password automatically over time.
-     */
+    // =========================
+    // Mise à jour du mot de passe (rehash automatique)
+    // =========================
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
@@ -39,9 +30,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-     /**
-     * Find users having a given role.
-     */
+    // =========================
+    // Récupérer les utilisateurs par rôle
+    // =========================
     public function findByRole(string $role): array
     {
         return $this->createQueryBuilder('u')
@@ -52,11 +43,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
-     /**
-     * Find "students only":
-     *   - Users that are plain ROLE_USER (or with empty roles),
-     *   - and do NOT have ROLE_TEACHER nor ROLE_ADMIN.
-     */
+    // =========================
+    // Récupérer uniquement les élèves
+    // =========================
     public function findStudentsOnly(): array
     {
         return $this->createQueryBuilder('u')
@@ -71,5 +60,4 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getResult();
     }
-
 }

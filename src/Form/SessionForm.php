@@ -18,9 +18,14 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SessionForm extends AbstractType
 {
+    
+    // =========================
+    // Construction du formulaire de création d’une session
+    // =========================
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // Sélection du type de cours
             ->add('classType', EntityType::class, [
                 'class' => ClassType::class,
                 'choice_label' => 'title',
@@ -30,6 +35,8 @@ class SessionForm extends AbstractType
                 },
                 'label' => 'Type de cours',
             ])
+
+            // Sélection de la salle
             ->add('room', EntityType::class, [
                 'class' => Room::class,
                 'choice_label' => 'nameRoom',
@@ -40,6 +47,8 @@ class SessionForm extends AbstractType
                 },
                 'label' => 'Salle',
             ])
+
+            // Date et heure de début du cours
             ->add('startAt', DateTimeType::class, [
                 'widget' => 'single_text',
                 'input'  => 'datetime_immutable',
@@ -49,17 +58,19 @@ class SessionForm extends AbstractType
                     'min' => (new \DateTimeImmutable('now'))->format('Y-m-d\TH:i'),
                 ],
             ])
+            // Date et heure de fin du cours
             ->add('endAt', DateTimeType::class, [
                 'widget' => 'single_text',
                 'input'  => 'datetime_immutable',
                 'label'  => 'Fin',
                 'help'   => 'La fin doit être après le début',
             ])
+            // Nombre de places disponibles
             ->add('capacity', IntegerType::class, [
                 'label' => 'Places disponibles',
                 'attr'  => ['min' => 1, 'step' => 1],
             ])
-
+            // Tarif du cours (optionnel)
             ->add('price', NumberType::class, [
                 'required' => false,
                 'label'    => 'Tarif (€)',
@@ -68,7 +79,7 @@ class SessionForm extends AbstractType
                 'attr'     => ['step' => '0.01', 'min' => '0'],
                 'help'     => 'Laissez vide si gratuit.',
             ])
-
+            // Description libre du cours
             ->add('details', TextareaType::class, [
                 'required' => false,
                 'label'    => 'Détails / description',
