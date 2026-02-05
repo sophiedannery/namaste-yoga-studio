@@ -12,7 +12,7 @@ final class ProfileController extends AbstractController
     // =========================
     // Page principale de l’espace élève
     // =========================
-    #[Route('/mon-espace', name: 'app_profile')]
+    #[Route('/profile/mon-espace', name: 'app_profile')]
     #[IsGranted('ROLE_USER')] // Accessible uniquement aux utilisateurs connectés
     public function index(): Response
     {
@@ -25,7 +25,7 @@ final class ProfileController extends AbstractController
     // =========================
     // Liste des cours à venir de l’élève
     // =========================
-    #[Route('/mon-espace/mes-cours', name: 'app_profile_cours')]
+    #[Route('/profile/mon-espace/mes-cours', name: 'app_profile_cours')]
     #[IsGranted('ROLE_USER')] // Accessible uniquement aux utilisateurs connectés
     public function upcomingSession(): Response
     {
@@ -37,7 +37,7 @@ final class ProfileController extends AbstractController
     // =========================
     // Historique des cours suivis par l’élève
     // =========================
-    #[Route('/mon-espace/mes-historique', name: 'app_profile_historique')]
+    #[Route('/profile/mon-espace/mes-historique', name: 'app_profile_historique')]
     #[IsGranted('ROLE_USER')] // Accessible uniquement aux utilisateurs connectés
     public function pastSession(): Response
     {
@@ -48,7 +48,7 @@ final class ProfileController extends AbstractController
     // =========================
     // Modification du profil de l’élève
     // =========================
-    #[Route('/mon-espace/modifier', name: 'app_profile_modifier')]
+    #[Route('/profile/mon-espace/modifier', name: 'app_profile_modifier')]
     #[IsGranted('ROLE_USER')] // Accessible uniquement aux utilisateurs connectés
     public function modifProfile(): Response
     {
