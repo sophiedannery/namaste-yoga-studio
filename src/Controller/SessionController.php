@@ -52,7 +52,7 @@ final class SessionController extends AbstractController
     // =========================
     // Création d’une session (professeur)
     // =========================
-    #[Route('/session/ajout', name: 'app_session_new')]
+    #[Route('/teacher/session/ajout', name: 'app_session_new')]
     #[IsGranted('ROLE_TEACHER')] // Accès réservé aux professeurs
     public function newSession(
         Request $request,
