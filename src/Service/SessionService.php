@@ -16,7 +16,7 @@ final class SessionService
     // =========================
     // Associer professeur à la session
     // =========================
-    public function prepareNewSession(Session $session, User $teacher): void 
+    public function setTeacherNewSession(Session $session, User $teacher): void 
     {
         $session->setTeacher($teacher);
     }

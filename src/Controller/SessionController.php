@@ -60,16 +60,15 @@ final class SessionController extends AbstractController
         StatsCounter $counter
         ): Response
     {
-        // Récupérer le professeur connecté
-        /** @var \App\Entity\User $user */
-            $teacher = $this->getUser();
-        
+
         // Créer une nouvelle session
         $session = new Session();
 
-        // Préparer la session avec le service Session
-        $sessionService->prepareNewSession($session, $teacher);
-
+        // Récupérer le professeur connecté
+        /** @var \App\Entity\User $user */
+            $teacher = $this->getUser();
+        $sessionService->setTeacherNewSession($session, $teacher);
+        
         // Créer le formulaire lié à la session
         $form = $this->createForm(SessionForm::class, $session);
         // Traitement de la requête (POST)
