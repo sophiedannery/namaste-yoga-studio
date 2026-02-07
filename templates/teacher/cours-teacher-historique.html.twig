@@ -12,21 +12,7 @@
 			<h1 class="hero-heading mb-0">Historique de mes cours</h1>
 		</div>
 
-		{# FILTRES #}
-		<div class="row mb-3">
-
-			<div class="col-md-4">
-				<label for="status-filter" class="form-label">Filtrer par statut</label>
-				<select id="status-filter" class="form-select">
-					<option value="">Tous les statuts</option>
-					<option value="SCHEDULED">Cours passés</option>
-					<option value="CANCELLED">Cours annulés</option>
-				</select>
-			</div>
-		</div>
-
 		<p id="session-status" class="text-muted small mb-2" role="status" aria-live="polite"></p>
-
 
 		<div class="table-responsive">
 			<table class="table table-striped align-middle">
@@ -37,7 +23,7 @@
 						<th>Cours</th>
 						<th>Places</th>
 						<th>Tarif</th>
-						<th>Statut</th>
+						<th>Annulation</th>
 					</tr>
 				</thead>
 				<tbody id="session-table-body">
@@ -56,13 +42,9 @@
 
 		<div class="text-center m-5">
 			<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_profile_teacher')}}">Retour</a>
-
-
 		</div>
 
-
-	</secion>
-
+	</section>
 
 	<script src="/js/teacher-sessions-historique.js" defer></script>
 

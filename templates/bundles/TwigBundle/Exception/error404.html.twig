@@ -1,21 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accès refusé
+{% block title %}Page introuvable
 {% endblock %}
 
 {% block body %}
 
+
 	<section class="container py-5">
 
-		<h1>Accès refusé</h1>
-		<p>Vous n’avez pas les droits.</p>
+		<h1>404</h1>
+		<p>Oups… la page que vous cherchez n’existe pas.</p>
 
 		<div class="text-center m-5">
 			<a class="btn btn-secondary px-4 me-md-2" href="{{ path('app_home')}}">Retour à l'accueil</a>
 		</div>
 
-
 	</section>
-
 
 {% endblock %}

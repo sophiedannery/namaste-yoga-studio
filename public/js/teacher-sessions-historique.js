@@ -1,13 +1,6 @@
 // Remplissage de la page une fois le DOM prêt
 document.addEventListener('DOMContentLoaded', () => {
     loadSessions();
-
-    // Filtres
-    const statusSelect  = document.getElementById('status-filter');
-
-    if (statusSelect) {
-        statusSelect.addEventListener('change', applyFilters);
-    }
 });
 
 
@@ -76,13 +69,17 @@ async function loadSessions() {
             const status   = session.status ?? '—';
             const title    = session.classType?.title ?? '—';
 
+            const annulationText = status === 'CANCELLED'
+            ? 'Cours annulé'
+            : '';
+
             tr.innerHTML = `
                 <td>${session.id ?? ''}</td>
                 <td>${startDate}</td>
                 <td>${title}</td>
                 <td>${capacity}</td>
                 <td>${price} €</td>
-                <td>${status}</td>
+                <td>${annulationText}</td>
             `;
 
             tbody.appendChild(tr);
@@ -111,26 +108,5 @@ async function loadSessions() {
 }
 
 
-// Appliquer les filtres statut
-function applyFilters() {
-    const statusSelect  = document.getElementById('status-filter');
-    const selectedStatus  = statusSelect ? statusSelect.value : '';
 
-    const rows = document.querySelectorAll('#session-table-body tr');
 
-    rows.forEach((row) => {
-        const statusCell  = row.children[6]; // Statut
-
-        if (!statusCell) return;
-
-        const statusText  = statusCell.textContent.trim().toUpperCase();
-
-        let matchStatus  = true;
-
-        if (selectedStatus !== '') {
-            matchStatus = (statusText === selectedStatus.toUpperCase());
-        }
-
-        row.style.display = (matchStatus) ? '' : 'none';
-    });
-}

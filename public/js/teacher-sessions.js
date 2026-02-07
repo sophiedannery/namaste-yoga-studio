@@ -76,78 +76,77 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // GEstion du modal élèves
     // --- Modal liste des élèves ---
-const studentsModalEl = document.getElementById('sessionStudentsModal');
-const studentsTitleEl = document.getElementById('sessionStudentsModalLabel');
-const studentsListEl  = document.getElementById('sessionStudentsList');
+    const studentsModalEl = document.getElementById('sessionStudentsModal');
+    const studentsTitleEl = document.getElementById('sessionStudentsModalLabel');
+    const studentsListEl  = document.getElementById('sessionStudentsList');
 
-if (studentsModalEl && studentsListEl) {
-    studentsModalEl.addEventListener('show.bs.modal', async function (event) {
-        const button = event.relatedTarget;
-        if (!button) return;
+    if (studentsModalEl && studentsListEl) {
+        studentsModalEl.addEventListener('show.bs.modal', async function (event) {
+            const button = event.relatedTarget;
+            if (!button) return;
 
-        const sessionId   = button.getAttribute('data-session-id');
-        const title       = button.getAttribute('data-session-title')   || '';
-        const date        = button.getAttribute('data-session-date')    || '';
+            const sessionId   = button.getAttribute('data-session-id');
+            const title       = button.getAttribute('data-session-title')   || '';
+            const date        = button.getAttribute('data-session-date')    || '';
 
-        // Titre du modal
-        studentsTitleEl.textContent = `Élèves inscrits – ${title} (${date})`;
+            // Titre du modal
+            studentsTitleEl.textContent = `Élèves inscrits – ${title} (${date})`;
 
-        // État "chargement..."
-        studentsListEl.innerHTML = `
-            <li class="list-group-item text-muted">Chargement...</li>
-        `;
+            // État "chargement..."
+            studentsListEl.innerHTML = `
+                <li class="list-group-item text-muted">Chargement...</li>
+            `;
 
-        try {
-            const response = await fetch(`/api/sessions/${sessionId}/students`, {
-                headers: {
-                    'Accept': 'application/json'
+            try {
+                const response = await fetch(`/api/sessions/${sessionId}/students`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
                 }
-            });
 
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP : ${response.status}`);
-            }
+                const students = await response.json();
 
-            const students = await response.json();
+                if (!students.length) {
+                    studentsListEl.innerHTML = `
+                        <li class="list-group-item text-muted">
+                            Aucun élève inscrit pour le moment.
+                        </li>
+                    `;
+                    return;
+                }
 
-            if (!students.length) {
+                studentsListEl.innerHTML = '';
+                students.forEach((student) => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item d-flex justify-content-between align-items-center';
+
+                    const fullName = `${student.lastName ?? ''} ${student.firstName ?? ''}`.trim();
+                    const email    = student.email ?? '';
+
+                    li.innerHTML = `
+                        <span>
+                            <strong>${fullName || 'Élève'}</strong>
+                            ${email ? `<br><small class="text-muted">${email}</small>` : ''}
+                        </span>
+                    `;
+
+                    studentsListEl.appendChild(li);
+                });
+
+            } catch (error) {
+                console.error(error);
                 studentsListEl.innerHTML = `
-                    <li class="list-group-item text-muted">
-                        Aucun élève inscrit pour le moment.
+                    <li class="list-group-item text-danger">
+                        Impossible de charger la liste des élèves.
                     </li>
                 `;
-                return;
             }
-
-            studentsListEl.innerHTML = '';
-            students.forEach((student) => {
-                const li = document.createElement('li');
-                li.className = 'list-group-item d-flex justify-content-between align-items-center';
-
-                const fullName = `${student.lastName ?? ''} ${student.firstName ?? ''}`.trim();
-                const email    = student.email ?? '';
-
-                li.innerHTML = `
-                    <span>
-                        <strong>${fullName || 'Élève'}</strong>
-                        ${email ? `<br><small class="text-muted">${email}</small>` : ''}
-                    </span>
-                `;
-
-                studentsListEl.appendChild(li);
-            });
-
-        } catch (error) {
-            console.error(error);
-            studentsListEl.innerHTML = `
-                <li class="list-group-item text-danger">
-                    Impossible de charger la liste des élèves.
-                </li>
-            `;
-        }
-    });
-}
-
+        });
+    }
 
 });
 
@@ -163,7 +162,7 @@ async function loadSessions() {
     }
 
     if (statusEl) {
-        statusEl.textContent = 'Chargement...';
+        statusEl.textContent = 'Chargement de vos séances à venir...';
     }
 
     try {
@@ -207,7 +206,6 @@ async function loadSessions() {
                     timeStyle: 'short'
                 })
                 : 'À planifier';
-
             const price    = session.price ?? '—';
             const capacity = session.capacity ?? '—';
             const status   = session.status ?? '—';
@@ -241,11 +239,13 @@ async function loadSessions() {
                         
                     </div>
                     <div class="text-md-end d-flex flex-column align-items-md-end align-items-start gap-2">
+
                         <span class="badge session-status ${
                             isCancelled ? 'bg-secondary text-bg-secondary' : 'bg-success text-bg-success'
                         }">
                             ${status === 'CANCELLED' ? 'Séance annulée' : 'Séance confirmée'}
                         </span>
+
                         <button 
                             class="btn btn-sm btn-secondary btn-students-session me-1"
                             data-session-id="${session.id}"
