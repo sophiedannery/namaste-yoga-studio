@@ -23,6 +23,12 @@ class SecurityController extends AbstractController
     {
         // Si un utilisateur est déjà connecté
         if ($user = $security->getUser()) {
+
+            // Si c’est admin, redirection vers l’espace admin
+            if (in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+                return $this->redirectToRoute('app_admin');
+            }
+
             // Si c’est un professeur, redirection vers l’espace professeur
             if (in_array('ROLE_TEACHER', $user->getRoles(), true)) {
                 return $this->redirectToRoute('app_profile_teacher');

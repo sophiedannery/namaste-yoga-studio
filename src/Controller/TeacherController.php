@@ -29,7 +29,7 @@ final class TeacherController extends AbstractController
     #[IsGranted('ROLE_TEACHER')] // Accès réservé aux professeurs
     public function upComingSessionTeacher(): Response
     {
-        return $this->render('teacher/cours-teacher.html.twig', [   
+        return $this->render('teacher/cours-teacher.html.twig', [
         ]);
     }
 

@@ -166,6 +166,8 @@ hr{
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
 }
 
+
+
 .navbar-nav {
     display: flex;
     gap: 1.5rem;
@@ -219,7 +221,7 @@ hr{
 
 
 /* =======================================================
-                  NAVIGATION - HOMEPAGE - Transparent
+                  NAVIGATION - ACCUEIL - Transparent
 ======================================================= */
 
 .navbar-scroll {
@@ -249,14 +251,14 @@ hr{
 
 
 .navbar-scroll .navbar-collapse.show .nav-link {
-  color: var(--color-primary) !important;
-}
+  color: white !important;
+} 
 
 
 
 
 /* =======================================================
-                  NAVIGATION - HOMEPAGE - Scrolled
+                  NAVIGATION - ACCUEIL - Scrolled
 ======================================================= */
 
 .navbar-scroll.scrolled {
@@ -280,6 +282,8 @@ hr{
   color: var(--primary) !important;
 }
   
+
+
 
 
   /* =======================================================
@@ -472,4 +476,70 @@ footer a {
   
 .card-body ul i {
   color: var(--primary);
+}
+
+  
+  /* =======================================================
+                  FORMULAIRES
+======================================================= */
+.form-control {
+  background-color: #fdfdfc !important; 
+}
+
+
+/* =========================
+    KPI BAR
+========================= */
+.kpi-bar__inner{
+  background: var(--bg-surface, #f4f3f2);
+  border: 1px solid rgba(0,0,0,.06);
+  border-radius: 16px;
+  padding: 14px 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.06);
+}
+
+.kpi-item{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.kpi-item__icon{
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(127,176,105,.18); /* sauge claire */
+  color: #1f2937;
+  flex: 0 0 auto;
+}
+
+.kpi-item__value{
+  font-family: "Merriweather", serif;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.kpi-item__label{
+  font-size: .9rem;
+  color: rgba(31,41,55,.72);
+}
+
+.kpi-sep{
+  width: 1px;
+  background: rgba(0,0,0,.08);
+  align-self: stretch;
+  margin: 6px 0;
+}
+
+/* Mobile: plus compact */
+@media (max-width: 575.98px){
+  .kpi-bar__inner{ padding: 12px; }
+  .kpi-item{ padding: 8px 10px; }
+  .kpi-item__value{ font-size: 1.4rem; }
 }
