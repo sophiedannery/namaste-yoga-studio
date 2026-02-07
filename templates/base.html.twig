@@ -55,8 +55,11 @@
 		{% endif %}
 
 		{% for label, messages in app.flashes %}
+			{% set alertType = (label == 'error') ? 'danger' : label %}
+
 			<div class="container mt-5 mb-3">
-				<div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+				<div class="alert alert-{{ alertType }} alert-dismissible fade show" role="alert">
+
 					{% for msg in messages %}
 						<div class="text-center">
 							{{ msg }}

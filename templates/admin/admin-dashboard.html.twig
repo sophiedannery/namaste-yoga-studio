@@ -5,102 +5,101 @@
 
 {% block body %}
 
+
 	<section class="py-5">
 		<div class="container">
 
-			<h1 class="hero-heading mb-0 mt-3 mt-md-0">Tableau de bord</h1>
-			<p class="text-muted mt-3 mb-5"></p>
+			<div class="kpi-bar mb-4" aria-label="Statistiques principales">
+				<div class="kpi-bar__inner d-flex flex-column flex-md-row gap-3 gap-md-0 justify-content-between align-items-stretch">
 
-			<div class="row mb-5">
-				<div class="col-12 col-sm-4 mb-4">
-					<div class="card h-100 border-0 shadow hover-animate">
-						<div class="card-body">
-							<div class="icon-rounded bg-secondary-light mb-3">
-								<i class="fa-solid fa-spa"></i>
-							</div>
-							<h5 class="card-title mb-3">
-								<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_teacher_edit')}}">Les professeurs</a>
-							</h5>
-							<p class="text-muted card-text text-sm">Gérer les comptes des professeurs</p>
+					<div class="kpi-item flex-fill">
+						<div class="kpi-item__icon" aria-hidden="true">
+							<i class="fa-solid fa-calendar-check"></i>
+						</div>
+						<div class="kpi-item__content">
+							<div class="kpi-item__value">{{ totals.confirmed }}</div>
+							<div class="kpi-item__label">Réservations</div>
 						</div>
 					</div>
-				</div>
 
-				<div class="col-12 col-sm-4 mb-4">
-					<div class="card h-100 border-0 shadow hover-animate">
-						<div class="card-body">
-							<div class="icon-rounded bg-secondary-light mb-3">
-								<i class="fa-solid fa-users-line"></i>
-							</div>
-							<h5 class="card-title mb-3">
-								<a class="text-decoration-none text-dark stretched-link" href="{{ path('app_student_edit')}}">Les élèves</a>
-							</h5>
-							<p class="text-muted card-text text-sm">Suspendre un compte élève</p>
+					<div class="kpi-sep d-none d-md-block" aria-hidden="true"></div>
+
+					<div class="kpi-item flex-fill">
+						<div class="kpi-item__icon" aria-hidden="true">
+							<i class="fa-solid fa-calendar-xmark"></i>
+						</div>
+						<div class="kpi-item__content">
+							<div class="kpi-item__value">{{ totals.cancelled }}</div>
+							<div class="kpi-item__label">Annulations</div>
 						</div>
 					</div>
-				</div>
 
+					<div class="kpi-sep d-none d-md-block" aria-hidden="true"></div>
 
-				<div class="col-12 col-sm-4 mb-4">
-					<div class="card h-100 border-0 shadow hover-animate">
-						<div class="card-body">
-							<div class="icon-rounded bg-secondary-light mb-3">
-								<i class="fa-solid fa-calendar"></i>
-							</div>
-							<h5 class="card-title mb-3">
-								<a class="text-decoration-none text-dark stretched-link" data-turbo="false" href="{{ path('app_admin_sessions')}}">Les cours</a>
-							</h5>
-							<p class="text-muted card-text text-sm">Voir la liste des cours</p>
+					<div class="kpi-item flex-fill">
+						<div class="kpi-item__icon" aria-hidden="true">
+							<i class="fa-solid fa-dumbbell"></i>
+						</div>
+						<div class="kpi-item__content">
+							<div class="kpi-item__value">{{ totals.sessions_net }}</div>
+							<div class="kpi-item__label">Séances à venir</div>
 						</div>
 					</div>
+
 				</div>
 			</div>
 
-			<div class="row mb-5">
-				<div class="col-12 col-sm-4 mb-4">
-					<div class="card h-100 border-0 shadow">
-						<div class="card-body">
-							<div class="icon-rounded bg-secondary-light mb-3">
-								<i class="fa-solid fa-chart-column"></i>
-							</div>
-							<h5 class="card-title mb-3">
-								<a class="text-decoration-none text-dark stretched-link" href="#">{{ totals.confirmed }}</a>
-							</h5>
-							<p class="text-muted card-text text-sm">Réservations</p>
-						</div>
-					</div>
-				</div>
+			<div class="admin-actions mb-5">
+				<h2 class="h5 mb-4">Tableau de bord</h2>
 
-				<div class="col-12 col-sm-4 mb-4">
-					<div class="card h-100 border-0 shadow">
-						<div class="card-body">
-							<div class="icon-rounded bg-secondary-light mb-3">
-								<i class="fa-solid fa-chart-column"></i>
-							</div>
-							<h5 class="card-title mb-3">
-								<a class="text-decoration-none text-dark stretched-link" href="#">{{ totals.cancelled }}</a>
-							</h5>
-							<p class="text-muted card-text text-sm">Annulation</p>
-						</div>
-					</div>
-				</div>
+				<div class="list-group shadow-sm">
 
-
-				<div class="col-12 col-sm-4 mb-4">
-					<div class="card h-100 border-0 shadow">
-						<div class="card-body">
-							<div class="icon-rounded bg-secondary-light mb-3">
-								<i class="fa-solid fa-chart-column"></i>
+					<div class="list-group-item d-flex justify-content-between align-items-center">
+						<div class="d-flex align-items-center gap-3">
+							<i class="fa-solid fa-spa text-secondary fs-4"></i>
+							<div>
+								<div class="fw-semibold">Professeurs</div>
+								<small class="text-muted">Créer, modifier ou suspendre un compte professeur</small>
 							</div>
-							<h5 class="card-title mb-3">
-								<a class="text-decoration-none text-dark stretched-link" data-turbo="false" href="#">{{ totals.sessions_net }}</a>
-							</h5>
-							<p class="text-muted card-text text-sm">Nombre de cours</p>
 						</div>
+						<a href="{{ path('app_teacher_edit') }}" class="btn btn-outline-secondary btn-sm">
+							Gérer
+						</a>
 					</div>
+
+					<div class="list-group-item d-flex justify-content-between align-items-center">
+						<div class="d-flex align-items-center gap-3">
+							<i class="fa-solid fa-users-line text-secondary fs-4"></i>
+							<div>
+								<div class="fw-semibold">Élèves</div>
+								<small class="text-muted">Suspendre ou réactiver un compte élève</small>
+							</div>
+						</div>
+						<a href="{{ path('app_student_edit') }}" class="btn btn-outline-secondary btn-sm">
+							Gérer
+						</a>
+					</div>
+
+					<div class="list-group-item d-flex justify-content-between align-items-center">
+						<div class="d-flex align-items-center gap-3">
+							<i class="fa-solid fa-calendar text-secondary fs-4"></i>
+							<div>
+								<div class="fw-semibold">Cours</div>
+								<small class="text-muted">Consulter, annuler ou superviser les cours</small>
+							</div>
+						</div>
+						<a href="{{ path('app_admin_sessions') }}" class="btn btn-outline-secondary btn-sm">
+							Voir
+						</a>
+					</div>
+
 				</div>
 			</div>
+
+
 		</div>
+
+
 	</section>
 
 {% endblock %}
