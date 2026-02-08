@@ -43,7 +43,7 @@ final class SessionApiController extends AbstractController
 
 
     // =========================
-    // READ - afficher toutes les sessions
+    // READ - afficher toutes les sessions à venir
     // =========================
     #[Route('/upcoming', name: 'showUpcomingSessions', methods: ['GET'])]
     public function showAllUpcomingSessions(

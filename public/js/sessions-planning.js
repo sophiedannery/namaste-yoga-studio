@@ -101,16 +101,13 @@ async function loadSessions() {
             // On remplit la carte 
             card.innerHTML = `
                 <div class="card-body p-4 pb-0 align-items-center">
-                
                     <div class="row g-4 align-items-center">
-
                         <div class="col-sm-4">
                             <h3>${title}</h3>
                             <h4>
                                 ${startDate}
                             <h4>
                         </div>
-
                         <div class="col-sm-4 align-items-center">
                             <p class="mb-1">
                                 <i class="fa-solid fa-users me-2"></i>
@@ -125,7 +122,6 @@ async function loadSessions() {
                                 ${price} €
                             </p>
                         </div >
-
                         <div class="col-sm-4 text-center">
                             <img src="${avatarSrc}" 
                             alt="Photo de ${teacherFirstName}" 
@@ -135,7 +131,6 @@ async function loadSessions() {
                                 ${teacherFirstName}
                             </h4>
                         </div>
-
                         <div class="col-12 text-center mt-2">
                             
                             <a href="/session-details/${session.id}" class="btn btn-primary my-3">Détails du cours</a>
@@ -144,7 +139,6 @@ async function loadSessions() {
                     </div>
                 </div>
             `;
-
             container.appendChild(card);
         });
 
