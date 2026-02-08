@@ -49,7 +49,7 @@ class SessionRepository extends ServiceEntityRepository
             ->leftJoin('s.classType', 'ct')->addSelect('ct')
             ->leftJoin('s.room', 'room')->addSelect('room')
             ->leftJoin('s.reservations', 'r')->addSelect('r')
-            ->orderBy('s.startAt', 'ACS')
+            ->orderBy('s.startAt', 'ASC')
             ->getQuery()
             ->getResult();
     }
