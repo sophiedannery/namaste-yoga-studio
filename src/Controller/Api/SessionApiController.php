@@ -43,6 +43,30 @@ final class SessionApiController extends AbstractController
 
 
     // =========================
+    // READ - afficher toutes les sessions
+    // =========================
+    #[Route('/upcoming', name: 'showUpcomingSessions', methods: ['GET'])]
+    public function showAllUpcomingSessions(
+        SessionRepository $session_repository,
+        SerializerInterface $serializer
+    ): JsonResponse
+    {
+        // Récupérer toutes les sessions depuis la base de données
+        $sessions = $session_repository->findAllUpcoming();
+        
+        // Conversion des sessions en JSON avec le groupe de sérialisation "getSessions"
+        $jsonSessions = $serializer->serialize(
+            $sessions,
+            'json',
+            ['groups' => 'getSessions']
+        );
+
+        // Retourner la réponse JSON
+        return new JsonResponse($jsonSessions, Response::HTTP_OK, [], true);
+    }
+
+
+    // =========================
     // READ - sessions du professeur connecté
     // =========================
     #[Route('/my', name: 'showMySessions', methods: ['GET'])]

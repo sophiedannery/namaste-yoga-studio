@@ -45,7 +45,7 @@ async function loadSessions() {
     }
 
     try {
-        const response = await fetch('/api/sessions/show', {
+        const response = await fetch('/api/sessions/upcoming', {
             headers: {
                 'Accept': 'application/json'
             }
@@ -55,17 +55,7 @@ async function loadSessions() {
             throw new Error(`Erreur HTTP : ${response.status}`);
         }
 
-        const sessions = await response.json();
-
-        // On filtre pour n'avoir que les sessions à venir
-        const now = new Date();
-        const upcomingSessions = sessions.filter((session) => {
-            if (!session.startAt) {
-                return false;
-            }
-            const startDateObj = new Date(session.startAt);
-            return startDateObj > now;
-        });
+        const upcomingSessions = await response.json();
 
         // On vide le container
         container.innerHTML = '';
