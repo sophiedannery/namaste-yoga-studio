@@ -53,6 +53,8 @@ class SessionForm extends AbstractType
                 'widget' => 'single_text',
                 'input'  => 'datetime_immutable',
                 'label'  => 'Début',
+                'view_timezone'  => 'Europe/Paris', // ce que le prof saisit/voit
+                'model_timezone' => 'UTC',
                 'help'   => 'Date et heure de début',
                 'attr'   => [
                     'min' => (new \DateTimeImmutable('now'))->format('Y-m-d\TH:i'),
@@ -63,6 +65,8 @@ class SessionForm extends AbstractType
                 'widget' => 'single_text',
                 'input'  => 'datetime_immutable',
                 'label'  => 'Fin',
+                'view_timezone'  => 'Europe/Paris', // ce que le prof saisit/voit
+                'model_timezone' => 'UTC',
                 'help'   => 'La fin doit être après le début',
             ])
             // Nombre de places disponibles
