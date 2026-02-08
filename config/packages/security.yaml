@@ -29,6 +29,7 @@ security:
         - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/api/reservations/test/error, roles: PUBLIC_ACCESS }
         - { path: ^/api/sessions/show$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/sessions/upcoming$, roles: PUBLIC_ACCESS }
         - { path: ^/api/reservations/test/error, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: ROLE_USER }
 
