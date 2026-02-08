@@ -204,7 +204,7 @@ hr{
 .navbar-toggler {
     border: none !important;
     box-shadow: none;
-    color: var(--color-bg) !important;
+    color: var(--color-primary) !important;
   }
 
   .navbar-toggler:focus {
@@ -230,7 +230,7 @@ hr{
     box-shadow: none;
 }
 
-.navbar-scroll .nav-link,
+.navbar-scroll:not(.scrolled) .nav-link,
 .navbar-scroll .btn {
     color: var(--color-bg) !important;
 }
@@ -279,7 +279,7 @@ hr{
 
   /* menu burger */
 .navbar-scroll.scrolled .navbar-toggler {
-  color: var(--primary) !important;
+  color: var(--color-primary) !important;
 }
   
 
